@@ -42,14 +42,14 @@ export default function Home() {
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold text-gray-800 mb-6">Features</h2>
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="p-6 bg-white rounded-lg shadow">
+            <div className="p-6 bg-white rounded-lg shadow flex flex-col items-center">
               <Image src="/email.svg" width={100} height={100} alt="Email" />
               <h3 className="text-xl font-bold text-gray-800 mt-4">Email Reminders</h3>
               <p className="text-gray-600 mt-2">
                 Schedule email reminders to never miss an important event.
               </p>
             </div>
-            <div className="p-6 bg-white rounded-lg shadow">
+            <div className="p-6 bg-white rounded-lg shadow flex flex-col items-center">
               <Image src="/whatsapp.svg" width={100} height={100} alt="WhatsApp" />
               <h3 className="text-xl font-bold text-gray-800 mt-4">
                 WhatsApp Reminders
@@ -58,7 +58,7 @@ export default function Home() {
                 Get reminders delivered directly to your WhatsApp chat.
               </p>
             </div>
-            <div className="p-6 bg-white rounded-lg shadow">
+            <div className="p-6 bg-white rounded-lg shadow flex flex-col items-center">
               <Image src="/sms.svg" width={100} height={100} alt="SMS" />
               <h3 className="text-xl font-bold text-gray-800 mt-4">SMS Reminders</h3>
               <p className="text-gray-600 mt-2">
