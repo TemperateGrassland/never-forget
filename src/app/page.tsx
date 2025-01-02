@@ -9,6 +9,9 @@ export default function Home() {
         <div className="container mx-auto px-4 py-6 flex justify-between items-center">
           <h1 className="text-2xl font-bold text-indigo-600">NeverForget</h1>
           <nav className="space-x-4">
+            <Link href="/login" className="bg-indigo-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-indigo-700">
+              Login/Sign Up
+            </Link>
             <Link href="#features" className="text-gray-700 hover:text-indigo-600">
               Features
             </Link>
