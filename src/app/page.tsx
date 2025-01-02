@@ -101,7 +101,7 @@ export default function Home() {
       <section id="contact" className="py-16 bg-indigo-600 text-white">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold mb-6">Contact Us</h2>
-          <p className="text-lg mb-8">Have questions? We're here to help!</p>
+          <p className="text-lg mb-8">Have questions? We are here to help!</p>
           <button className="bg-white text-indigo-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100">
             Contact Support
           </button>
