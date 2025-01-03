@@ -1,0 +1,40 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                 Int      @id @default(autoincrement()) // Unique identifier
+  email              String   @unique                     // User's email (unique)
+  passwordHash       String                                // Hashed password
+  firstName          String                                // First name
+  lastName           String                                // Last name
+  phoneNumber        String?                               // Optional phone number
+  dateOfBirth        DateTime?                             // Optional date of birth
+  createdAt          DateTime @default(now())              // Timestamp for creation
+  updatedAt          DateTime @updatedAt                   // Auto-updated on modification
+  isActive           Boolean  @default(true)               // Active status
+  reminders          Reminder[]                            // Relationship to reminders
+}
+
+model Reminder {
+  id                 Int      @id @default(autoincrement()) // Unique identifier
+  title              String                                 // Reminder title
+  description        String?                                // Optional reminder details
+  scheduledAt        DateTime                               // When the reminder should occur
+  userId             Int                                    // Foreign key to User
+  createdAt          DateTime @default(now())               // Timestamp for creation
+  updatedAt          DateTime @updatedAt                   // Auto-updated on modification
+  
+  user               User     @relation(fields: [userId], references: [id]) // Relationship back to User
+}
