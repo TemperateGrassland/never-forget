@@ -4,10 +4,14 @@ import { useState } from "react";
 
 export default function LoginPage() {
   const [isLogin, setIsLogin] = useState(true); // Toggle between login and sign-up
+  const [email, setEmail] = useState(""); // Email state
   const [password, setPassword] = useState(""); // Password state
   const [confirmPassword, setConfirmPassword] = useState(""); // Confirm password state
+  const [firstName, setFirstName] = useState(""); // First name state
+  const [lastName, setLastName] = useState(""); // Last name state
+  const [phoneNumber, setPhoneNumber] = useState(""); // Phone number state
+  const [dateOfBirth, setDateOfBirth] = useState(""); // Date of birth state
   const [errorMessage, setErrorMessage] = useState(""); // Error message state
-  const [email, setEmail] = useState(""); // Email state
 
   const toggleForm = () => {
     setIsLogin(!isLogin);
@@ -31,7 +35,14 @@ export default function LoginPage() {
         const response = await fetch("/api/users", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
+          body: JSON.stringify({
+            email,
+            password,
+            firstName,
+            lastName,
+            phoneNumber,
+            dateOfBirth,
+          }),
         });
 
         if (!response.ok) {
@@ -58,6 +69,71 @@ export default function LoginPage() {
         </h2>
 
         <form onSubmit={handleSubmit}>
+          {!isLogin && (
+            <>
+              <div className="mb-4">
+                <label htmlFor="firstName" className="block text-gray-700 font-medium mb-2">
+                  First Name
+                </label>
+                <input
+                  type="text"
+                  id="firstName"
+                  name="firstName"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  required
+                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-black"
+                  placeholder="Enter your first name"
+                />
+              </div>
+
+              <div className="mb-4">
+                <label htmlFor="lastName" className="block text-gray-700 font-medium mb-2">
+                  Last Name
+                </label>
+                <input
+                  type="text"
+                  id="lastName"
+                  name="lastName"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  required
+                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-black"
+                  placeholder="Enter your last name"
+                />
+              </div>
+
+              <div className="mb-4">
+                <label htmlFor="phoneNumber" className="block text-gray-700 font-medium mb-2">
+                  Phone Number
+                </label>
+                <input
+                  type="tel"
+                  id="phoneNumber"
+                  name="phoneNumber"
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-black"
+                  placeholder="Enter your phone number (optional)"
+                />
+              </div>
+
+              <div className="mb-4">
+                <label htmlFor="dateOfBirth" className="block text-gray-700 font-medium mb-2">
+                  Date of Birth
+                </label>
+                <input
+                  type="date"
+                  id="dateOfBirth"
+                  name="dateOfBirth"
+                  value={dateOfBirth}
+                  onChange={(e) => setDateOfBirth(e.target.value)}
+                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-black"
+                />
+              </div>
+            </>
+          )}
+
           <div className="mb-4">
             <label htmlFor="email" className="block text-gray-700 font-medium mb-2">
               Email
