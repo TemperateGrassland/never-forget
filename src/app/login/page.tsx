@@ -7,6 +7,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState(""); // Password state
   const [confirmPassword, setConfirmPassword] = useState(""); // Confirm password state
   const [errorMessage, setErrorMessage] = useState(""); // Error message state
+  const [email, setEmail] = useState(""); // Email state
 
   const toggleForm = () => {
     setIsLogin(!isLogin);
@@ -15,19 +16,38 @@ export default function LoginPage() {
     setErrorMessage("");
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Check if passwords match during sign-up
     if (!isLogin && password !== confirmPassword) {
       setErrorMessage("Passwords do not match. Please try again.");
       return;
     }
 
     setErrorMessage("");
-    // Proceed with form submission (e.g., API call)
-    // TODO: update this with API call and automatically log in
-    alert(isLogin ? "Logged in successfully!" : "Signed up successfully!");
+
+    if (!isLogin) {
+      try {
+        const response = await fetch("/api/users", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          setErrorMessage(errorData.message || "Something went wrong.");
+          return;
+        }
+
+        alert("Sign-up successful! Please log in.");
+        toggleForm(); // Switch back to login form
+      } catch (err) {
+        setErrorMessage("Failed to sign up. Please try again.");
+      }
+    } else {
+      alert("Logged in successfully!"); // Placeholder for login functionality
+    }
   };
 
   return (
@@ -38,7 +58,6 @@ export default function LoginPage() {
         </h2>
 
         <form onSubmit={handleSubmit}>
-          {/* Email Input */}
           <div className="mb-4">
             <label htmlFor="email" className="block text-gray-700 font-medium mb-2">
               Email
@@ -47,13 +66,14 @@ export default function LoginPage() {
               type="email"
               id="email"
               name="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
               className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-black"
               placeholder="Enter your email"
             />
           </div>
 
-          {/* Password Input */}
           <div className="mb-4">
             <label htmlFor="password" className="block text-gray-700 font-medium mb-2">
               Password
@@ -70,7 +90,6 @@ export default function LoginPage() {
             />
           </div>
 
-          {/* Confirm Password Input for Sign-Up */}
           {!isLogin && (
             <div className="mb-6">
               <label
@@ -92,12 +111,10 @@ export default function LoginPage() {
             </div>
           )}
 
-          {/* Error Message */}
           {errorMessage && (
             <div className="mb-4 text-red-600 font-medium text-sm">{errorMessage}</div>
           )}
 
-          {/* Submit Button */}
           <button
             type="submit"
             className="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-indigo-700 transition"
