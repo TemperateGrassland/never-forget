@@ -63,8 +63,12 @@ export default function LoginPage() {
 
         alert("Sign-up successful! Please log in.");
         toggleForm(); // Switch to login form
-      } catch (err: any) {
-        setErrorMessage(`Failed to sign up: ${err.message || "An unknown error occurred."}`);
+      } catch (err) {
+        if (err instanceof Error) {
+          setErrorMessage(`Failed to sign up: ${err.message}`);
+        } else {
+          setErrorMessage("An unknown error occurred during sign-up.");
+        }
       }
     } else {
       // Login logic
@@ -89,9 +93,12 @@ export default function LoginPage() {
         const data = await response.json();
         alert(`Welcome back, ${data.firstName || "user"}!`);
         // Optionally, store user info in state or localStorage
-      } catch (err: any) {
-        setErrorMessage(`Login failed: ${err.message || "An unknown error occurred."}`);
-      }
+      } catch (err) {
+        if (err instanceof Error) {
+          setErrorMessage(`Login failed: ${err.message}`);
+        } else {
+          setErrorMessage("An unknown error occurred during login.");
+        }
     }
   };
 
