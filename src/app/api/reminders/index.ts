@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/react'; // Assuming you're using NextAuth
-import prisma from '../../../lib/prisma'; // Your Prisma client setup
+import prisma from '../../../../lib/prisma'; // Your Prisma client setup
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
