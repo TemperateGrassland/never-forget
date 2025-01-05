@@ -23,14 +23,15 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!isLogin && password !== confirmPassword) {
-      setErrorMessage("Passwords do not match. Please try again.");
-      return;
-    }
-
     setErrorMessage("");
 
     if (!isLogin) {
+      // Sign-up logic
+      if (password !== confirmPassword) {
+        setErrorMessage("Passwords do not match. Please try again.");
+        return;
+      }
+
       try {
         const response = await fetch("/api/users", {
           method: "POST",
@@ -47,17 +48,50 @@ export default function LoginPage() {
 
         if (!response.ok) {
           const errorData = await response.json();
-          setErrorMessage(errorData.message || "Something went wrong.");
+
+          if (errorData.errors) {
+            const detailedErrors = errorData.errors.map((err: string) => `- ${err}`).join("\n");
+            setErrorMessage(`Sign-up failed for the following reasons:\n${detailedErrors}`);
+          } else if (errorData.message) {
+            setErrorMessage(errorData.message);
+          } else {
+            setErrorMessage("Something went wrong. Please try again.");
+          }
+
           return;
         }
 
         alert("Sign-up successful! Please log in.");
-        toggleForm(); // Switch back to login form
-      } catch (err) {
-        setErrorMessage("Failed to sign up. Please try again.");
+        toggleForm(); // Switch to login form
+      } catch (err: any) {
+        setErrorMessage(`Failed to sign up: ${err.message || "An unknown error occurred."}`);
       }
     } else {
-      alert("Logged in successfully!"); // Placeholder for login functionality
+      // Login logic
+      try {
+        const response = await fetch("/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email,
+            password,
+          }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          setErrorMessage(
+            errorData.message || "Login failed. Please check your email and password."
+          );
+          return;
+        }
+
+        const data = await response.json();
+        alert(`Welcome back, ${data.firstName || "user"}!`);
+        // Optionally, store user info in state or localStorage
+      } catch (err: any) {
+        setErrorMessage(`Login failed: ${err.message || "An unknown error occurred."}`);
+      }
     }
   };
 
@@ -188,7 +222,9 @@ export default function LoginPage() {
           )}
 
           {errorMessage && (
-            <div className="mb-4 text-red-600 font-medium text-sm">{errorMessage}</div>
+            <div className="mb-4 text-red-600 font-medium text-sm whitespace-pre-wrap">
+              {errorMessage}
+            </div>
           )}
 
           <button
