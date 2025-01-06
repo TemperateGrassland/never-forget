@@ -29,11 +29,11 @@ export const authOptions: AuthOptions = {
       }
       return token;
     },
-    async session({ session, token }) {
+    async session({ session, user }) {
       // Attach token properties to the session
       if (session.user) {
-        session.user.name = token.name;
-        session.user.email = token.email;
+        session.user.id = user.id;
+        session.user.email = user.email;
       }
       return session;
     },

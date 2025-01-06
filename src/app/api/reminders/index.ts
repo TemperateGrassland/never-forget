@@ -27,6 +27,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           title,
           description,
           scheduledAt: new Date(scheduledAt),
+          userId: session.user.id,
           },
       });
 

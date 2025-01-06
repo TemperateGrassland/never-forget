@@ -8,7 +8,7 @@ datasource db {
 }
 
 model User {
-  id           Int        @id @default(autoincrement())
+  id           String        @id @default(cuid())
   email        String     @unique
   createdAt    DateTime   @default(now())
   dateOfBirth  DateTime?
@@ -24,8 +24,8 @@ model User {
 }
 
 model Account {
-  id                 Int       @id @default(autoincrement())
-  userId             Int
+  id                 String       @id @default(cuid())
+  userId             String
   provider           String
   providerAccountId  String
   type               String
@@ -44,7 +44,7 @@ model Account {
 model Session {
   id           String   @id @default(cuid()) // Use cuid for unique string IDs
   sessionToken String   @unique
-  userId       Int
+  userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
@@ -58,11 +58,11 @@ model VerificationToken {
 }
 
 model Reminder {
-  id          Int      @id @default(autoincrement())
+  id          String      @id @default(cuid())
   title       String
   description String?
   scheduledAt DateTime
-  userId      Int  // Foreign key referencing User.id
+  userId      String  // Foreign key referencing User.id
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   user        User     @relation(fields: [userId], references: [id])
