@@ -9,7 +9,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const session = await getServerSession(req, res, authOptions);
 
     // Check if user is authenticated
-    if (!session || !session.user || !session.user.id) {
+    if (!session || !session.user || !session.user.name) {
       return res.status(401).json({ message: 'Unauthorized' });
     }
 
@@ -27,7 +27,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           title,
           description,
           scheduledAt: new Date(scheduledAt),
-          userId: Number(session.user.id), // Ensure userId is numeric
+          userId: Number(session.user.name),
         },
       });
 

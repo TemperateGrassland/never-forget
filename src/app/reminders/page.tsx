@@ -39,6 +39,7 @@ export default function RemindersPage() {
       setScheduledAt("");
     } catch (error) {
       setErrorMessage("An error occurred. Please try again.");
+      console.error("Error creating reminder:", error);
     }
   };
 

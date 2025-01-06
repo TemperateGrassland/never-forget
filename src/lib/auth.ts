@@ -16,8 +16,8 @@ export const authOptions: NextAuthOptions = {
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   jwt: {
-    encryption: true, // Encrypt the JWT for additional security
-  },
+    maxAge: 60 * 60 * 24 * 30,
+},
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
