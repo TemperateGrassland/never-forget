@@ -26,13 +26,6 @@ export const authOptions: NextAuthOptions = {
       }
       return token;
     },
-    async session({ session, token }) {
-      if (token) {
-        session.user.id = token.id; // Include the user ID in the session
-        session.user.email = token.email; // Include the user email in the session
-      }
-      return session;
-    },
   },
   pages: {
     signIn: '/auth/signin', // Custom sign-in page
