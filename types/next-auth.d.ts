@@ -3,7 +3,7 @@ import NextAuth from 'next-auth';
 declare module 'next-auth' {
   interface Session {
     user: {
-      id: number; // Add the id property
+      id: string; // Add the id property
       name: string;
       email: string;
       image?: string;
@@ -11,6 +11,6 @@ declare module 'next-auth' {
   }
 
   interface User {
-    id: number; // Extend User type to include id
+    id: string; // Extend User type to include id
   }
 }
