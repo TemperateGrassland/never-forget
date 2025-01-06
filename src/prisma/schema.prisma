@@ -19,6 +19,42 @@ model User {
   phoneNumber  String?
   updatedAt    DateTime   @updatedAt
   reminders    Reminder[]
+  accounts     Account[]  // Relation to Account
+  sessions     Session[]  // Relation to Session
+}
+
+model Account {
+  id                 Int       @id @default(autoincrement())
+  userId             Int
+  provider           String
+  providerAccountId  String
+  type               String
+  access_token       String?   // Optional fields for OAuth
+  refresh_token      String?
+  expires_at         Int?
+  id_token           String?
+  scope              String?
+  token_type         String?
+  session_state      String?
+  user               User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId]) // Ensure unique accounts per provider
+}
+
+model Session {
+  id           String   @id @default(cuid()) // Use cuid for unique string IDs
+  sessionToken String   @unique
+  userId       Int
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String  @id
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token]) // Ensure token uniqueness
 }
 
 model Reminder {

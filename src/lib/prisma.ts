@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 
 const globalForPrisma = global as unknown as { prisma: PrismaClient };
 
-// Use a single Prisma Client instance in development to avoid connection issues
+// Use a single Prisma Client instance in development to avoid hot reloading connection issues
 export const prisma =
   globalForPrisma.prisma ||
   new PrismaClient({
