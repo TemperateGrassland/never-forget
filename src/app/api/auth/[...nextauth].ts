@@ -40,7 +40,7 @@ export const authOptions: AuthOptions = {
   },
 
   pages: {
-    signIn: "/auth/signin", // Custom sign-in page
+    signIn: "/login", // Custom sign-in page
     verifyRequest: "/auth/verify-request", // Page displayed after a magic link is sent
     error: "/auth/error", // Error page
   },

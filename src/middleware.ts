@@ -8,7 +8,7 @@ export async function middleware(req: NextRequest) {
   // Check if the user is authenticated
   if (!token) {
     // Redirect unauthenticated users to the sign-in page
-    const signInUrl = new URL('/auth/signin', req.url);
+    const signInUrl = new URL('/login', req.url);
     return NextResponse.redirect(signInUrl);
   }
   return NextResponse.next();

@@ -2,8 +2,16 @@
 
 import { useState } from "react";
 
+interface Reminder {
+  id: string;
+  title: string;
+  description?: string;
+  scheduledAt: string;
+}
+
+
 export default function RemindersPage() {
-  const [reminders, setReminders] = useState([]);
+  const [reminders, setReminders] = useState<Reminder[]>([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [scheduledAt, setScheduledAt] = useState("");
