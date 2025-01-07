@@ -1,6 +1,9 @@
+import prisma from "@/lib/prisma";
 import bcrypt from "bcrypt";
+import { NextApiRequest } from 'next';
 
-export async function POST(request) {
+
+export async function POST(request: NextApiRequest) {
   try {
     const { email, password, firstName, lastName, phoneNumber, dateOfBirth } = await request.json();
 
@@ -32,7 +35,7 @@ export async function POST(request) {
     });
   } catch (err) {
     return new Response(
-      JSON.stringify({ message: "Failed to create user.", error: err.message }),
+      JSON.stringify({ message: "Failed to create user.", err }),
       { status: 500 }
     );
   }
