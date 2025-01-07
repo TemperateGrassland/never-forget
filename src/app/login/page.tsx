@@ -7,7 +7,7 @@ export default function AuthPage() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e:React.FormEvent) => {
     e.preventDefault();
     setMessage("");
 
@@ -20,6 +20,7 @@ export default function AuthPage() {
       }
     } catch (error) {
       setMessage("An error occurred. Please try again.");
+      console.error(error);
     }
   };
 

@@ -1,9 +1,9 @@
 import prisma from "@/lib/prisma";
 import bcrypt from "bcrypt";
-import { NextApiRequest } from 'next';
+import { NextRequest } from "next/server";
 
 
-export async function POST(request: NextApiRequest) {
+export async function POST(request: NextRequest) {
   try {
     const { email, password, firstName, lastName, phoneNumber, dateOfBirth } = await request.json();
 
