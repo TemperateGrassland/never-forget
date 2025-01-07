@@ -12,7 +12,11 @@ export default function AuthPage() {
     setMessage("");
 
     try {
-      const result = await signIn("email", { email, redirect: false });
+      const result = await signIn("email", 
+        { 
+          email, 
+          redirect: false,
+          callbackUrl: "http://localhost:3000/dashboard", });
       if (result?.error) {
         setMessage(`Error: ${result.error}`);
       } else {
