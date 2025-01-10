@@ -4,7 +4,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import prisma from "@/lib/prisma";
 
 export const authOptions: AuthOptions = {
-  adapter: PrismaAdapter(prisma),
+  adapter: PrismaAdapter(prisma), 
   providers: [
     EmailProvider({
       server: process.env.EMAIL_SERVER, // SMTP server configuration
@@ -35,12 +35,17 @@ export const authOptions: AuthOptions = {
       return session;
     },
     async redirect({ url, baseUrl }) {
-      // Redirect to the dashboard after sign-in
+      // Utilize the 'url' parameter to determine the redirect destination
       if (url.startsWith(baseUrl)) {
+        console.log("Redirect callback path 1:", { url, baseUrl });
         return url;
       } else if (url.startsWith("/")) {
+        console.log("Redirect callback path 2:", { url, baseUrl });
+
         return new URL(url, baseUrl).toString();
       }
+      console.log("Redirect callback path 3:", { url, baseUrl });
+
       return baseUrl;
     },
   },
@@ -60,4 +65,4 @@ export const authOptions: AuthOptions = {
   debug: process.env.NODE_ENV === "development", // Enable debug logs in development
 };
 
-export default NextAuth(authOptions);
+export const { handlers, signIn, signOut, auth} =  NextAuth(authOptions);
