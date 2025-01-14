@@ -2,32 +2,33 @@
 
 import { useState } from "react";
 import { signIn } from "next-auth/react";
+// import SignIn from "../components/ui/sign-in";
 
 export default function AuthPage() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
 
-  const handleSubmit = async (e:React.FormEvent) => {
-    e.preventDefault();
-    setMessage("");
+  // const handleSubmit = async (e:React.FormEvent) => {
+  //   e.preventDefault();
+  //   setMessage("");
 
-    try {
-      const result = await signIn("email", 
-        { 
-          email, 
-          redirect: false,
-          callbackUrl: "localhost:3000/dashboard", 
-          });
-      if (result?.error) {
-        setMessage(`Error: ${result.error}`);
-      } else {
-        setMessage("Check your email for the magic link.");
-      }
-    } catch (error) {
-      setMessage("An error occurred. Please try again.");
-      console.error(error);
-    }
-  };
+  //   try {
+  //     const result = await signIn("email", 
+  //       { 
+  //         email, 
+  //         redirect: false,
+  //         callbackUrl: "localhost:3000/dashboard", 
+  //         });
+  //     if (result?.error) {
+  //       setMessage(`Error: ${result.error}`);
+  //     } else {
+  //       setMessage("Check your email for the magic link.");
+  //     }
+  //   } catch (error) {
+  //     setMessage("An error occurred. Please try again.");
+  //     console.error(error);
+  //   }
+  // };
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
@@ -35,7 +36,8 @@ export default function AuthPage() {
         <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
           Sign In or Sign Up to NeverForget
         </h2>
-        <form onSubmit={handleSubmit}>
+        {/* <SignIn /> */}
+        {/* <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label htmlFor="email" className="block text-gray-700 font-medium mb-2">
               Email
@@ -62,7 +64,7 @@ export default function AuthPage() {
           >
             Send Magic Link
           </button>
-        </form>
+        </form> */}
       </div>
     </div>
   );

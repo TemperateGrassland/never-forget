@@ -10,26 +10,27 @@ datasource db {
 model User {
   id           String     @id @default(cuid())
   email        String     @unique
+  emailVerified  DateTime?
   createdAt    DateTime   @default(now())
   dateOfBirth  DateTime?
-  firstName    String
+  firstName    String?
   isActive     Boolean    @default(true)
-  lastName     String
-  passwordHash String
+  lastName     String?
+  passwordHash String?
   phoneNumber  String?
   updatedAt    DateTime   @updatedAt
-  reminders    Reminder[]
-  accounts     Account[]  // Relation to Account
-  sessions     Session[]  // Relation to Session
+  reminders    Reminder[] // One-to-many relationship
+  accounts     Account[]  // One-to-many relationship
+  sessions     Session[]  // One-to-many relationship
 }
 
 model Account {
   id                 String       @id @default(cuid())
-  userId             String
+  userId             String       // Foreign key referencing User.id
   provider           String
   providerAccountId  String
   type               String
-  access_token       String?   // Optional fields for OAuth
+  access_token       String?   
   refresh_token      String?
   expires_at         Int?
   id_token           String?
@@ -42,11 +43,14 @@ model Account {
 }
 
 model Session {
-  id           String   @id @default(cuid()) // Use cuid for unique string IDs
+  id           String   @id @default(cuid())
   sessionToken String   @unique
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Mark userId as unique to enforce one-to-one relationship
+  // @@unique([userId])
 }
 
 model VerificationToken {
@@ -62,8 +66,10 @@ model Reminder {
   title       String
   description String?
   scheduledAt DateTime
-  userId      String  // Foreign key referencing User.id
+  userId      String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   user        User     @relation(fields: [userId], references: [id])
+
+  // Remove unique constraint for one-to-many relationship
 }

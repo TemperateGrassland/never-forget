@@ -17,3 +17,6 @@ export async function middleware(req: NextRequest) {
 export const config = {
   matcher: ['/'], // Apply middleware to all routes
 };
+
+
+// export { auth } from "@/lib/auth"

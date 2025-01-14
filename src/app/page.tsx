@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+// import SignIn from './components/ui/sign-in';
 
 export default function Home() {
   return (
@@ -110,6 +111,7 @@ export default function Home() {
           </button>
         </div>
       </section>
+      {/* <SignIn /> */}
 
       {/* Footer */}
       <footer className="bg-gray-800 text-white py-4">

@@ -1,7 +1,7 @@
 "use server"
 
-import { signIn } from "@/lib/auth" 
+import { signIn } from "next-auth/react"
 
-export default async function magicLinkLogin(formData: FormData) {
-    await signIn("email", formData)
+export default async function magicLinkLogin() {
+    await signIn("email")
 }
