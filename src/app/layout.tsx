@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { getServerSession } from "next-auth";
-import AuthProvider from "./components/ui/AuthProvider";
+// import AuthProvider from "./components/ui/AuthProvider";
 import NavMenu from "./components/ui/NavMenu";
 
 const geistSans = Geist({
@@ -31,12 +31,12 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body>
-        <AuthProvider>
+        {/* <AuthProvider>
           <main className="mx-auto max-w-5xl text-2xl flex gap-2 text-white">
             <NavMenu />
             {children}
           </main>
-        </AuthProvider>
+        </AuthProvider> */}
       </body>
     </html>   
   );
