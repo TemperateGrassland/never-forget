@@ -69,34 +69,34 @@
 
 // From NextJS: https://next-auth.js.org/configuration/nextjs#in-app-directory
 
-import type {
-    GetServerSidePropsContext,
-    NextApiRequest,
-    NextApiResponse,
-  } from "next"
-  import type { NextAuthOptions } from "next-auth"
-  import { getServerSession } from "next-auth"
-  import EmailProvider from "next-auth/providers/email";
+// import type {
+//     GetServerSidePropsContext,
+//     NextApiRequest,
+//     NextApiResponse,
+//   } from "next"
+//   import type { NextAuthOptions } from "next-auth"
+//   import { getServerSession } from "next-auth"
+//   import EmailProvider from "next-auth/providers/email";
 
   
-  // You'll need to import and pass this
-  // to `NextAuth` in `app/api/auth/[...nextauth]/route.ts`
-  export const config = {
-    providers: [
-            EmailProvider({
-              server: process.env.EMAIL_SERVER, // SMTP server configuration
-              from: process.env.EMAIL_FROM,    // Email address used to send magic links
-            }),
-          ],
-          secret: process.env.NEXTAUTH_SECRET, // Used for signing/encrypting JWTs and cookies
-  } satisfies NextAuthOptions
+//   // You'll need to import and pass this
+//   // to `NextAuth` in `app/api/auth/[...nextauth]/route.ts`
+//   export const config = {
+//     providers: [
+//             EmailProvider({
+//               server: process.env.EMAIL_SERVER, // SMTP server configuration
+//               from: process.env.EMAIL_FROM,    // Email address used to send magic links
+//             }),
+//           ],
+//           secret: process.env.NEXTAUTH_SECRET, // Used for signing/encrypting JWTs and cookies
+//   } satisfies NextAuthOptions
   
-  // Use it in server contexts
-  export function auth(
-    ...args:
-      | [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"]]
-      | [NextApiRequest, NextApiResponse]
-      | []
-  ) {
-    return getServerSession(...args, config)
-  }
+//   // Use it in server contexts
+//   export function auth(
+//     ...args:
+//       | [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"]]
+//       | [NextApiRequest, NextApiResponse]
+//       | []
+//   ) {
+//     return getServerSession(...args, config)
+//   }
