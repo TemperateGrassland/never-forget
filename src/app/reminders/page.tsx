@@ -56,7 +56,7 @@ export default function RemindersPage() {
       <div className="w-full max-w-3xl bg-white p-8 rounded-lg shadow-md">
         <header className="mb-8">
           <h1 className="text-3xl font-bold text-indigo-600">NeverForget</h1>
-          <p className="text-gray-700">Your ultimate tool for managing reminders.</p>
+          <p className="text-gray-700">The tool for managing WhatsApp reminders.</p>
         </header>
 
         <section>

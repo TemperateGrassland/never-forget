@@ -2,8 +2,20 @@
 // import Link from 'next/link';
 // // import SignIn from './components/ui/sign-in';
 
+"use client";
+
+import { login } from "@/lib/actions/auth";
+
 export default function Page() {
-  return <h1>Hello!</h1>
+  return (
+  <>
+  <h1>Hello!</h1>
+  <div> 
+    <p> you are not signed in</p>{" "}
+    <button onClick={() => login()}>Sign in</button>
+  </div>
+  </>
+);
 }
 
 // import { getServerSession } from "next-auth/next"
