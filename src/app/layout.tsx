@@ -31,6 +31,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body>
+        <h1> yo</h1>
         {/* <AuthProvider>
           <main className="mx-auto max-w-5xl text-2xl flex gap-2 text-white">
             <NavMenu />
