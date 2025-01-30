@@ -1,16 +1,16 @@
-import NextAuth from 'next-auth';
+// import NextAuth from 'next-auth';
 
-declare module 'next-auth' {
-  interface Session {
-    user: {
-      id: string; // Add the id property
-      name: string;
-      email: string;
-      image?: string;
-    };
-  }
+// declare module 'next-auth' {
+//   interface Session {
+//     user: {
+//       id: string; // Add the id property
+//       name: string;
+//       email: string;
+//       image?: string;
+//     };
+//   }
 
-  interface User {
-    id: string; // Extend User type to include id
-  }
-}
+//   interface User {
+//     id: string; // Extend User type to include id
+//   }
+// }
