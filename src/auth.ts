@@ -1,9 +1,14 @@
 // "use server"
 
-import NextAuth from 'next-auth';
+import NextAuth, { NextAuthOptions } from 'next-auth';
 import EmailProvider from 'next-auth/providers/email';
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { PrismaClient } from "@prisma/client";
 
-export const {auth, handlers, signIn, signOut} = NextAuth({
+const prisma = new PrismaClient();
+
+export const authConfig: NextAuthOptions ={
+    adapter: PrismaAdapter(prisma),
     providers: [
         EmailProvider({
           server: process.env.EMAIL_SERVER, // SMTP server configuration
@@ -11,5 +16,4 @@ export const {auth, handlers, signIn, signOut} = NextAuth({
         }),
       ],
       secret: process.env.NEXTAUTH_SECRET, // Used for signing/encrypting JWTs and cookies
-    }
-);
+};

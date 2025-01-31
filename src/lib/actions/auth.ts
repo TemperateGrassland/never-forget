@@ -4,10 +4,10 @@ import { signIn, signOut } from "@/auth";
 
 
 export const login = async () => {
-    await signIn("email", {redirectTo: "/"});
-}
+    await signIn("email");
+};
 
 
 export const logout = async () => {
-    await signOut("email", {redirectTo: "/"});
-}
+    await signOut();
+};

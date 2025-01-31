@@ -5,6 +5,7 @@
 "use client";
 
 import { login } from "@/lib/actions/auth";
+import { LoginButton, LogoutButton } from "./components/ui/SignIn";
 
 export default function Page() {
   return (
@@ -12,7 +13,8 @@ export default function Page() {
   <h1>Hello!</h1>
   <div> 
     <p> you are not signed in</p>{" "}
-    <button onClick={() => login()}>Sign in</button>
+    <LoginButton />
+    <LogoutButton />
   </div>
   </>
 );
