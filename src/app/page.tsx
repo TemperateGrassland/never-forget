@@ -2,23 +2,25 @@
 // import Link from 'next/link';
 // // import SignIn from './components/ui/sign-in';
 
-"use client";
+"use server";
 
-import { login } from "@/lib/actions/auth";
+import { auth } from "@/auth";
 import { LoginButton, LogoutButton } from "./components/ui/SignIn";
 
-export default function Page() {
+export default async function Page() {
+  const session = await auth();
+  console.log(session);
   return (
   <>
   <h1>Hello!</h1>
   <div> 
-    <p> you are not signed in</p>{" "}
+    <p> you are not signed in</p>
     <LoginButton />
     <LogoutButton />
   </div>
   </>
-);
-}
+)
+};
 
 // import { getServerSession } from "next-auth/next"
 // import { authOptions } from "./api/auth/[...nextauth]";

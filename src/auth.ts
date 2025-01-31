@@ -1,13 +1,13 @@
 // "use server"
 
-import NextAuth, { NextAuthOptions } from 'next-auth';
+import NextAuth, { getServerSession, NextAuthOptions } from 'next-auth';
 import EmailProvider from 'next-auth/providers/email';
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export const authConfig: NextAuthOptions ={
+export const authConfig: NextAuthOptions = {
     adapter: PrismaAdapter(prisma),
     providers: [
         EmailProvider({
@@ -16,4 +16,18 @@ export const authConfig: NextAuthOptions ={
         }),
       ],
       secret: process.env.NEXTAUTH_SECRET, // Used for signing/encrypting JWTs and cookies
+      session: {
+        strategy: "database", // ✅ Ensure it is "database" (not "jwt")
+    },
 };
+
+
+
+export async function auth() {
+  return await getServerSession(authConfig);
+}
+
+// const handlers = NextAuth(authConfig);
+// export { handlers as GET, handlers as POST };
+
+// export const {auth, handler, signIn, signOut} = NextAuth(authConfig);
