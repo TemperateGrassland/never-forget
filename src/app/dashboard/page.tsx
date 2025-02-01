@@ -3,9 +3,14 @@
 import { useSession } from "next-auth/react";
 
 export default function DashboardPage() {
-  const { data: session, status } = useSession()
 
-  if (status === "authenticated") {
+  const { data: session } = useSession()
+
+  if (!session) {
+    return <p>Loading...</p>
+  }
+
+  if (session) {
     return (
       <div>
         <h1>Welcome to the Dashboard</h1>

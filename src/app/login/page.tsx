@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { signIn } from "next-auth/react";
-// import SignIn from "../components/ui/sign-in";
 
 export default function AuthPage() {
   const [email, setEmail] = useState("");
@@ -36,8 +35,8 @@ export default function AuthPage() {
         <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
           Sign In or Sign Up to NeverForget
         </h2>
-        {/* <SignIn /> */}
-        {/* <form onSubmit={handleSubmit}>
+        <SignIn /> 
+        {/* {/* <form onSubmit={handleSubmit}> */}
           <div className="mb-4">
             <label htmlFor="email" className="block text-gray-700 font-medium mb-2">
               Email
@@ -64,7 +63,7 @@ export default function AuthPage() {
           >
             Send Magic Link
           </button>
-        </form> */}
+        </form>
       </div>
     </div>
   );
