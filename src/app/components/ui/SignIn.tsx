@@ -1,11 +1,8 @@
 "use client";
 
-import { signIn, signOut } from "next-auth/react";
+import { signIn } from "next-auth/react";
 
 export function LoginButton() {
-  return <button onClick={() => signIn("email")}>Sign in with Email</button>;
+  return <button onClick={() => signIn("email", {"callbackUrl": "http://localhost:3000/"})}>Sign in with Email</button>;
 }
 
-export function LogoutButton() {
-  return <button onClick={() => signOut()}>Sign out</button>;
-}

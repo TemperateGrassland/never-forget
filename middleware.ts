@@ -1,45 +1,22 @@
-// This was a first attempt at check the token in the request
-// import { NextRequest, NextResponse } from 'next/server';
-// import { getToken } from 'next-auth/jwt';
+import { NextResponse, type NextRequest } from "next/server";
+import { auth } from "@/auth";
+import path from "path";
 
-// export async function middleware(req: NextRequest) {
-//   // Extract the token from the request
-//   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+const protectedRoutes = ["/dashboard/:path*"];
 
-//   // Check if the user is authenticated
-//   // if (!token) {
-//   //   // Redirect unauthenticated users to the sign-in page
-//   //   const signInUrl = new URL('/login', req.url);
-//   //   return NextResponse.redirect(signInUrl);
-//   // }
-//   return NextResponse.next();
-// }
+export default async function middleware(req: NextRequest) {
+    console.log("🔹 middleware callback triggered");
+    const session = await auth();
 
-// export const config = {
-//   matcher: ['/'], // Apply middleware to all routes
-// };
+    const { pathname } = req.nextUrl;
 
+    const isProtectedRoute = protectedRoutes.some((route) =>pathname.startsWith(route));
 
-// // export { auth } from "@/lib/auth"
+    if (isProtectedRoute && !session) {
+        return NextResponse.redirect(new URL("/login", req.url));
+    }
+// Go forward to the route that the request is initially going to
+    return NextResponse.next();
+}
 
-
-// This was a second attempt where I wanted to delete the cookie
-// import { NextResponse } from 'next/server';
-
-// export function middleware() {
-//   const response = NextResponse.next();
-//   response.cookies.delete('your_cookie_name');
-//   return response;
-// }
-
-
-// This is the third attempt where I initialise NextAuth and matching on routes
-// import NextAuth from 'next-auth';
-// import { authConfig } from './auth.config';
- 
-// export default NextAuth(authConfig).auth;
- 
-// export const config = {
-//   // https://nextjs.org/docs/app/building-your-application/routing/middleware#matcher
-//   matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)'],
-// };
+export { auth as middleware } from "@/auth"

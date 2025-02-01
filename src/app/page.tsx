@@ -1,20 +1,31 @@
-// import Image from 'next/image';
-// import Link from 'next/link';
-// // import SignIn from './components/ui/sign-in';
-
 "use server";
 
 import { auth } from "@/auth";
-import { LoginButton, LogoutButton } from "./components/ui/SignIn";
+import { LoginButton } from "./components/ui/SignIn";
+import { LogoutButton } from "./components/ui/Signout";
+import { getServerSession } from "next-auth";
 
 export default async function Page() {
   const session = await auth();
+  console.log("🔹 page callback triggered");
   console.log(session);
+
+  if (session?.user) {
+    return (
+    <>
+    <h1>Hello!</h1>
+    <div> 
+      <p> you are signed in: {session?.user?.email}</p>
+      <LogoutButton />
+    </div>
+    </>
+    )
+  }
   return (
   <>
   <h1>Hello!</h1>
   <div> 
-    <p> you are not signed in</p>
+    <p> you are not signed in </p>
     <LoginButton />
     <LogoutButton />
   </div>

@@ -7,6 +7,7 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
+  
 export const authConfig: NextAuthOptions = {
     adapter: PrismaAdapter(prisma),
     providers: [
@@ -19,15 +20,27 @@ export const authConfig: NextAuthOptions = {
       session: {
         strategy: "database", // ✅ Ensure it is "database" (not "jwt")
     },
+    debug: true,
+    async signIn({ user }) {
+      console.log("✅ signIn callback triggered:", user);
+      return true;
+    },
+    async jwt({ token, user }) {
+      console.log("🔹 jwt callback triggered:", { token, user });
+      if (user) {
+        token.id = user.id;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      console.log("🔹 session callback triggered:", { session, token });
+      session.user.id = token.id;
+      return session;
+    },
+    async redirect({ url, baseUrl }) {
+      console.log("🔹 redirect callback triggered:", { url, baseUrl });
+      return baseUrl + "/dashboard"; // ✅ Redirect to dashboard after login
+    },
 };
 
-
-
-export async function auth() {
-  return await getServerSession(authConfig);
-}
-
-// const handlers = NextAuth(authConfig);
-// export { handlers as GET, handlers as POST };
-
-// export const {auth, handler, signIn, signOut} = NextAuth(authConfig);
+export const { handlers, signIn, signOut, auth } = NextAuth(authConfig);
