@@ -15,6 +15,8 @@ export async function GET() {
   for (const reminder of dueReminders) {
     console.log(`📢 Sending reminder to ${reminder.user.email}: ${reminder.title}`);
 
+    // Todo add the logic to send the whatsapp msg
+
     await prisma.reminder.update({
       where: { id: reminder.id },
       data: { sent: true },
