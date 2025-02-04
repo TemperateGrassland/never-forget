@@ -12,9 +12,9 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { title, description, scheduledAt } = await req.json();
+    const { title, description, scheduledAt, frequency } = await req.json();
 
-    if (!title || !scheduledAt) {
+    if (!title || !scheduledAt || !frequency) {
       return NextResponse.json({ error: "Title and date are required" }, { status: 400 });
     }
 
@@ -31,6 +31,7 @@ export async function POST(req: Request) {
         title,
         description,
         scheduledAt: new Date(scheduledAt), // Ensure proper date format
+        frequency, 
         userId: user.id,
       },
     });
