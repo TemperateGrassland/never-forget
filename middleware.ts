@@ -1,6 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { auth } from "@/auth";
-import path from "path";
 
 const protectedRoutes = ["/dashboard/:path*"];
 

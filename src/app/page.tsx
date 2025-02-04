@@ -3,7 +3,6 @@
 import { auth } from "@/auth";
 import { LoginButton } from "./components/ui/SignIn";
 import { LogoutButton } from "./components/ui/Signout";
-import { getServerSession } from "next-auth";
 
 export default async function Page() {
   const session = await auth();
