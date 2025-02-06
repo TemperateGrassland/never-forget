@@ -35,7 +35,7 @@ export default function CalendarView() {
   return (
     <div className="max-w-md mx-auto p-4 border rounded shadow">
       <h2 className="text-lg font-bold mb-3">Select a Date</h2>
-      <Calendar onChange={setSelectedDate} value={selectedDate} className="text-black" />
+      <Calendar onChange={setSelectedDate} value={selectedDate} locale="en-GB" className="text-black" />
       <input
         type="text"
         placeholder="Title"
