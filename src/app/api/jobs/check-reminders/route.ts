@@ -23,17 +23,25 @@ export async function GET(request: NextRequest) {
     include: { user: true },
   });
 
-  for (const reminder of dueReminders) {
+  for (const reminder of reminders) {
     console.log(`📢 Sending reminder to ${reminder.user.email}: ${reminder.title}`);
-    await sendWhatsAppMessage(reminder.user.phoneNumber, reminder.title);
-  
-    // Todo add the logic to send the whatsapp msg
-
-    await prisma.reminder.update({
-      where: { id: reminder.id },
-      // TODO add this field to the Reminder schema.  
-      data: { sent: true },
-    });
+    try {
+      const phoneNumber = reminder.user.phoneNumber ?? ''
+      if (phoneNumber.length < 10) {
+        console.log(`📢 No valid phone number found for ${reminder.user.email}: ${reminder.title}`);
+        return;
+      }
+      const response = await sendWhatsAppMessage(phoneNumber, reminder.title);
+      if (response == 200) {
+        console.log(`📢 Reminder sent to ${reminder.user.email}: ${reminder.title}`);
+        await prisma.reminder.update({
+          where: { id: reminder.id },
+          data: { isSent: true },
+        });
+      }
+    } catch (error) {
+      console.error(`📢 Error sending reminder to ${reminder.user.email}: ${reminder.title}`, error);
+    }
   }
 
   console.log(`📢 Sent ${reminders.length} reminders.`);
@@ -48,7 +56,7 @@ async function sendWhatsAppMessage(phoneNumber: string, message: string) {
   const accessToken = process.env.WHATSAPP_ACCESS_TOKEN;
 
   // TODO check this works
-  await fetch(url, {
+  const messageSent = await fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -61,4 +69,6 @@ async function sendWhatsAppMessage(phoneNumber: string, message: string) {
       text: { body: message },
     }),
   });
+
+  return messageSent.status;
 }

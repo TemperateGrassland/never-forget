@@ -81,4 +81,5 @@ model Reminder {
   createdAt   DateTime          @default(now())
   updatedAt   DateTime          @updatedAt
   user        User              @relation(fields: [userId], references: [id])
+  isSent     Boolean            @default(false) 
 }
