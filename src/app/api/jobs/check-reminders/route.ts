@@ -1,9 +1,14 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+// Secure the cron job by checking the auth header against the env var, should both be the same
+  const authHeader = request.headers.get("Authorization");
+  if (authHeader !== 'Bearer $(process.env.WHATSAPP_CRON_SECRET)') {
+    return new Response("Unauthorized", { status: 401 });
+  }
   console.log("🔎 Checking for due reminders...");
 
   const now = new Date();
