@@ -32,11 +32,4 @@ export default function DashboardPage() {
   }
 
   return <a href="/api/auth/signin">Sign in</a>  
-  return (
-      <div>
-        <h1>Welcome to the Dashboard</h1>
-        {/* Add your dashboard components here */}
-        
-      </div>
-    );
-  }
+}

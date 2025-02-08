@@ -36,7 +36,7 @@ export default function AuthPage() {
           Sign In or Sign Up to NeverForget
         </h2>
         <SignIn /> 
-        {/* {/* <form onSubmit={handleSubmit}> */}
+         <form onSubmit={handleSubmit}> */}
           <div className="mb-4">
             <label htmlFor="email" className="block text-gray-700 font-medium mb-2">
               Email
