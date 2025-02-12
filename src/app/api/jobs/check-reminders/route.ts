@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
       const phoneNumber = reminder.user.phoneNumber ?? ''
       if (phoneNumber.length < 10) {
         console.log(`📢 No valid phone number found for ${reminder.user.email}: ${reminder.title}`);
-        return;
+        return NextResponse.json({ message: "Checked reminders - no phone number", status: 200 });
       }
       const response = await sendWhatsAppMessage(phoneNumber, reminder.title);
       if (response == 200) {
@@ -41,6 +41,7 @@ export async function GET(request: NextRequest) {
       }
     } catch (error) {
       console.error(`📢 Error sending reminder to ${reminder.user.email}: ${reminder.title}`, error);
+      return NextResponse.json({ message: "Checked reminders", status: 200 });
     }
   }
 
