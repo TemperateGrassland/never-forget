@@ -10,7 +10,7 @@ export default function CalendarView() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [message, setMessage] = useState("");
-  const [frequency, setFrequency] = useState(ReminderFrequency.DAILY);
+  const [frequency, setFrequency] = useState<ReminderFrequency>(ReminderFrequency.DAILY);
 
   async function handleSaveReminder() {
     if (!selectedDate || !title) {
@@ -35,7 +35,20 @@ export default function CalendarView() {
   return (
     <div className="max-w-md mx-auto p-4 border rounded shadow">
       <h2 className="text-lg font-bold mb-3">Select a Date</h2>
-      <Calendar onChange={setSelectedDate} value={selectedDate} locale="en-GB" className="text-black" />
+      <Calendar
+  onChange={(value) => {
+    if (value instanceof Date) {
+      setSelectedDate(value);
+    } else if (Array.isArray(value) && value.length > 0 && value[0] instanceof Date) {
+      setSelectedDate(value[0]); // Pick the first date in range
+    } else {
+      setSelectedDate(null);
+    }
+  }}
+  value={selectedDate}
+  locale="en-GB"
+  className="text-black"
+/>
       <input
         type="text"
         placeholder="Title"
@@ -55,13 +68,13 @@ export default function CalendarView() {
         {Object.values(ReminderFrequency).map((option) => (
           <label key={option} className="block">
             <input
-              type="radio"
-              name="frequency"
-              value={option}
-              checked={frequency === option}
-              onChange={() => setFrequency(option)}
-              className="mr-2"
-            />
+            type="radio"
+            name="frequency"
+            value={option}
+            checked={frequency === option}
+            onChange={() => setFrequency(option as ReminderFrequency)} // ✅ Explicitly cast to ReminderFrequency
+            className="mr-2"
+          />
             {option}
           </label>
         ))}

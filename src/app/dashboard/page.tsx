@@ -23,7 +23,7 @@ export default function DashboardPage() {
       <div>
         <h1>Welcome to the Dashboard</h1>
         {/* Add your dashboard components here */}
-        <p>Signed in as {session.user.email}</p>
+        <p>Signed in as {session?.user?.email || "Unknown User"}</p>
         <LogoutButton />
         <UpdatePhone />
 
@@ -31,5 +31,5 @@ export default function DashboardPage() {
     )
   }
 
-  return <a href="/api/auth/signin">Sign in</a>  
+  return <link href="/api/auth/signin">Sign in</link>  
 }
