@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { LoginButton } from "@/app/components/ui/SignIn";  
+import { signIn } from "next-auth/react";
 
 export default function AuthPage() {
   const [email, setEmail] = useState("");

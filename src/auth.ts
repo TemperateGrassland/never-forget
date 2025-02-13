@@ -1,17 +1,17 @@
 // "use server"
 
-import NextAuth, { getServerSession, NextAuthOptions } from 'next-auth';
-import EmailProvider from 'next-auth/providers/email';
+import NextAuth from 'next-auth';
+import Nodemailer from "next-auth/providers/nodemailer"
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
   
-export const authConfig: NextAuthOptions = {
+export const { auth, handlers, signIn, signOut } = NextAuth({
     adapter: PrismaAdapter(prisma),
     providers: [
-        EmailProvider({
+      Nodemailer({
           server: process.env.EMAIL_SERVER, // SMTP server configuration
           from: process.env.EMAIL_FROM,    // Email address used to send magic links
         }),
@@ -41,6 +41,6 @@ export const authConfig: NextAuthOptions = {
       console.log("🔹 redirect callback triggered:", { url, baseUrl });
       return baseUrl + "/dashboard"; // ✅ Redirect to dashboard after login
     },
-};
+});
 
-export const { handlers, signIn, signOut, auth } = NextAuth(authConfig);
+// export const { handlers, signIn, signOut, auth } = NextAuth(authConfig);
