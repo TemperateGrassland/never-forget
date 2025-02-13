@@ -1,8 +1,8 @@
-// {
-//     // "crons": [
-//     //   {
-//     //     "path": "/api/jobs/check-reminders",
-//     //     "schedule": "*/5 * * * *"
-//     //   }
-//     // ]
-//   }
+{
+    "crons": [
+      {
+        "path": "/api/jobs/check-reminders",
+        "schedule": "0 8 * * *"
+      }
+    ]
+  }
