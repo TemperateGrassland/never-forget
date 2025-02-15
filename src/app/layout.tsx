@@ -25,12 +25,10 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <SessionProvider>
-      <html lang="en">
-        <body>
-        <main>{children}</main>
-        </body>
-      </html>  
-    </SessionProvider> 
+    <html lang="en">
+      <body>
+      <main>{children}</main>
+      </body>
+    </html>  
   );
 }
