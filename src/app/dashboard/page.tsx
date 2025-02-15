@@ -1,13 +1,13 @@
 "use client";
 
-import { useSession } from "next-auth/react";
+import { auth } from "@/auth";
 import { LogoutButton } from "@/app/components/ui/Signout";
 import { LoginButton } from "../components/ui/SignIn";
 import UpdatePhone from "../components/ui/AddPhoneNumber";
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
 
-  const { data: session } = useSession()
+  const session  = await auth();
 
   if (!session) {
     return (
