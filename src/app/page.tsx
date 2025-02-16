@@ -15,6 +15,7 @@ export default async function Page() {
     <h1>Hello!</h1>
     <div> 
       <p> you are signed in: {session?.user?.email}</p>
+      
       <LogoutButton />
     </div>
     </>
