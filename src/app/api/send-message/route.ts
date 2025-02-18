@@ -1,15 +1,34 @@
-import { NextRequest } from "next/server";
-
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
     try {
-    //   const { message } = await req.json(); // Get data from client request
+    //   const { phoneNumber, message } = await req.json(); // Get data from client request
   
-      // Simulating API processing (e.g., calling an external API)
-      console.log("Message received:");
+      const response = await fetch(
+        `https://graph.facebook.com/v17.0/${process.env.WHATSAPP_PHONE_ID}/messages`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${process.env.WHATSAPP_ACCESS_TOKEN}`,
+          },
+          body: JSON.stringify({
+            messaging_product: "whatsapp",
+            recipient_type: "individual",
+            to: phoneNumber, // Dynamic phone number
+            type: "text",
+            text: { body: message }, // Dynamic message
+          }),
+        }
+      );
   
-      return Response.json({ success: true, message: "Message sent successfully!" });
+      const result = await response.json();
+  
+      if (!response.ok) {
+        throw new Error(`Error: ${result.error?.message || "Failed to send message"}`);
+      }
+  
+      return Response.json({ success: true, data: result });
     } catch (error) {
-      console.error("Error:", error);
-      return Response.json({ success: false, error: "Failed to send message" }, { status: 500 });
+      console.error("WhatsApp API Error:", error);
+      return Response.json({ success: false, error: (error as Error).message }, { status: 500 });
     }
   }

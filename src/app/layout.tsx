@@ -18,6 +18,7 @@ export const metadata: Metadata = {
 };
 
 import { SessionProvider } from "next-auth/react";
+import Navbar from "./components/ui/NavBar";
 
 export default async function RootLayout({
   children,
@@ -27,6 +28,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body>
+      <Navbar />
       <main>{children}</main>
       </body>
     </html>  
