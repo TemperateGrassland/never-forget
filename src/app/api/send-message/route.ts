@@ -11,11 +11,12 @@ export async function POST(req: Request) {
             Authorization: `Bearer ${process.env.WHATSAPP_ACCESS_TOKEN}`,
           },
           body: JSON.stringify({
-            messaging_product: "whatsapp",
-            recipient_type: "individual",
-            to: phoneNumber, // Dynamic phone number
-            type: "text",
-            text: { body: message }, // Dynamic message
+            // Update with the args when ready
+            // messaging_product: "whatsapp",
+            // recipient_type: "individual",
+            // to: phoneNumber, // Dynamic phone number
+            // type: "text",
+            // text: { body: message }, // Dynamic message
           }),
         }
       );
