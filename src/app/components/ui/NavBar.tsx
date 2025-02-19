@@ -10,7 +10,7 @@ const Navbar: React.FC = () => {
     <nav className="bg-blue-500 p-4 shadow-md">
       <div className="container mx-auto flex justify-between items-center">
         <div className="text-white text-xl font-bold">
-          <Link href="/">MyApp</Link>
+          <Link href="/">Never Forget</Link>
         </div>
 
         {/* Hamburger Button (Mobile) */}
@@ -27,12 +27,7 @@ const Navbar: React.FC = () => {
           </li>
           <li>
             <Link href="/about" className="text-white hover:underline">
-              About
-            </Link>
-          </li>
-          <li>
-            <Link href="/contact" className="text-white hover:underline">
-              Contact
+              What you can expect
             </Link>
           </li>
         </ul>
