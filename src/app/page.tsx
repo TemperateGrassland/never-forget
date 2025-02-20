@@ -22,7 +22,7 @@ export default async function Page() {
         ) : (
           <>
             <p className="text-lg text-red-600 font-semibold bg-red-100 px-4 py-2 rounded-md shadow-md">
-              🙈 You are not signed in.
+              🙈 You are not signed in
             </p>
             <LoginButton />
           </>
