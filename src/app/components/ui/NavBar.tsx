@@ -12,10 +12,10 @@ const Navbar: React.FC = () => {
         {/* Left Spacer to balance the center */}
         <div className="w-1/3"></div>
 
-        {/* Centered Title */}
+        {/* Centered Title
         <div className="text-white text-xl font-bold absolute left-1/2 transform -translate-x-1/2">
           <Link href="/">Never Forget</Link>
-        </div>
+        </div> */}
 
         {/* Navigation Links (Right Aligned) */}
         <ul className="flex space-x-6 w-1/3 justify-end">
