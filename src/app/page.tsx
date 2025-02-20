@@ -25,9 +25,7 @@ export default async function Page() {
   <>
   <h1>Hello!</h1>
   <div> 
-    <p> you are not signed in </p>
     <LoginButton />
-    <LogoutButton />
   </div>
   </>
 )
