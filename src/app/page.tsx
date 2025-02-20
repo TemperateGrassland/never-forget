@@ -22,7 +22,7 @@ export default async function Page() {
         ) : (
           <>
             <p className="text-lg text-red-600 font-semibold bg-red-100 px-4 py-2 rounded-md shadow-md">
-              ❌ You are not signed in. Please log in below.
+              🙈 You are not signed in.
             </p>
             <LoginButton />
           </>
@@ -31,7 +31,7 @@ export default async function Page() {
 
       {/* New Reminder Form */}
       <div className="mt-6 max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-xl font-semibold text-center mb-4">Set a Reminder</h2>
+        <h2 className="text-xl font-semibold text-center mb-4 text-black">Set a Reminder</h2>
         
         {/* Event Name Input */}
         <label className="block text-gray-700 font-medium mb-1">Event Details</label>
