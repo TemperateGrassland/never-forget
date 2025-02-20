@@ -6,32 +6,64 @@ import { LogoutButton } from "./components/ui/Signout";
 
 export default async function Page() {
   const session = await auth();
-  console.log("🔹 page callback triggered");
-  console.log(session);
 
-  if (session?.user) {
-    return (
-      <>
-      <h1 className="text-3xl font-bold text-center mt-4">Hello!</h1>
-      <div className="flex flex-col items-center mt-4">
-        <p className="text-lg text-green-600 font-semibold bg-green-100 px-4 py-2 rounded-md shadow-md">
-          ✅ You are signed in: {session?.user?.email}
-        </p>
-        <LogoutButton />
-      </div>
-    </>
-    )
-  }
   return (
     <>
-    <h1 className="text-3xl font-bold text-center mt-4">Never forget an important date again!</h1>
-    <div className="flex flex-col items-center mt-4">
-      <p className="text-lg text-red-600 font-semibold bg-red-100 px-4 py-2 rounded-md shadow-md">
-        ❌ You are not signed in. Please log in below.
-      </p>
-      <LoginButton />
-    </div>
-  </>
+      <h1 className="text-3xl font-bold text-center mt-4">Never forget an important date again!</h1>
+
+      <div className="flex flex-col items-center mt-4">
+        {session?.user ? (
+          <>
+            <p className="text-lg text-green-600 font-semibold bg-green-100 px-4 py-2 rounded-md shadow-md">
+              ✅ You are signed in: {session?.user?.email}
+            </p>
+            <LogoutButton />
+          </>
+        ) : (
+          <>
+            <p className="text-lg text-red-600 font-semibold bg-red-100 px-4 py-2 rounded-md shadow-md">
+              ❌ You are not signed in. Please log in below.
+            </p>
+            <LoginButton />
+          </>
+        )}
+      </div>
+
+      {/* New Reminder Form */}
+      <div className="mt-6 max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
+        <h2 className="text-xl font-semibold text-center mb-4">Set a Reminder</h2>
+        
+        {/* Event Name Input */}
+        <label className="block text-gray-700 font-medium mb-1">Event Details</label>
+        <input
+          type="text"
+          placeholder="Enter event details..."
+          className="w-full px-4 py-2 border rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+
+        {/* Date Input */}
+        <label className="block text-gray-700 font-medium mb-1">Select Date</label>
+        <input
+          type="date"
+          className="w-full px-4 py-2 border rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+
+        {/* Phone Number Input */}
+        <label className="block text-gray-700 font-medium mb-1">Phone Number</label>
+        <input
+          type="tel"
+          placeholder="Enter phone number..."
+          className="w-full px-4 py-2 border rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+
+        {/* Submit Button */}
+        <button
+          className="w-full bg-blue-500 text-white px-4 py-2 rounded-md font-semibold hover:bg-blue-600"
+        >
+          Submit Reminder
+        </button>
+      </div>
+    </>
 )
 };
 
