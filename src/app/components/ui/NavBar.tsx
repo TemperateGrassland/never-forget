@@ -21,7 +21,6 @@ const Navbar: React.FC = () => {
         {/* Navigation Links (Right Aligned) */}
         <ul className="flex space-x-6 w-1/3 justify-end">
           {session?.user ? (
-            // ✅ If user is signed in, show Home button
             <li>
               <Link href="/" className="text-white hover:underline">
                 Home
@@ -29,7 +28,9 @@ const Navbar: React.FC = () => {
             </li>
           ) : (
             <li>
-              <LoginButton />
+              <Link href="/api/auth/signin" className="text-white hover:underline">
+                Login
+              </Link>
             </li>
           )}
         </ul>
