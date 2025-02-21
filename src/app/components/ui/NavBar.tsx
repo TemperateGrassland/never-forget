@@ -6,7 +6,11 @@ import { useSession } from "next-auth/react";
 import { LoginButton } from "./SignIn";
 
 const Navbar: React.FC = () => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+
+  if (status === "loading") {
+    return <p>Loading...</p>; // Show loading text or spinner
+  }
 
   return (
     <nav className="bg-blue-500 p-4 shadow-md">
