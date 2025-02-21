@@ -35,26 +35,26 @@ export default async function Page() {
         <h2 className="text-xl font-semibold text-center mb-4 text-black">Set a Reminder</h2>
         
         {/* Event Name Input */}
-        <label className="block text-gray-700 font-medium mb-1">Event Details</label>
+        <label className="block text-gray-700 font-medium mb-1 text-black">Event Details</label>
         <input
           type="text"
           placeholder="Enter event details..."
-          className="w-full px-4 py-2 border rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="w-full px-4 py-2 border rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400 text-black"
         />
 
         {/* Date Input */}
-        <label className="block text-gray-700 font-medium mb-1">Select Date</label>
+        <label className="block text-gray-700 font-medium mb-1 text-black">Select Date</label>
         <input
           type="date"
-          className="w-full px-4 py-2 border rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="w-full px-4 py-2 border rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400 text-black"
         />
 
         {/* Phone Number Input */}
-        <label className="block text-gray-700 font-medium mb-1">Phone Number</label>
+        <label className="block text-gray-700 font-medium mb-1 text-black">Phone Number</label>
         <input
           type="tel"
           placeholder="Enter phone number..."
-          className="w-full px-4 py-2 border rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="w-full px-4 py-2 border rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400 text-black"
         />
 
         {/* Submit Button */}
