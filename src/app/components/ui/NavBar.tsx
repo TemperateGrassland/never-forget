@@ -21,12 +21,7 @@ const Navbar: React.FC = () => {
         <ul className="flex space-x-6 w-1/3 justify-end">
           <li>
             <Link href="/" className="text-white hover:underline">
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link href="/about" className="text-white hover:underline">
-              What you can expect
+              Login
             </Link>
           </li>
         </ul>
