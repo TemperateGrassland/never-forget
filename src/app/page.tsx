@@ -39,7 +39,7 @@ export default async function Page() {
         <input
           type="text"
           placeholder="Enter event details..."
-          className="w-full px-4 py-2 border rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400 text-black"
+          className="w-full px-4 py-2 border rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400 text-black placeholder-black"
         />
 
         {/* Date Input */}
@@ -54,7 +54,7 @@ export default async function Page() {
         <input
           type="tel"
           placeholder="Enter phone number..."
-          className="w-full px-4 py-2 border rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400 text-black"
+          className="w-full px-4 py-2 border rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400 text-black placeholder-black"
         />
 
         {/* Submit Button */}
