@@ -2,9 +2,10 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 const Navbar: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const { data: session } = useSession();
 
   return (
     <nav className="bg-blue-500 p-4 shadow-md">
@@ -12,18 +13,23 @@ const Navbar: React.FC = () => {
         {/* Left Spacer to balance the center */}
         <div className="w-1/3"></div>
 
-        {/* Centered Title
-        <div className="text-white text-xl font-bold absolute left-1/2 transform -translate-x-1/2">
-          <Link href="/">Never Forget</Link>
-        </div> */}
-
         {/* Navigation Links (Right Aligned) */}
         <ul className="flex space-x-6 w-1/3 justify-end">
-          <li>
-            <Link href="/" className="text-white hover:underline">
-              Login
-            </Link>
-          </li>
+          {session?.user ? (
+            // ✅ If user is signed in, show Home button
+            <li>
+              <Link href="/" className="text-white hover:underline">
+                Home
+              </Link>
+            </li>
+          ) : (
+            // ❌ If user is NOT signed in, show Login button
+            <li>
+              <Link href="/api/auth/signin" className="text-white hover:underline">
+                Login
+              </Link>
+            </li>
+          )}
         </ul>
       </div>
     </nav>
