@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import { LoginButton } from "./SignIn";
 
 const Navbar: React.FC = () => {
   const { data: session } = useSession();
@@ -23,11 +24,8 @@ const Navbar: React.FC = () => {
               </Link>
             </li>
           ) : (
-            // ❌ If user is NOT signed in, show Login button
             <li>
-              <Link href="/api/auth/signin" className="text-white hover:underline">
-                Login
-              </Link>
+              <LoginButton />
             </li>
           )}
         </ul>
