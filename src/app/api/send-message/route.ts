@@ -12,7 +12,7 @@ export async function POST(req: Request) {
           },
           body: JSON.stringify({
             "messaging_product": "whatsapp",
-            "to": "+447816410701",
+            "to": process.env.WHATSAPP_RECIPIENT_PHONE,
             "type": "template",
             "template": {
                 "name": "reminder",
