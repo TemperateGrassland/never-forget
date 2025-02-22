@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-export default function SendButton() {
+export default function SendMessage() {
   const [loading, setLoading] = useState(false);
   const [responseMessage, setResponseMessage] = useState("");
 

@@ -4,6 +4,7 @@ import { auth } from "@/auth";
 import { LogoutButton } from "@/app/components/ui/Signout";
 import { LoginButton } from "../components/ui/SignIn";
 import UpdatePhone from "../components/ui/AddPhoneNumber";
+import SendMessage from "../components/ui/SendMessage";
 
 export default async function DashboardPage() {
 
@@ -26,7 +27,7 @@ export default async function DashboardPage() {
         <p>Signed in as {session?.user?.email || "Unknown User"}</p>
         <LogoutButton />
         <UpdatePhone />
-
+        <SendMessage />
       </div>
     )
   }
