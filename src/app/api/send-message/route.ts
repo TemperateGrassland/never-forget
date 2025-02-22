@@ -1,6 +1,6 @@
 export async function POST(req: Request) {
     try {
-    //   const { phoneNumber, message } = await req.json(); // Get data from client request
+      // const { phoneNumber, message } = await req.json(); // Get data from client request
   
       const response = await fetch(
         `https://graph.facebook.com/v17.0/${process.env.WHATSAPP_PHONE_ID}/messages`,
@@ -11,13 +11,60 @@ export async function POST(req: Request) {
             Authorization: `Bearer ${process.env.WHATSAPP_ACCESS_TOKEN}`,
           },
           body: JSON.stringify({
-            // Update with the args when ready
-            // messaging_product: "whatsapp",
-            // recipient_type: "individual",
-            // to: phoneNumber, // Dynamic phone number
-            // type: "text",
-            // text: { body: message }, // Dynamic message
-          }),
+            "messaging_product": "whatsapp",
+            "to": "+447816410701",
+            "type": "template",
+            "template": {
+                "name": "reminder",
+                "language": {
+                    "code": "en_GB",
+                    "policy": "deterministic"
+                },
+                "components": [
+                    {
+                        "type": "body",
+                        "parameters": [
+                            {
+                                "type": "text",
+                                "parameter_name": "text",
+                                "text": "Mobo"
+                            },
+                            {
+                                "type": "text",
+                                "parameter_name": "reminder_1",
+                                "text": "Drive to Winslow"
+                            },
+                            {
+                                "type": "text",
+                                "parameter_name": "when_1",
+                                "text": "Today"
+                            },
+                            {
+                                "type": "text",
+                                "parameter_name": "reminder_2",
+                                "text": "Take care of Simbi and Chai"
+                            },
+                            {
+                                "type": "text",
+                                "parameter_name": "when_2",
+                                "text": "Always"
+                            },
+                            {
+                                "type": "text",
+                                "parameter_name": "reminder_3",
+                                "text": "Get shit together"
+                            },
+                            {
+                                "type": "text",
+                                "parameter_name": "when_3",
+                                "text": "Maybe tomorrow?"
+                            }
+                        ]
+                    }
+                ]
+            }
+          }
+        ),
         }
       );
   
