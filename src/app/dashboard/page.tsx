@@ -24,7 +24,6 @@ export default async function DashboardPage() {
     return (
       <div>
         <h1>Welcome to the Dashboard</h1>
-        {/* Add your dashboard components here */}
         <p>Signed in as {session?.user?.email || "Unknown User"}</p>
         <LogoutButton />
         <UpdatePhone />
