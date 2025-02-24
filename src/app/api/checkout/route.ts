@@ -18,7 +18,7 @@ export async function POST(req: Request) {
         quantity: item.quantity,
       })),
       mode: "payment",
-      success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/success`,
+      success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard`,
       cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/cancel`,
     });
 
