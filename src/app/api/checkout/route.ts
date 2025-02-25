@@ -7,13 +7,15 @@ export async function POST(req: Request) {
   try {
     const { items } = await req.json();
 
-    if (!Array.isArray(items)) {
-      throw new Error("Invalid items array");
+    interface CheckoutItem {
+      name: string;
+      price: number; // Assume price is in dollars, multiplied by 100 for cents
+      quantity: number;
     }
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
-      line_items: items.map((item: any) => ({
+      line_items: items.map((item: CheckoutItem) => ({
         price_data: {
           currency: "usd",
           product_data: { name: item.name },
