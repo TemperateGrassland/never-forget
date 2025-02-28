@@ -1,4 +1,4 @@
-"use server";
+"use client";
 
 import { auth } from "@/auth";
 import { LogoutButton } from "@/app/components/ui/Signout";
