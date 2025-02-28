@@ -1,26 +1,29 @@
-"use client"; 
+import React from "react";
+import { useStripe, useElements, Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 
-import { useEffect } from "react";
-import Script from "next/script";
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
-export default function StripeBuyButton() {
-  useEffect(() => {
-    console.log("Stripe Buy Button Loaded");
-  }, []);
+const CheckoutButton: React.FC = () => {
+  const stripe = useStripe();
+  const elements = useElements();
+
+  const handleCheckout = async () => {
+    const response = await fetch("/api/checkout", { method: "POST" });
+    const { sessionId } = await response.json();
+
+    if (stripe) {
+      stripe.redirectToCheckout({ sessionId });
+    }
+  };
 
   return (
-    <div>
-      {/* Load Stripe's Buy Button Script */}
-      <Script
-        src="https://js.stripe.com/v3/buy-button.js"
-        strategy="lazyOnload" // Ensures it loads after the page renders
-      />
-
-      {/* Stripe Buy Button Component */}
-      <stripe-buy-button
-        buy-button-id="buy_btn_1QvITQF5x12WgiZJOqux6bz0"
-        publishable-key={process.env.STRIPE_PUBLISHABLE_KEY} // Use env variable
-      ></stripe-buy-button>
-    </div>
+    <Elements stripe={stripePromise}>
+      <button onClick={handleCheckout} className="bg-blue-500 text-white p-2 rounded">
+        Checkout
+      </button>
+    </Elements>
   );
-}
+};
+
+export default CheckoutButton;
