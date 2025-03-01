@@ -5,12 +5,13 @@ import { LogoutButton } from "@/app/components/ui/Signout";
 import { LoginButton } from "../components/ui/SignIn";
 import UpdatePhone from "../components/ui/AddPhoneNumber";
 import SendMessage from "../components/ui/SendMessage";
-import CheckoutButton from "../components/ui/CheckoutButton";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
+import dynamic from "next/dynamic";
 
 const stripePromise = loadStripe(process.env.STRIPE_PUBLISHABLE_KEY!);
 
+const CheckoutButton = dynamic(() => import("../components/ui/CheckoutButton"), { ssr: false });
 
 export default async function DashboardPage() {
 
