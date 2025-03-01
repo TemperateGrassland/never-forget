@@ -1,11 +1,11 @@
-"use client";
+"use server";
 
 import { auth } from "@/auth";
 import { LogoutButton } from "@/app/components/ui/Signout";
 import { LoginButton } from "../components/ui/SignIn";
 import UpdatePhone from "../components/ui/AddPhoneNumber";
 import SendMessage from "../components/ui/SendMessage";
-import StripeBuyButton from "../components/ui/CheckoutButton";
+import CheckoutButton from "../components/ui/CheckoutButton";
 
 export default async function DashboardPage() {
 
@@ -28,7 +28,7 @@ export default async function DashboardPage() {
         <LogoutButton />
         <UpdatePhone />
         <SendMessage />
-        <StripeBuyButton />
+        <CheckoutButton />
       </div>
     )
   }

@@ -1,10 +1,12 @@
+"use client";
+
 import React from "react";
 import { useStripe, useElements, Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
-const CheckoutButton: React.FC = () => {
+export default function CheckoutButton() {
   const stripe = useStripe();
   const elements = useElements();
 
@@ -26,4 +28,3 @@ const CheckoutButton: React.FC = () => {
   );
 };
 
-export default CheckoutButton;
