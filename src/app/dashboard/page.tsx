@@ -6,6 +6,7 @@ import { LoginButton } from "../components/ui/SignIn";
 import UpdatePhone from "../components/ui/AddPhoneNumber";
 import SendMessage from "../components/ui/SendMessage";
 import CheckoutButton from "../components/ui/CheckoutButton";
+import { Elements } from "@stripe/react-stripe-js";
 
 export default async function DashboardPage() {
 
@@ -28,7 +29,9 @@ export default async function DashboardPage() {
         <LogoutButton />
         <UpdatePhone />
         <SendMessage />
-        <CheckoutButton />
+        <Elements stripe={stripePromise}>
+          <CheckoutButton />
+        </Elements>
       </div>
     )
   }
