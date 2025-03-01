@@ -4,11 +4,8 @@ import React from "react";
 import { useStripe, useElements, Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 
-const stripePromise = loadStripe(process.env.STRIPE_PUBLISHABLE_KEY!);
-
 export default function CheckoutButton() {
   const stripe = useStripe();
-  const elements = useElements();
 
   const handleCheckout = async () => {
     const response = await fetch("/api/checkout", { method: "POST" });
@@ -20,11 +17,9 @@ export default function CheckoutButton() {
   };
 
   return (
-    <Elements stripe={stripePromise}>
-      <button onClick={handleCheckout} className="bg-blue-500 text-white p-2 rounded">
-        Checkout
-      </button>
-    </Elements>
+    <button onClick={handleCheckout} className="bg-blue-500 text-white p-2 rounded">
+      Checkout
+    </button>
   );
 };
 
