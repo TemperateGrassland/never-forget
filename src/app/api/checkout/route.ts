@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
-import Stripe from "stripe";
+// import Stripe from "stripe";
 
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+import { loadStripe } from "@stripe/stripe-js";
+
+const stripe = await loadStripe(process.env.STRIPE_PUBLISHABLE_KEY!)
 
 export async function POST(req: Request) {
   try {
