@@ -12,13 +12,12 @@ export async function GET() {
     });
 
     const plans = prices.data.map(price => ({
-      id: price.id,
-      name: price.product.name,
-      description: price.product.description,
-      price: price.unit_amount,
-      interval: price.recurring.interval,
-      price_id: price.id,
-    }));
+        id: price.id,
+        name: (price.product as Stripe.Product).name, // 🚨 Unsafe if price.product is a string
+        description: (price.product as Stripe.Product).description,
+        price: price.unit_amount,
+        price_id: price.id,
+      }));
 
     return NextResponse.json(plans);
   } catch (error) {

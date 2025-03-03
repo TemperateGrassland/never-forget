@@ -17,6 +17,12 @@ export default function Subscriptions() {
 
   const handleSubscribe = async (priceId) => {
     const stripe = await stripePromise;
+
+    if (stripe!) {
+        console.error("Stripe failed to initialise correctly - check the env var for the publishable key.")
+        return;
+    }
+    
     const { sessionId } = await fetch('/api/create-checkout-session', {
       method: 'POST',
       headers: {
