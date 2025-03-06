@@ -36,6 +36,7 @@ export default async function DashboardPage() {
         <LogoutButton />
         <UpdatePhone />
         <SendMessage />
+        < />
         {/* <Elements stripe={stripePromise}>
           <CheckoutButton />
         </Elements> */}
