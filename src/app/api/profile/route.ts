@@ -32,6 +32,10 @@ export async function PUT(req: Request) {
 
   const { name, phone } = await req.json();
 
+  if (!session.user.email) {
+    return NextResponse.json({ error: "User email is missing" }, { status: 400 });
+  }
+
   const updatedUser = await prisma.user.update({
     where: { email: session.user.email },
     data: { name, phone },
