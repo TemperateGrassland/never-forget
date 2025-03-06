@@ -8,6 +8,7 @@ import SendMessage from "../components/ui/SendMessage";
 import CheckoutButton from "../components/ui/CheckoutButton";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
+import ProfileButton from "../components/ui/ProfileButton";
 
 const stripePromise = loadStripe(process.env.STRIPE_PUBLISHABLE_KEY!);
 
@@ -36,7 +37,7 @@ export default async function DashboardPage() {
         <LogoutButton />
         <UpdatePhone />
         <SendMessage />
-        < />
+        <ProfileButton />
         {/* <Elements stripe={stripePromise}>
           <CheckoutButton />
         </Elements> */}
