@@ -83,7 +83,7 @@ export default function ProfilePage() {
       <h1 className="text-2xl font-bold text-center">Your Profile</h1>
       <form onSubmit={handleSubmit} className="mt-6 space-y-4">
         <div>
-          <label className="block text-gray-700 font-medium">Name</label>
+          <label className="block text-gray-700 font-medium text-black">Name</label>
           <input
             type="text"
             name="name"
@@ -106,7 +106,7 @@ export default function ProfilePage() {
         </div>
 
         <div>
-          <label className="block text-gray-700 font-medium">Phone Number</label>
+          <label className="block text-gray-700 font-medium text-black">Phone Number</label>
           <input
             type="tel"
             name="phone"
@@ -118,7 +118,7 @@ export default function ProfilePage() {
 
         <button
           type="submit"
-          className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-700"
+          className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-700 text-black"
           disabled={updating}
         >
           {updating ? "Updating..." : "Update Profile"}
