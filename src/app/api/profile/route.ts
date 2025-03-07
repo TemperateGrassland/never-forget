@@ -30,7 +30,7 @@ export async function PUT(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { firstName, phoneNumber } = await req.json();
+  const { firstName, lastName, phoneNumber } = await req.json();
 
   if (!session.user.email) {
     return NextResponse.json({ error: "User email is missing" }, { status: 400 });
@@ -38,7 +38,7 @@ export async function PUT(req: Request) {
 
   const updatedUser = await prisma.user.update({
     where: { email: session.user.email },
-    data: { firstName, phoneNumber },
+    data: { firstName, lastName, phoneNumber },
   });
 
   return NextResponse.json(updatedUser);
