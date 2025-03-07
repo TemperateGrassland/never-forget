@@ -83,13 +83,13 @@ export default function ProfilePage() {
       <h1 className="text-2xl font-bold text-center">Your Profile</h1>
       <form onSubmit={handleSubmit} className="mt-6 space-y-4">
         <div>
-          <label className="block text-gray-700 font-medium text-black">Name</label>
+          <label className="block text-gray-700 font-medium">Name</label>
           <input
             type="text"
             name="name"
             value={user.name}
             onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded-md"
+            className="w-full p-2 border border-gray-300 rounded-md text-black"
             required
           />
         </div>
@@ -100,25 +100,25 @@ export default function ProfilePage() {
             type="email"
             name="email"
             value={user.email}
-            className="w-full p-2 border border-gray-300 rounded-md bg-gray-100"
+            className="w-full p-2 border border-gray-300 rounded-md bg-gray-100 text-black"
             disabled
           />
         </div>
 
         <div>
-          <label className="block text-gray-700 font-medium text-black">Phone Number</label>
+          <label className="block text-gray-700 font-medium">Phone Number</label>
           <input
             type="tel"
             name="phone"
             value={user.phone}
             onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded-md"
+            className="w-full p-2 border border-gray-300 rounded-md text-black"
           />
         </div>
 
         <button
           type="submit"
-          className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-700 text-black"
+          className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-700"
           disabled={updating}
         >
           {updating ? "Updating..." : "Update Profile"}
