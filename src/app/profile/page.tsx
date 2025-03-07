@@ -10,7 +10,8 @@ export default function ProfilePage() {
 
   // User State
   const [user, setUser] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
     email: "",
     phone: "",
   });
@@ -35,7 +36,8 @@ export default function ProfilePage() {
           if (res.ok) {
             const data = await res.json();
             setUser({
-              name: data.name || "",
+              firstName: data.name || "",
+              lastName: data.name || "",
               email: data.email || "",
               phone: data.phone || "",
             });
@@ -83,11 +85,23 @@ export default function ProfilePage() {
       <h1 className="text-2xl font-bold text-center text-black">Your Profile</h1>
       <form onSubmit={handleSubmit} className="mt-6 space-y-4">
         <div>
-          <label className="block text-gray-700 font-medium">Name</label>
+          <label className="block text-gray-700 font-medium">First Name</label>
           <input
             type="text"
             name="name"
-            value={user.name}
+            value={user.firstName}
+            onChange={handleChange}
+            className="w-full p-2 border border-gray-300 rounded-md text-black"
+            required
+          />
+        </div>
+
+        <div>
+          <label className="block text-gray-700 font-medium">Last Name</label>
+          <input
+            type="text"
+            name="name"
+            value={user.lastName}
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded-md text-black"
             required
