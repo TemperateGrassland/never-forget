@@ -88,7 +88,7 @@ export default function ProfilePage() {
           <label className="block text-gray-700 font-medium">First Name</label>
           <input
             type="text"
-            name="name"
+            name="firstName"
             value={user.firstName}
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded-md text-black"
@@ -100,7 +100,7 @@ export default function ProfilePage() {
           <label className="block text-gray-700 font-medium">Last Name</label>
           <input
             type="text"
-            name="name"
+            name="lastName"
             value={user.lastName}
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded-md text-black"
