@@ -80,7 +80,7 @@ export default function ProfilePage() {
 
   return (
     <div className="max-w-lg mx-auto p-6 bg-white shadow-md rounded-lg">
-      <h1 className="text-2xl font-bold text-center">Your Profile</h1>
+      <h1 className="text-2xl font-bold text-center text-black">Your Profile</h1>
       <form onSubmit={handleSubmit} className="mt-6 space-y-4">
         <div>
           <label className="block text-gray-700 font-medium">Name</label>
