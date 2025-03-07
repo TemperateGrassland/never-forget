@@ -20,12 +20,24 @@ const Navbar: React.FC = () => {
 
         {/* Navigation Links (Right Aligned) */}
         <ul className="flex space-x-6 w-1/3 justify-end">
-          {session?.user ? (
-            <li>
+          <li>
               <Link href="/" className="text-white hover:underline">
                 Home
               </Link>
+          </li>
+          {session?.user ? (
+            <>
+            <li>
+              <Link href="/reminders" className="text-white hover:underline">
+                Reminders
+              </Link>
             </li>
+            <li>
+            <Link href="/profile" className="text-white hover:underline">
+                Profile
+              </Link>
+            </li>
+            </>
           ) : (
             <li>
               <Link href="/api/auth/signin" className="text-white hover:underline">

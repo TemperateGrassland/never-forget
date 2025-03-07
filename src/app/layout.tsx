@@ -29,7 +29,7 @@ export default async function RootLayout({
     <SessionProvider>
       <html lang="en">
         <body>
-        {/* <Navbar /> */}
+        <Navbar />
         <main>{children}</main>
         </body>
       </html>  
