@@ -1,21 +1,25 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { auth } from "@/auth";
 
-const protectedRoutes = ["/dashboard/:path*"];
+// Define public routes that do not require authentication
+const publicRoutes = ["/login", "/public/:path*"];
 
 export default async function middleware(req: NextRequest) {
-    console.log("🔹 middleware callback triggered");
-    const session = await auth();
+  console.log("🔹 Middleware callback triggered");
+  const session = await auth();
 
-    const { pathname } = req.nextUrl;
+  const { pathname } = req.nextUrl;
 
-    const isProtectedRoute = protectedRoutes.some((route) =>pathname.startsWith(route));
+  // Check if the requested path is a public route
+  const isPublicRoute = publicRoutes.some((route) =>
+    pathname.startsWith(route)
+  );
 
-    if (isProtectedRoute && !session) {
-        return NextResponse.redirect(new URL("/login", req.url));
-    }
-// Go forward to the route that the request is initially going to
-    return NextResponse.next();
+  // If the route is not public and the user is not authenticated, redirect to /login
+  if (!isPublicRoute && !session) {
+    return NextResponse.redirect(new URL("/login", req.url));
+  }
+
+  // Proceed with the request
+  return NextResponse.next();
 }
-
-export { auth as middleware } from "@/auth"
