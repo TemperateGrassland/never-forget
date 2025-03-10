@@ -19,6 +19,11 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         strategy: "database", 
     },
     debug: true,
+    callbacks: {
+      authorized({ auth }) {
+        return !!auth?.user;
+      },
+    },
     // callbacks: { // ✅ Move jwt and session under callbacks
     //   async signIn({ user }) {
     //     console.log("✅ signIn callback triggered:", user);
