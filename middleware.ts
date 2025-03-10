@@ -1,20 +1,24 @@
+import { auth } from "@/auth"; 
 import { NextResponse, type NextRequest } from "next/server";
-import { auth } from "@/auth";
 
 export default async function middleware(req: NextRequest) {
-  const session = await auth();
+  const session = await auth(); 
   const { pathname } = req.nextUrl;
 
-  // Allow access to the home page and static files
-  if (pathname === "/" || pathname.startsWith("/_next/")) {
+  // Allow unauthenticated users to access only the homepage
+  if (pathname === "/") {
     return NextResponse.next();
   }
 
-  // Redirect unauthenticated users to the home page
+  // Redirect unauthenticated users to the homepage
   if (!session) {
     return NextResponse.redirect(new URL("/", req.url));
   }
 
-  // Allow authenticated users to proceed
   return NextResponse.next();
 }
+
+// Apply middleware to all routes except static assets and API routes
+export const config = {
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+};

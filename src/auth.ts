@@ -21,9 +21,13 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     debug: true,
     callbacks: {
       authorized({ auth }) {
-        return !!auth?.user;
+        return !!auth?.user; // Allow only authenticated users
       },
-    },
+      async redirect({ url, baseUrl }) {
+        console.log("🔹 redirect callback triggered:", { url, baseUrl });
+        return baseUrl + "/dashboard"; // Redirect authenticated users to dashboard
+      },
+    }
     // callbacks: { // ✅ Move jwt and session under callbacks
     //   async signIn({ user }) {
     //     console.log("✅ signIn callback triggered:", user);
