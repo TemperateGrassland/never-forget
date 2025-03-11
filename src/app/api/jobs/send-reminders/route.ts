@@ -78,10 +78,14 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(req: NextRequest) {
+export async function POST(req: NextRequest) {
   try {
-    const response = await fetch('https://example.com/api/target-endpoint', {
-      method: 'GET',
+    const apiUrl = process.env.WHATSAPP_API;
+    if (!apiUrl) {
+      throw new Error('WHATSAPP_API environment variable is not defined.');
+    }
+    const response = await fetch(apiUrl, {
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         // Add any additional headers required by the target endpoint
