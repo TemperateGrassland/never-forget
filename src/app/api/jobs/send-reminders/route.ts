@@ -81,15 +81,27 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function POST(req: NextRequest) {
   try {
     const apiUrl = process.env.WHATSAPP_API;
+
     if (!apiUrl) {
       throw new Error('WHATSAPP_API environment variable is not defined.');
     }
+
+    const requestBody = process.env.POST_REQUEST_BODY;
+    
+
+    if (!requestBody){
+      throw new Error('POST_REQUEST_BODY environment variable is not defined.');
+    }
+
+    const parsedBody = JSON.parse(requestBody);
+
     const response = await fetch(apiUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         // Add any additional headers required by the target endpoint
       },
+      body: JSON.stringify(parsedBody),
     });
 
     if (!response.ok) {
