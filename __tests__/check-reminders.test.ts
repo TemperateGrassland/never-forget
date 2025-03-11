@@ -1,4 +1,4 @@
-import { GET } from "../src/app/api/jobs/check-reminders/route";
+import { GET } from "../src/app/api/jobs/send-reminders/route";
 import { NextRequest } from "next/server";
 import { PrismaClient } from "@prisma/client";
 
