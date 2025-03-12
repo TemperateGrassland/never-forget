@@ -93,10 +93,10 @@ export async function POST(req: NextRequest) {
       throw new Error('POST_REQUEST_BODY environment variable is not defined.');
     }
 
-    const accessToken = process.env.WHATSAPP_ACCESS_TOKEN;
+    const accessToken = process.env.WHATSAPP_CRON_SECRET;
 
     if (!accessToken){
-      throw new Error('WHATSAPP_ACCESS_TOKEN environment variable is not defined.');
+      throw new Error('WHATSAPP_CRON_SECRET environment variable is not defined.');
     }
 
     const parsedBody = JSON.parse(requestBody);
