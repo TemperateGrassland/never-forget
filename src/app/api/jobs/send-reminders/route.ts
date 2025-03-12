@@ -93,11 +93,18 @@ export async function POST(req: NextRequest) {
       throw new Error('POST_REQUEST_BODY environment variable is not defined.');
     }
 
+    const accessToken = process.env.WHATSAPP_ACCESS_TOKEN;
+
+    if (!accessToken){
+      throw new Error('WHATSAPP_ACCESS_TOKEN environment variable is not defined.');
+    }
+
     const parsedBody = JSON.parse(requestBody);
 
     const response = await fetch(apiUrl, {
       method: 'POST',
       headers: {
+        'Authorization': 'Bearer ${accessToken}',
         'Content-Type': 'application/json',
         // Add any additional headers required by the target endpoint
       },
