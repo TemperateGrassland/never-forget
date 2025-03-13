@@ -100,11 +100,12 @@ export async function GET(req: NextRequest) {
     }
 
     const parsedBody = JSON.parse(requestBody);
+    console.log('Fetching URL:', apiUrl);
 
     const response = await fetch(apiUrl, {
       method: 'POST',
       headers: {
-        'Authorization': 'Bearer ${accessToken}',
+        'Authorization': `Bearer ${accessToken}`,
         'Content-Type': 'application/json',
         // Add any additional headers required by the target endpoint
       },
