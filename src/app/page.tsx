@@ -10,7 +10,7 @@ export default async function Page() {
   return (
     <>
     <h1 className="text-3xl font-bold text-center mt-4">
-      <span className="italic underline">Never Forget</span> an important date again!
+       Don't remember the important dates in your life, <span className="italic underline">Never Forget</span> 
     </h1>
       <div className="flex flex-col items-center mt-4">
         {session?.user ? (
