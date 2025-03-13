@@ -101,6 +101,8 @@ export async function GET(req: NextRequest) {
 
     const parsedBody = JSON.parse(requestBody);
     console.log('Fetching URL:', apiUrl);
+    console.log('Fetching request:', requestBody);
+    console.log('Fetching access:', accessToken);
 
     const response = await fetch(apiUrl, {
       method: 'POST',
