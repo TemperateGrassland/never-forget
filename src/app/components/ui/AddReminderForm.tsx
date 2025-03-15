@@ -41,22 +41,22 @@ export default function AddReminderForm() {
       {error && <p className="text-red-500">{error}</p>}
 
       <div className="mb-2">
-        <label className="block font-medium">Title</label>
+        <label className="block font-medium text-secondary">Title</label>
         <input
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="w-full p-2 border rounded-md"
+          className="w-full p-2 border rounded-md text-primary"
           required
         />
       </div>
 
       <div className="mb-2">
-        <label className="block font-medium">Description</label>
+        <label className="block font-medium text-secondary">Description</label>
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          className="w-full p-2 border rounded-md"
+          className="w-full p-2 border rounded-md text-primary"
         />
       </div>
 
