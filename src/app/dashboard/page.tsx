@@ -23,7 +23,7 @@ export default async function DashboardPage() {
   if (!session) {
     return (
     <>
-      <p>Loading...</p>
+      <p>Hey **maybe** stranger, come join the party </p>
       <LoginButton />
     </>
     )
