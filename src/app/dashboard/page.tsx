@@ -32,9 +32,13 @@ export default async function DashboardPage() {
     )
   }
 
-  const reminders = await prisma.reminder.findMany({
-    orderBy: { createdAt: 'desc' },
-  });
+  const reminders = (await prisma.reminder.findMany({
+    orderBy: { createdAt: "desc" },
+  })).map(reminder => ({
+    ...reminder,
+    createdAt: reminder.createdAt.toISOString(), // Convert Date → String
+    updatedAt: reminder.updatedAt.toISOString(), // Convert Date → String
+  }));
 
   if (session) {
     return (
