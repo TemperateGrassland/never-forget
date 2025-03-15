@@ -112,7 +112,8 @@ export async function GET(req: NextRequest) {
     });
 
     if (!response.ok) {
-      throw new Error(`Request failed with status ${response.status}`);
+      const errorText = await response.text(); // Capture full error response
+      throw new Error(`Request failed with status ${response.status}: ${errorText}`);
     }
 
     const data = await response.json();
@@ -120,6 +121,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({ status: 'Success', data });
   } catch (error) {
+    
     console.error('Error making request:', error);
     return NextResponse.json({ status: 'Error', message: error.message });
   }
