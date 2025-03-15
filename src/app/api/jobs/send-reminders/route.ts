@@ -99,7 +99,7 @@ export async function GET(req: NextRequest) {
       throw new Error('WHATSAPP_CRON_SECRET environment variable is not defined.');
     }
 
-    const parsedBody = JSON.stringify(requestBody);
+    const parsedBody = JSON.parse(requestBody);
     console.log(parsedBody);
 
     const response = await fetch(apiUrl, {
@@ -108,7 +108,7 @@ export async function GET(req: NextRequest) {
         'Authorization': `Bearer ${accessToken}`,
         'Content-Type': 'application/json',
       },
-      body: parsedBody,
+      body: JSON.stringify(parsedBody),
     });
 
     if (!response.ok) {
