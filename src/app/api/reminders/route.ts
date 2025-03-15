@@ -30,8 +30,6 @@ export async function POST(req: Request) {
       data: {
         title,
         description,
-        scheduledAt: new Date(scheduledAt), // Ensure proper date format
-        frequency, 
         userId: user.id,
       },
     });
