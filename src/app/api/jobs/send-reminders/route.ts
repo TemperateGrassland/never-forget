@@ -107,9 +107,8 @@ export async function GET(req: NextRequest) {
       headers: {
         'Authorization': `Bearer ${accessToken}`,
         'Content-Type': 'application/json',
-        // Add any additional headers required by the target endpoint
       },
-      body: JSON.stringify(parsedBody),
+      body: parsedBody,
     });
 
     if (!response.ok) {
