@@ -9,6 +9,8 @@ import CheckoutButton from "../components/ui/CheckoutButton";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import ProfileButton from "../components/ui/ProfileButton";
+import AddReminderForm from "../components/ui/AddReminderForm";
+import DashboardTable from "../components/ui/DashboardTable";
 
 const stripePromise = loadStripe(process.env.STRIPE_PUBLISHABLE_KEY!);
 
@@ -38,6 +40,13 @@ export default async function DashboardPage() {
         <UpdatePhone />
         <SendMessage />
         <ProfileButton />
+        {/* Display the reminders using DashboardTable */}
+        <DashboardTable reminders={reminders} />
+
+        {/* Add Reminder Form */}
+        <div className="mt-6">
+          <AddReminderForm />
+        </div>
         {/* <Elements stripe={stripePromise}>
           <CheckoutButton />
         </Elements> */}
