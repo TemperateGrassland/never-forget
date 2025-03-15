@@ -12,10 +12,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { title, description, scheduledAt, frequency } = await req.json();
+    const { title, description } = await req.json();
 
-    if (!title || !scheduledAt || !frequency) {
-      return NextResponse.json({ error: "Title and date are required" }, { status: 400 });
+    if (!title ) {
+      return NextResponse.json({ error: "Title and is required" }, { status: 400 });
     }
 
     // Get the user ID from the session

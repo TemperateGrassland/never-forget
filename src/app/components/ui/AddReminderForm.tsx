@@ -41,12 +41,12 @@ export default function AddReminderForm() {
       {error && <p className="text-red-500">{error}</p>}
 
       <div className="mb-2">
-        <label className="block font-medium text-secondary">Title</label>
+        <label className="block font-medium text-secondary">What do you want to remember?</label>
         <input
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="w-full p-2 border rounded-md text-primary"
+          className="w-full p-2 border rounded-md text-black"
           required
         />
       </div>
@@ -56,7 +56,7 @@ export default function AddReminderForm() {
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          className="w-full p-2 border rounded-md text-primary"
+          className="w-full p-2 border rounded-md text-black"
         />
       </div>
 
