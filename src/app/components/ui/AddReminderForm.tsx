@@ -27,8 +27,8 @@ export default function AddReminderForm() {
       setTitle('');
       setDescription('');
       alert('Reminder added successfully');
-    } catch (err: any) {
-      setError(err.message);
+    } catch (error) {
+      setError(error);
     } finally {
       setLoading(false);
     }
