@@ -79,5 +79,5 @@ model Reminder {
   createdAt   DateTime          @default(now())
   updatedAt   DateTime          @updatedAt
   user        User              @relation(fields: [userId], references: [id])
-  isComplete  Boolean            @default(false) 
+  isComplete  Boolean           @default(false) 
 }
