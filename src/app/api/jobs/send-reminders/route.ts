@@ -100,7 +100,6 @@ export async function GET(req: NextRequest) {
     }
 
     const parsedBody = JSON.parse(requestBody);
-    console.log(parsedBody);
 
     const response = await fetch(apiUrl, {
       method: 'POST',
