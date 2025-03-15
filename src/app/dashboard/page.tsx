@@ -11,6 +11,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import ProfileButton from "../components/ui/ProfileButton";
 import AddReminderForm from "../components/ui/AddReminderForm";
 import DashboardTable from "../components/ui/DashboardTable";
+import prisma from "@/lib/prisma";
 
 const stripePromise = loadStripe(process.env.STRIPE_PUBLISHABLE_KEY!);
 
@@ -30,6 +31,10 @@ export default async function DashboardPage() {
     </>
     )
   }
+
+  const reminders = await prisma.reminder.findMany({
+    orderBy: { createdAt: 'desc' },
+  });
 
   if (session) {
     return (
