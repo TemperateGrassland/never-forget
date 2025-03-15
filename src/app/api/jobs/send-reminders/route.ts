@@ -93,6 +93,7 @@ export async function GET(req: NextRequest) {
       throw new Error('POST_REQUEST_BODY environment variable is not defined.');
     }
 
+    // Get the meta application access key
     const accessToken = process.env.WHATSAPP_CRON_SECRET;
 
     if (!accessToken){
