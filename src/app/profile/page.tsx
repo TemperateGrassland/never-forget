@@ -13,7 +13,7 @@ export default function ProfilePage() {
     firstName: "",
     lastName: "",
     email: "",
-    phone: "",
+    phoneNumber: "",
   });
 
   const [loading, setLoading] = useState(true);
@@ -26,28 +26,30 @@ export default function ProfilePage() {
     }
   }, [status, router]);
 
-  // Fetch profile data
+  // Fetch profile data from API
   useEffect(() => {
     async function fetchProfile() {
-      if (session?.user) {
-        setLoading(true);
-        try {
-          const res = await fetch("/api/profile");
-          if (res.ok) {
-            const data = await res.json();
-            setUser({
-              firstName: data.name || "",
-              lastName: data.name || "",
-              email: data.email || "",
-              phone: data.phone || "",
-            });
-          }
-        } catch (error) {
-          console.error("Error fetching profile:", error);
-        }
+      if (!session?.user) return;
+
+      setLoading(true);
+      try {
+        const res = await fetch("/api/profile");
+        if (!res.ok) throw new Error("Failed to fetch profile data");
+
+        const data = await res.json();
+        setUser({
+          firstName: data.firstName || "",
+          lastName: data.lastName || "",
+          email: data.email || "",
+          phoneNumber: data.phoneNumber || "",
+        });
+      } catch (error) {
+        console.error("Error fetching profile:", error);
+      } finally {
         setLoading(false);
       }
     }
+
     fetchProfile();
   }, [session]);
 
@@ -60,6 +62,7 @@ export default function ProfilePage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setUpdating(true);
+
     try {
       const res = await fetch("/api/profile", {
         method: "PUT",
@@ -67,18 +70,19 @@ export default function ProfilePage() {
         body: JSON.stringify(user),
       });
 
-      if (res.ok) {
-        alert("Profile updated successfully!");
-      } else {
-        alert("Failed to update profile.");
-      }
+      if (!res.ok) throw new Error("Failed to update profile");
+
+      alert("Profile updated successfully!");
     } catch (error) {
       console.error("Error updating profile:", error);
+      alert("Failed to update profile.");
+    } finally {
+      setUpdating(false);
     }
-    setUpdating(false);
   };
 
-  if (loading) return <p>Loading profile...</p>;
+  // Show loading state
+  if (loading) return <p className="text-center">Loading profile...</p>;
 
   return (
     <div className="max-w-lg mx-auto p-6 bg-white shadow-md rounded-lg">
@@ -123,8 +127,8 @@ export default function ProfilePage() {
           <label className="block text-gray-700 font-medium">Phone Number</label>
           <input
             type="tel"
-            name="phone"
-            value={user.phone}
+            name="phoneNumber"
+            value={user.phoneNumber}
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded-md text-black"
           />
