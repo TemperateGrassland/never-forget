@@ -28,14 +28,17 @@ export async function POST(req: Request) {
     }
 
     // Get the user ID from the session
-    const user = await prisma.user.findUnique({ where: { email: session.user.email } });
+    const user = await prisma.user.findUnique({
+      where: { email: session.user.email },
+      include: { reminders: true }, // Fetch existing reminders for this user
+    });
 
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    // Save reminder in Prisma
-    const reminder = await prisma.reminder.create({
+    // Save new reminder in Prisma
+    const newReminder = await prisma.reminder.create({
       data: {
         title,
         description,
@@ -43,10 +46,16 @@ export async function POST(req: Request) {
       },
     });
 
-    // Emit WebSocket event
-    emitWebSocketEvent("newReminder", reminder);
+    // Fetch updated user data with the newly created reminder included
+    const updatedUser = await prisma.user.findUnique({
+      where: { id: user.id },
+      include: { reminders: { orderBy: { createdAt: "asc" } } },
+    });
 
-    return NextResponse.json({ message: "Reminder saved", reminder });
+    // Emit WebSocket event with full user + reminders data
+    emitWebSocketEvent("newReminder", updatedUser);
+
+    return NextResponse.json({ message: "Reminder saved", reminder: newReminder });
   } catch (error) {
     console.error("Error saving reminder:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
