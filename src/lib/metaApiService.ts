@@ -55,22 +55,23 @@ export async function buildMetaApiRequests() {
     
     
     
-    {
-    messaging_product: 'whatsapp',
-    to: user.phoneNumber, 
-    type: 'template',
-    template: {
-      name: 'reminder',
-      language: { code: 'en_GB' },
-      components: [
-        {
-          type: 'text',
-          parameters: user.reminders.map((reminder) => ({
-            type: 'text',
-            text: `${reminder.title}: ${reminder.description || 'No description'}`,
-          })),
-        },
-      ],
-    },
-  }));
+//     {
+//     messaging_product: 'whatsapp',
+//     to: user.phoneNumber, 
+//     type: 'template',
+//     template: {
+//       name: 'reminder',
+//       language: { code: 'en_GB' },
+//       components: [
+//         {
+//           type: 'text',
+//           parameters: user.reminders.map((reminder) => ({
+//             type: 'text',
+//             text: `${reminder.title}: ${reminder.description || 'No description'}`,
+//           })),
+//         },
+//       ],
+//     },
+//   }
+));
 }
