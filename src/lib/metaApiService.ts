@@ -30,40 +30,22 @@ export async function buildMetaApiRequests() {
                     type: 'body',
                     parameters: [
                         {
-                            "type": "text",
-                            "parameter_name": "text",
-                            "text": user.firstName
+                            'type': 'text',
+                            'parameter_name': 'text',
+                            'text': user.firstName
                         },
-                        {
-                            "type": "text",
-                            "parameter_name": "reminder_1",
-                            "text": "Drive to Winslow"
-                        },
-                        {
-                            "type": "text",
-                            "parameter_name": "when_1",
-                            "text": "Today"
-                        },
-                        {
-                            "type": "text",
-                            "parameter_name": "reminder_2",
-                            "text": "Take care of Simbi and Chai"
-                        },
-                        {
-                            "type": "text",
-                            "parameter_name": "when_2",
-                            "text": "Always"
-                        },
-                        {
-                            "type": "text",
-                            "parameter_name": "reminder_3",
-                            "text": "Get shit together"
-                        },
-                        {
-                            "type": "text",
-                            "parameter_name": "when_3",
-                            "text": "Maybe tomorrow?"
-                        }
+                        ...user.reminders.map((reminder, index) => [
+                            {
+                                type: 'text',
+                                parameter_name: `reminder_${index + 1}`,
+                                text: reminder.title
+                            },
+                            {
+                                type: 'text',
+                                parameter_name: `when_${index + 1}`,
+                                text: reminder.createdAt.toISOString().split('T')[0] // Example: Format date as YYYY-MM-DD
+                            }
+                        ]).flat()
                     ]
                 }
             ]
