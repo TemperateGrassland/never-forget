@@ -5,6 +5,8 @@ export async function GET() {
     // Generate API request JSON for each user
     const metaRequests = await buildMetaApiRequests();
 
+    console.log("metaRequests: ", metaRequests)
+
     // Send HTTP requests to Meta API
     const responses = await Promise.all(metaRequests.map(async (request) => {
       const response = await fetch('https://graph.facebook.com/YOUR_VERSION/YOUR_PHONE_ID/messages', {
