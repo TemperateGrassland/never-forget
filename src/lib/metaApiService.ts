@@ -11,6 +11,8 @@ export async function buildMetaApiRequests() {
     },
   });
 
+  console.log("usersWithReminders:", usersWithReminders)
+
   // Format the data into JSON payloads for Meta API
   return usersWithReminders.map((user) => ({
     messaging_product: 'whatsapp',
