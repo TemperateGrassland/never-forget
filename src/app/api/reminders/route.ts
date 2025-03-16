@@ -4,6 +4,15 @@ import { auth } from "@/auth";
 
 const prisma = new PrismaClient();
 
+// WebSocket event emitter function
+function emitWebSocketEvent(event: string, data: any) {
+  if (globalThis.io) {
+    globalThis.io.emit(event, data);
+  } else {
+    console.warn("WebSocket server not initialized yet.");
+  }
+}
+
 export async function POST(req: Request) {
   try {
     const session = await auth();
@@ -14,8 +23,8 @@ export async function POST(req: Request) {
 
     const { title, description } = await req.json();
 
-    if (!title ) {
-      return NextResponse.json({ error: "Title and is required" }, { status: 400 });
+    if (!title) {
+      return NextResponse.json({ error: "Title is required" }, { status: 400 });
     }
 
     // Get the user ID from the session
@@ -33,6 +42,9 @@ export async function POST(req: Request) {
         userId: user.id,
       },
     });
+
+    // Emit WebSocket event
+    emitWebSocketEvent("newReminder", reminder);
 
     return NextResponse.json({ message: "Reminder saved", reminder });
   } catch (error) {
