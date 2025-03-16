@@ -5,7 +5,7 @@ export async function GET() {
     // Generate API request JSON for each user
     const metaRequests = await buildMetaApiRequests();
 
-    console.log("metaRequests: ", metaRequests)
+    console.log("metaRequests:", JSON.stringify(metaRequests, null, 2));
 
     // Send HTTP requests to Meta API
     const responses = await Promise.all(metaRequests.map(async (request) => {
