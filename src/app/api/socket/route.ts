@@ -1,9 +1,17 @@
-import { Server } from "socket.io";
+import { NextApiRequest, NextApiResponse } from "next";
+import { Server as ServerIO } from "socket.io";
+import { Server as NetServer } from "http";
 
-export default function handler(req: any, res: any) {
-  if (!res.socket.server.io) {
-    const io = new Server(res.socket.server);
-    res.socket.server.io = io;
+interface SocketServer extends NetServer {
+  io?: ServerIO;
+}
+
+export default function handler(req: NextApiRequest, res: NextApiResponse) {
+  const server = res.socket?.server as SocketServer;
+
+  if (!server.io) {
+    const io = new ServerIO(server);
+    server.io = io;
 
     io.on("connection", (socket) => {
       console.log("User connected");
@@ -13,5 +21,6 @@ export default function handler(req: any, res: any) {
       });
     });
   }
+
   res.end();
 }
