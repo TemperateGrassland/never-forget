@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { auth } from "@/auth";
-import { broadcastReminder } from "@/lib/socket"; // Import WebSocket broadcast function
+import { broadcastReminder } from "@/socket"; // Import WebSocket broadcast function
 
 const prisma = new PrismaClient();
 
