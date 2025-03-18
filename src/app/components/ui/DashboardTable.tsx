@@ -26,7 +26,7 @@ export default function DashboardTable() {
 
   // WebSocket Connection to Listen for Updates
   useEffect(() => {
-    const ws = new WebSocket("ws://localhost:4000"); // Replace with deployment URL
+    const ws = new WebSocket("ws://neverforget.one:4000"); // Replace with deployment URL
 
     ws.onmessage = (event) => {
       const message = JSON.parse(event.data);
