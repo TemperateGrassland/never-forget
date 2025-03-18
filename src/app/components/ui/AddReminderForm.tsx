@@ -7,11 +7,13 @@ export default function AddReminderForm() {
   const [description, setDescription] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
+    setSuccess('');
 
     try {
       const res = await fetch('/api/reminders', {
@@ -26,9 +28,15 @@ export default function AddReminderForm() {
 
       setTitle('');
       setDescription('');
-      alert('Reminder added successfully');
+      setSuccess('Reminder added successfully!'); // ✅ Success message
+
+      // Clear success message after 3 seconds
+      setTimeout(() => setSuccess(''), 3000);
     } catch (error) {
-      setError(error);
+      setError('Failed to add reminder. Please try again.'); // ✅ Error message
+
+      // Clear error message after 3 seconds
+      setTimeout(() => setError(''), 3000);
     } finally {
       setLoading(false);
     }
@@ -36,9 +44,12 @@ export default function AddReminderForm() {
 
   return (
     <form onSubmit={handleSubmit} className="p-4 border rounded-lg">
-      <h2 className="text-lg font-bold mb-2">Add New Reminder</h2>
-      
-      {error && <p className="text-red-500">{error}</p>}
+      <div className="flex justify-between items-center">
+        <h2 className="text-lg font-bold">Add New Reminder</h2>
+        {/* ✅ Success & Error Message Display */}
+        {success && <p className="text-green-500">{success}</p>}
+        {error && <p className="text-red-500">{error}</p>}
+      </div>
 
       <div className="mb-2">
         <label className="block font-medium text-secondary">What do you want to remember?</label>

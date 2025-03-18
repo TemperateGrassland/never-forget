@@ -1,9 +1,46 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { auth } from "@/auth";
-import { broadcastReminder } from "@/lib/websocket"; // Import WebSocket broadcast function
+import { broadcastReminder } from "@/lib/socket"; // Import WebSocket broadcast function
 
 const prisma = new PrismaClient();
+
+export async function GET(req: Request) {
+  try {
+    const session = await auth();
+    if (!session || !session.user?.email) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { email: session.user.email },
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    const reminders = await prisma.reminder.findMany({
+      where: { userId: user.id },
+      orderBy: { createdAt: "desc" },
+    });
+
+    return NextResponse.json({
+      reminders: reminders.map((r) => ({
+        id: r.id,
+        title: r.title,
+        description: r.description ?? "N/A",
+        userId: r.userId,
+        isComplete: r.isComplete,
+        createdAt: r.createdAt.toISOString(), // ✅ Convert Date to string
+        updatedAt: r.updatedAt.toISOString(), // ✅ Convert Date to string
+      })),
+    });
+  } catch (error) {
+    console.error("Error fetching reminders:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  }
+}
 
 export async function POST(req: Request) {
   try {

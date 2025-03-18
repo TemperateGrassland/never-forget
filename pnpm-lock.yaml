@@ -65,6 +65,9 @@ importers:
       supertest:
         specifier: ^7.0.0
         version: 7.0.0
+      ws:
+        specifier: ^8.18.1
+        version: 8.18.1
     devDependencies:
       '@babel/core':
         specifier: ^7.26.8

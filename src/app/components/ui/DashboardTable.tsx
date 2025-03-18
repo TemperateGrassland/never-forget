@@ -1,23 +1,16 @@
-import React from 'react';
+"use client";
 
-// Define the expected shape of reminders
-interface Reminder {
-  id: string;
-  title: string;
-  description: string | null;
-  createdAt: string;
-}
+import { Reminder } from "@/types";
+import { useState } from "react";
 
-// Define props interface
 interface DashboardTableProps {
   reminders: Reminder[];
 }
 
-const DashboardTable: React.FC<DashboardTableProps> = ({ reminders }) => {
+export default function DashboardTable({ reminders }: DashboardTableProps) {  
   return (
     <div className="p-4 border rounded-md">
       <h2 className="text-xl font-bold mb-4">Reminders</h2>
-
       {reminders.length === 0 ? (
         <p>No reminders found.</p>
       ) : (
@@ -33,7 +26,7 @@ const DashboardTable: React.FC<DashboardTableProps> = ({ reminders }) => {
             {reminders.map((reminder) => (
               <tr key={reminder.id} className="border">
                 <td className="border p-2">{reminder.title}</td>
-                <td className="border p-2">{reminder.description || 'N/A'}</td>
+                <td className="border p-2">{reminder.description || "N/A"}</td>
                 <td className="border p-2">
                   {new Date(reminder.createdAt).toLocaleDateString()}
                 </td>
@@ -44,6 +37,4 @@ const DashboardTable: React.FC<DashboardTableProps> = ({ reminders }) => {
       )}
     </div>
   );
-};
-
-export default DashboardTable;
+} 
