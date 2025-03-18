@@ -8,9 +8,6 @@ import SendMessage from "../components/ui/SendMessage";
 import ProfileButton from "../components/ui/ProfileButton";
 import AddReminderForm from "../components/ui/AddReminderForm";
 import DashboardTable from "../components/ui/DashboardTable";
-import prisma from "@/lib/prisma";
-// import { Reminder } from "@/types"; // Import Reminder type for type safety
-// import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 
 // Load Stripe client-side key
