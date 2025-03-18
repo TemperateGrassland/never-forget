@@ -11,7 +11,7 @@ import DashboardTable from "../components/ui/DashboardTable";
 import { loadStripe } from "@stripe/stripe-js";
 
 // Load Stripe client-side key
-const stripePromise = loadStripe(process.env.STRIPE_PUBLISHABLE_KEY!);
+// const stripePromise = loadStripe(process.env.STRIPE_PUBLISHABLE_KEY!);
 
 export default async function DashboardPage() {
   const session = await auth();
