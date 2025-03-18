@@ -1,4 +1,4 @@
-'use client'; // This makes it a client component
+'use client';
 
 import { useState } from 'react';
 
