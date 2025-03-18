@@ -1,13 +1,48 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Reminder } from "@/types";
-import { useState } from "react";
 
-interface DashboardTableProps {
-  reminders: Reminder[];
-}
+export default function DashboardTable() {
+  const [reminders, setReminders] = useState<Reminder[]>([]);
 
-export default function DashboardTable({ reminders }: DashboardTableProps) {  
+  // Function to fetch reminders from the API
+  const fetchReminders = async () => {
+    try {
+      const res = await fetch("/api/reminders");
+      if (!res.ok) throw new Error("Failed to fetch reminders");
+
+      const data = await res.json();
+      setReminders(data.reminders);
+    } catch (error) {
+      console.error("Error fetching reminders:", error);
+    }
+  };
+
+  // Fetch reminders initially
+  useEffect(() => {
+    fetchReminders();
+  }, []);
+
+  // WebSocket Connection to Listen for Updates
+  useEffect(() => {
+    const ws = new WebSocket("ws://localhost:4000"); // Replace with deployment URL
+
+    ws.onmessage = (event) => {
+      const message = JSON.parse(event.data);
+      if (message.event === "newReminder") {
+        fetchReminders(); // Re-fetch reminders on WebSocket event
+      }
+    };
+
+    ws.onclose = () => console.log("WebSocket disconnected");
+    // ws.onerror = (error) => console.error("WebSocket error:", error);
+
+    return () => {
+      ws.close();
+    };
+  }, []);
+
   return (
     <div className="p-4 border rounded-md">
       <h2 className="text-xl font-bold mb-4">Reminders</h2>
@@ -37,4 +72,4 @@ export default function DashboardTable({ reminders }: DashboardTableProps) {
       )}
     </div>
   );
-} 
+}
