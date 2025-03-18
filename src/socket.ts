@@ -18,6 +18,7 @@ export function broadcastReminder(reminder: Reminder) {
   const message = JSON.stringify({ event: "newReminder", data: reminder });
   clients.forEach((client) => {
     if (client.readyState === WebSocket.OPEN) {
+      console.log("sending new reminder via websocket...")
       client.send(message);
     }
   });
