@@ -9,8 +9,8 @@ import ProfileButton from "../components/ui/ProfileButton";
 import AddReminderForm from "../components/ui/AddReminderForm";
 import DashboardTable from "../components/ui/DashboardTable";
 import prisma from "@/lib/prisma";
-import { Reminder } from "@/types"; // Import Reminder type for type safety
-import { Elements } from "@stripe/react-stripe-js";
+// import { Reminder } from "@/types"; // Import Reminder type for type safety
+// import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 
 // Load Stripe client-side key
@@ -29,19 +29,19 @@ export default async function DashboardPage() {
     );
   }
 
-  // Fetch reminders for the authenticated user
-  const reminders: Reminder[] = await prisma.reminder
-    .findMany({
-      where: { userId: session.user.id }, // Fetch only reminders for the logged-in user
-      orderBy: { createdAt: "desc" },
-    })
-    .then((reminders) =>
-      reminders.map((reminder) => ({
-        ...reminder,
-        createdAt: reminder.createdAt, // Convert Date to String
-        updatedAt: reminder.updatedAt,
-      }))
-    );
+  // // Fetch reminders for the authenticated user
+  // const reminders: Reminder[] = await prisma.reminder
+  //   .findMany({
+  //     where: { userId: session.user.id }, // Fetch only reminders for the logged-in user
+  //     orderBy: { createdAt: "desc" },
+  //   })
+  //   .then((reminders) =>
+  //     reminders.map((reminder) => ({
+  //       ...reminder,
+  //       createdAt: reminder.createdAt, // Convert Date to String
+  //       updatedAt: reminder.updatedAt,
+  //     }))
+  //   );
 
   return (
     <div className="container mx-auto p-6">
@@ -62,7 +62,7 @@ export default async function DashboardPage() {
 
       {/* Reminders Table */}
       <div className="mt-6">
-        <DashboardTable reminders={reminders} />
+        <DashboardTable />
       </div>
 
       {/* Add Reminder Form */}
