@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { auth } from "@/auth";
-import { broadcastReminder } from "@/socket"; // Import WebSocket broadcast function
+import * as Ably from "ably";
 
 const prisma = new PrismaClient();
+const ably = new Ably.Rest(process.env.ABLY_API_KEY!);
 
 export async function GET(req: Request) {
   try {
@@ -70,7 +71,8 @@ export async function POST(req: Request) {
     });
 
     // ✅ Broadcast reminder to WebSocket clients
-    broadcastReminder(reminder);
+    const channel = ably.channels.get("reminders");
+    await channel.publish("newReminder", reminder);
 
     return NextResponse.json({ message: "Reminder saved", reminder });
   } catch (error) {

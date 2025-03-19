@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { Reminder } from "@/types";
+import * as Ably from "ably";
+
 
 export default function DashboardTable() {
   const [reminders, setReminders] = useState<Reminder[]>([]);
@@ -26,20 +28,16 @@ export default function DashboardTable() {
 
   // WebSocket Connection to Listen for Updates
   useEffect(() => {
-    const ws = new WebSocket("wss://neverforget.one:4000"); // Replace with deployment URL
+    const client = new Ably.Realtime({ authUrl: "/api/ably-token" }); // Secure authentication
+    const channel = client.channels.get("reminders");
 
-    ws.onmessage = (event) => {
-      const message = JSON.parse(event.data);
-      if (message.event === "newReminder") {
-        fetchReminders(); // Re-fetch reminders on WebSocket event
-      }
-    };
-
-    ws.onclose = () => console.log("WebSocket disconnected");
-    // ws.onerror = (error) => console.error("WebSocket error:", error);
+    channel.subscribe("newReminder", (message) => {
+      setReminders((prevReminders) => [message.data, ...prevReminders]);
+    });
 
     return () => {
-      ws.close();
+      channel.unsubscribe();
+      client.close();
     };
   }, []);
 
