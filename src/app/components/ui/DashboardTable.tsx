@@ -21,6 +21,21 @@ export default function DashboardTable() {
     }
   };
 
+  const deleteReminder = async (id: string) => {
+    try {
+      const res = await fetch(`/api/reminders/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) throw new Error("Failed to delete reminder");
+
+      // Update state immediately before Ably event is received
+      setReminders((prevReminders) => prevReminders.filter((reminder) => reminder.id !== id));
+    } catch (error) {
+      console.error("Error deleting reminder:", error);
+    }
+  };
+
   // Fetch reminders initially
   useEffect(() => {
     fetchReminders();
@@ -33,6 +48,11 @@ export default function DashboardTable() {
 
     channel.subscribe("newReminder", (message) => {
       setReminders((prevReminders) => [message.data, ...prevReminders]);
+    });
+
+    // Listen for deleted reminders
+    channel.subscribe("reminderDeleted", (message) => {
+      setReminders((prevReminders) => prevReminders.filter((reminder) => reminder.id !== message.data.id));
     });
 
     return () => {
@@ -62,6 +82,13 @@ export default function DashboardTable() {
                 <td className="border p-2">{reminder.description || "N/A"}</td>
                 <td className="border p-2">
                   {new Date(reminder.createdAt).toLocaleDateString()}
+                </td>
+                <td className="border p-2">
+                  <button
+                    onClick={() => deleteReminder(reminder.id)}
+                    className="bg-red-500 text-white px-2 py-1 rounded">
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))}
