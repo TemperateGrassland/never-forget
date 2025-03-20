@@ -26,8 +26,6 @@ export default async function Page() {
 
             {/* ✅ Show Dashboard & Features ONLY if Signed In */}
             <div className="container mx-auto p-6">
-              <h1 className="text-2xl font-bold">Welcome to the Dashboard</h1>
-              <p className="text-lg">Signed in as {session?.user?.email || "Unknown User"}</p>
 
               <div className="mt-4 flex space-x-4">
                 <LogoutButton />
