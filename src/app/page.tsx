@@ -33,7 +33,6 @@ export default async function Page() {
 
               <div className="mt-4 flex space-x-4">
                 <LogoutButton />
-                <ProfileButton />
               </div>
 
               <div className="mt-6 flex space-x-4">
