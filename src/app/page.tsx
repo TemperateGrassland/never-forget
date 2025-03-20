@@ -27,10 +27,6 @@ export default async function Page() {
             {/* ✅ Show Dashboard & Features ONLY if Signed In */}
             <div className="container mx-auto p-6">
 
-              <div className="mt-4 flex space-x-4">
-                <LogoutButton />
-              </div>
-
               <div className="mt-6 flex space-x-4">
                 <SendMessage />
               </div>
