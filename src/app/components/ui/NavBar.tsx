@@ -1,9 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import { LoginButton } from "./SignIn";
 
 const Navbar: React.FC = () => {
   const { data: session, status } = useSession();
