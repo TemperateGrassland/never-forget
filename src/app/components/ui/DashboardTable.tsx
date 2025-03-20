@@ -72,7 +72,7 @@ export default function DashboardTable() {
             <tr className="bg-gray-100">
               <th className="border p-2 text-left">Title</th>
               <th className="border p-2 text-left">Description</th>
-              <th className="border p-2 text-left">Created At</th>
+              <th className="border p-2 text-left">Created</th>
             </tr>
           </thead>
           <tbody>
