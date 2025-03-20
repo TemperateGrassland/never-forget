@@ -27,11 +27,6 @@ const Navbar: React.FC = () => {
           {session?.user ? (
             <>
             <li>
-              <Link href="/reminders" className="text-white hover:underline">
-                Reminders
-              </Link>
-            </li>
-            <li>
             <Link href="/profile" className="text-white hover:underline">
                 Profile
               </Link>
