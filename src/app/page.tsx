@@ -31,24 +31,19 @@ export default async function Page() {
               <h1 className="text-2xl font-bold">Welcome to the Dashboard</h1>
               <p className="text-lg">Signed in as {session?.user?.email || "Unknown User"}</p>
 
-              {/* Logout and Profile Management */}
               <div className="mt-4 flex space-x-4">
                 <LogoutButton />
                 <ProfileButton />
               </div>
 
-              {/* Update Phone Number and Messaging */}
               <div className="mt-6 flex space-x-4">
-                <UpdatePhone />
                 <SendMessage />
               </div>
 
-              {/* Reminders Table */}
               <div className="mt-6">
                 <DashboardTable />
               </div>
 
-              {/* Add Reminder Form */}
               <div className="mt-6">
                 <AddReminderForm />
               </div>
