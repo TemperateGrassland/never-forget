@@ -3,10 +3,8 @@
 import { auth } from "@/auth";
 import { LoginButton } from "./components/ui/SignIn";
 import { LogoutButton } from "./components/ui/Signout";
-import UpdatePhone from "./components/ui/AddPhoneNumber";
 import AddReminderForm from "./components/ui/AddReminderForm";
 import DashboardTable from "./components/ui/DashboardTable";
-import ProfileButton from "./components/ui/ProfileButton";
 import SendMessage from "./components/ui/SendMessage";
 
 export default async function Page() {
