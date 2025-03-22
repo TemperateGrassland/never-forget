@@ -3,6 +3,8 @@
 import React from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
+
 
 const Navbar: React.FC = () => {
   const { data: session, status } = useSession();
@@ -30,6 +32,14 @@ const Navbar: React.FC = () => {
             <Link href="/profile" className="text-white hover:underline">
                 Profile
               </Link>
+            </li>
+            <li>
+              <button
+                onClick={() => signOut({ callbackUrl: "/" })}
+                className="text-white hover:underline"
+              >
+                Sign Out
+              </button>
             </li>
             </>
           ) : (

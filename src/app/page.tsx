@@ -2,10 +2,9 @@
 
 import { auth } from "@/auth";
 import { LoginButton } from "./components/ui/SignIn";
-import { LogoutButton } from "./components/ui/Signout";
 import AddReminderForm from "./components/ui/AddReminderForm";
 import DashboardTable from "./components/ui/DashboardTable";
-import SendMessage from "./components/ui/SendMessage";
+// import { loadStripe } from "@stripe/stripe-js";
 
 export default async function Page() {
   const session = await auth();
@@ -22,14 +21,9 @@ export default async function Page() {
             <p className="text-lg text-green-600 font-semibold bg-green-100 px-4 py-2 rounded-md shadow-md">
               ✅ You are signed in: {session?.user?.email}
             </p>
-            <LogoutButton />
 
             {/* ✅ Show Dashboard & Features ONLY if Signed In */}
             <div className="container mx-auto p-6">
-
-              <div className="mt-6 flex space-x-4">
-                <SendMessage />
-              </div>
 
               <div className="mt-6">
                 <DashboardTable />
@@ -38,6 +32,11 @@ export default async function Page() {
               <div className="mt-6">
                 <AddReminderForm />
               </div>
+
+              {/* Stripe Checkout (Currently Disabled) */}
+              {/* <Elements stripe={stripePromise}>
+                <CheckoutButton />
+              </Elements> */}
             </div>
           </>
         ) : (

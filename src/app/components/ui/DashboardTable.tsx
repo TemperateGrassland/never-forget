@@ -70,9 +70,10 @@ export default function DashboardTable() {
         <table className="w-full border-collapse border border-gray-300">
           <thead>
             <tr className="bg-gray-100">
-              <th className="border p-2 text-left">Title</th>
-              <th className="border p-2 text-left">Description</th>
-              <th className="border p-2 text-left">Created</th>
+              <th className="border p-2 text-left text-black">Title</th>
+              <th className="border p-2 text-left text-black">Description</th>
+              <th className="border p-2 text-left text-black">Created</th>
+              <th className="border p-2 text-left text-black"></th>
             </tr>
           </thead>
           <tbody>
