@@ -17,7 +17,7 @@ export default function AuthPage() {
         { 
           email, 
           redirect: false,
-          callbackUrl: "localhost:3000/dashboard", 
+          callbackUrl: "localhost:3000/", 
           });
       if (result?.error) {
         setMessage(`Error: ${result.error}`);
