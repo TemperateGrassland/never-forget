@@ -51,9 +51,7 @@ export default async function DashboardPage() {
         <ProfileButton />
       </div>
 
-      {/* Update Phone Number and Messaging */}
       <div className="mt-6 flex space-x-4">
-        <UpdatePhone />
         <SendMessage />
       </div>
 
