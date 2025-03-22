@@ -26,20 +26,6 @@ export default async function DashboardPage() {
     );
   }
 
-  // // Fetch reminders for the authenticated user
-  // const reminders: Reminder[] = await prisma.reminder
-  //   .findMany({
-  //     where: { userId: session.user.id }, // Fetch only reminders for the logged-in user
-  //     orderBy: { createdAt: "desc" },
-  //   })
-  //   .then((reminders) =>
-  //     reminders.map((reminder) => ({
-  //       ...reminder,
-  //       createdAt: reminder.createdAt, // Convert Date to String
-  //       updatedAt: reminder.updatedAt,
-  //     }))
-  //   );
-
   return (
     <div className="container mx-auto p-6">
       <h1 className="text-2xl font-bold">Welcome to the Dashboard</h1>
