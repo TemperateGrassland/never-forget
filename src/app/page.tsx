@@ -18,11 +18,6 @@ export default async function Page() {
       <div className="flex flex-col items-center mt-4">
         {session?.user ? (
           <>
-            <p className="text-lg text-green-600 font-semibold bg-green-100 px-4 py-2 rounded-md shadow-md">
-              ✅ You are signed in: {session?.user?.email}
-            </p>
-
-            {/* ✅ Show Dashboard & Features ONLY if Signed In */}
             <div className="container mx-auto p-6">
 
               <div className="mt-6">
