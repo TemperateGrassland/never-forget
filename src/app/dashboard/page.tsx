@@ -48,7 +48,6 @@ export default async function DashboardPage() {
       {/* Logout and Profile Management */}
       <div className="mt-4 flex space-x-4">
         <LogoutButton />
-        <ProfileButton />
       </div>
 
       <div className="mt-6 flex space-x-4">
