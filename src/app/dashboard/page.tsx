@@ -50,10 +50,6 @@ export default async function DashboardPage() {
         <LogoutButton />
       </div>
 
-      <div className="mt-6 flex space-x-4">
-        <SendMessage />
-      </div>
-
       {/* Reminders Table */}
       <div className="mt-6">
         <DashboardTable />
