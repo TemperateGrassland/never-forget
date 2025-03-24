@@ -16,19 +16,6 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ success: false, error: "No reminders found" }, { status: 404 });
     }
 
-    // Format reminders into WhatsApp template structure
-    const formattedReminders = reminders.map((reminder, index) => ({
-      type: "text",
-      text: reminder.title, // ✅ Fetch title dynamically
-      parameter_name: `reminder_${index + 1}`,
-    }));
-
-    const whenReminders = reminders.map((reminder, index) => ({
-      type: "text",
-      text: new Date(reminder.createdAt).toLocaleDateString(), // ✅ Fetch created date
-      parameter_name: `when_${index + 1}`,
-    }));
-
     // Send the formatted WhatsApp message
     const response = await fetch(
       `https://graph.facebook.com/v17.0/${process.env.WHATSAPP_PHONE_ID}/messages`,
