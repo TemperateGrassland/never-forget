@@ -52,9 +52,25 @@ export async function GET(req: NextRequest) {
               {
                 type: "body",
                 parameters: [
-                  { type: "text", parameter_name: "text", text: "Mobo" },
-                  ...formattedReminders,
-                  ...whenReminders,
+                  {
+                    type: "text",
+                    parameter_name: "text",
+                    text: "Mobo", // User's name or greeting
+                  },
+                  {
+                    type: "text",
+                    parameter_name: "reminder_list",
+                    text: reminders
+                      .map((reminder) => {
+                        const dateLabel = new Date(reminder.createdAt).toLocaleDateString("en-GB", {
+                          day: "numeric",
+                          month: "short",
+                          year: "numeric",
+                        });
+                        return `* ${reminder.title} (${dateLabel})`;
+                      })
+                      .join(" \r "),
+                  },
                 ],
               },
             ],
