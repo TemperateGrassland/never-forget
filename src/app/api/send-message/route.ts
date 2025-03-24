@@ -53,8 +53,8 @@ export async function POST(req: NextRequest) {
                 type: "body",
                 parameters: [
                   { type: "text", parameter_name: "text", text: "Mobo" },
-                  ...formattedReminders, // ✅ Inject dynamic reminder titles
-                  ...whenReminders, // ✅ Inject dynamic reminder dates
+                  ...formattedReminders,
+                  ...whenReminders,
                 ],
               },
             ],
