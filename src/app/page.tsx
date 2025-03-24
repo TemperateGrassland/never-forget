@@ -18,7 +18,7 @@ export default async function Page() {
       <div className="flex flex-col items-center mt-4">
         {session?.user ? (
           <>
-            <div className="container mx-auto p-6">
+            <div className="w-full max-w-5xl mx-auto p-4">
 
               <div className="mt-6">
                 <DashboardTable />

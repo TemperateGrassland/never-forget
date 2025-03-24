@@ -77,12 +77,12 @@ export default function DashboardTable() {
   }, []);
 
   return (
-    <div className="p-4 border rounded-md">
+    <div className="overflow-x-auto w-full">
       <h2 className="text-xl font-bold mb-4">Reminders</h2>
       {reminders.length === 0 ? (
         <p>No reminders found.</p>
       ) : (
-        <table className="w-full border-collapse border border-gray-300">
+        <table className="min-w-full table-auto border-collapse border border-gray-300">
           <thead>
             <tr className="bg-gray-100">
               <th className="border p-2 text-left text-black">Title</th>
