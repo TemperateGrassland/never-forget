@@ -5,6 +5,7 @@ import { Reminder } from '@/types';
 import * as Ably from 'ably';
 import AnimatedRow from './AnimatedRow';
 import TodoItem from './TodoItem';
+import toast from 'react-hot-toast';
 
 export default function DashboardTable() {
   const [reminders, setReminders] = useState<Reminder[]>([]);
@@ -27,29 +28,45 @@ export default function DashboardTable() {
     const tickSound = new Audio('/bing.wav');
     tickSound.volume = 0.4;
     tickSound.currentTime = 0;
-    console.log('playing bing (from delete)');
     tickSound.play().catch(() => {});
   };
 
-  const deleteReminder = async (id: string) => {
-    setDeletingId(id);
-    // Actual deletion is handled after animation (see AnimatedRow)
-  };
+  const deleteReminder = (id: string) => {
+    const reminder = reminders.find((r) => r.id === id);
+    if (!reminder) return;
 
-  const handleRowAnimationEnd = (id: string) => async () => {
-    try {
-      const res = await fetch(`/api/reminders/${id}`, {
-        method: 'DELETE',
-      });
+    // Optimistically remove from UI
+    setReminders((prev) => prev.filter((r) => r.id !== id));
 
-      if (!res.ok) throw new Error('Failed to delete reminder');
+    let isUndone = false;
 
-      setReminders((prev) => prev.filter((r) => r.id !== id));
-      setDeletingId(null);
-      playFeedback();
-    } catch (error) {
-      console.error('Error deleting reminder:', error);
-    }
+    toast((t) => (
+      <div className="flex items-center gap-4">
+        <span>Reminder deleted.</span>
+        <button
+          className="bg-blue-600 text-white text-sm px-2 py-1 rounded"
+          onClick={() => {
+            toast.dismiss(t.id);
+            setReminders((prev) => [reminder, ...prev]);
+            isUndone = true;
+          }}
+        >
+          Undo
+        </button>
+      </div>
+    ), { duration: 5000 });
+
+    // Wait before actually deleting
+    setTimeout(async () => {
+      if (!isUndone) {
+        try {
+          await fetch(`/api/reminders/${id}`, { method: 'DELETE' });
+          playFeedback();
+        } catch (err) {
+          console.error("Error deleting reminder:", err);
+        }
+      }
+    }, 5000);
   };
 
   useEffect(() => {
@@ -97,7 +114,7 @@ export default function DashboardTable() {
                 key={reminder.id}
                 id={reminder.id}
                 isDeleting={deletingId === reminder.id}
-                onAnimationEnd={handleRowAnimationEnd(reminder.id)}
+                onAnimationEnd={() => {}}
               >
                 <TodoItem
                   task={reminder.title}
@@ -109,9 +126,8 @@ export default function DashboardTable() {
                 </td>
                 <td className="border p-2">
                   <button
-                    disabled={deletingId === reminder.id}
                     onClick={() => deleteReminder(reminder.id)}
-                    className="bg-red-500 text-white px-2 py-1 rounded disabled:opacity-50"
+                    className="bg-red-500 text-white px-2 py-1 rounded"
                   >
                     Delete
                   </button>

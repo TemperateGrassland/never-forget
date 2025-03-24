@@ -19,6 +19,7 @@ export const metadata: Metadata = {
 
 import { SessionProvider } from "next-auth/react";
 import Navbar from "./components/ui/NavBar";
+import { Toaster } from "react-hot-toast";
 
 export default async function RootLayout({
   children,
@@ -28,9 +29,10 @@ export default async function RootLayout({
   return (
     <SessionProvider>
       <html lang="en">
-        <body>
-        <Navbar />
-        <main>{children}</main>
+        <body className={`${geistSans.variable} ${geistMono.variable}`}>
+          <Navbar />
+          <main>{children}</main>
+          <Toaster position="bottom-right" />
         </body>
       </html>  
     </SessionProvider>
