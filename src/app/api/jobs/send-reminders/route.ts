@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
     const reminders = await prisma.reminder.findMany({
       where: { userId: process.env.DEFAULT_USER_ID }, // Replace with actual user ID from auth
       orderBy: { createdAt: "desc" }, // Fetch most recent reminders first
-      take: 3, // Limit to 3 reminders for WhatsApp template
+      take: 10, // Limit to ten reminders for WhatsApp template
     });
 
     if (reminders.length === 0) {
