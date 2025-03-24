@@ -12,7 +12,7 @@ export default async function Page() {
   return (
     <>
       <h1 className="text-3xl font-bold text-center mt-4">
-        <span className="italic underline">Never Forget</span>
+      Never Forget: putting <span className="italic underline">you</span>  on the front foot
       </h1>
 
       <div className="flex flex-col items-center mt-4">

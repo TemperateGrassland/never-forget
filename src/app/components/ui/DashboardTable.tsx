@@ -1,49 +1,54 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { Reminder } from "@/types";
-import * as Ably from "ably";
-import TodoItem from "./TodoItem";
+import { useState, useEffect } from 'react';
+import { Reminder } from '@/types';
+import * as Ably from 'ably';
+import AnimatedRow from './AnimatedRow';
+import TodoItem from './TodoItem';
 
 export default function DashboardTable() {
   const [reminders, setReminders] = useState<Reminder[]>([]);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const fetchReminders = async () => {
     try {
-      const res = await fetch("/api/reminders");
-      if (!res.ok) throw new Error("Failed to fetch reminders");
+      const res = await fetch('/api/reminders');
+      if (!res.ok) throw new Error('Failed to fetch reminders');
 
       const data = await res.json();
       setReminders(data.reminders);
     } catch (error) {
-      console.error("Error fetching reminders:", error);
+      console.error('Error fetching reminders:', error);
     }
   };
 
   const playFeedback = () => {
     if (navigator.vibrate) navigator.vibrate(30);
-    const tickSound = new Audio("/bing.wav");
+    const tickSound = new Audio('/bing.wav');
     tickSound.volume = 0.4;
     tickSound.currentTime = 0;
-    console.log("playing bing (from delete)");
+    console.log('playing bing (from delete)');
     tickSound.play().catch(() => {});
   };
-  
+
   const deleteReminder = async (id: string) => {
+    setDeletingId(id);
+    // Actual deletion is handled after animation (see AnimatedRow)
+  };
+
+  const handleRowAnimationEnd = (id: string) => async () => {
     try {
       const res = await fetch(`/api/reminders/${id}`, {
-        method: "DELETE",
+        method: 'DELETE',
       });
-  
-      if (!res.ok) throw new Error("Failed to delete reminder");
-  
-      setReminders((prevReminders) =>
-        prevReminders.filter((reminder) => reminder.id !== id)
-      );
-  
-      playFeedback(); // ✅ feedback after delete
+
+      if (!res.ok) throw new Error('Failed to delete reminder');
+
+      setReminders((prev) => prev.filter((r) => r.id !== id));
+      setDeletingId(null);
+      playFeedback();
     } catch (error) {
-      console.error("Error deleting reminder:", error);
+      console.error('Error deleting reminder:', error);
     }
   };
 
@@ -52,14 +57,14 @@ export default function DashboardTable() {
   }, []);
 
   useEffect(() => {
-    const client = new Ably.Realtime({ authUrl: "/api/ably-token" });
-    const channel = client.channels.get("reminders");
+    const client = new Ably.Realtime({ authUrl: '/api/ably-token' });
+    const channel = client.channels.get('reminders');
 
-    channel.subscribe("newReminder", (message) => {
+    channel.subscribe('newReminder', (message) => {
       setReminders((prev) => [message.data, ...prev]);
     });
 
-    channel.subscribe("reminderDeleted", (message) => {
+    channel.subscribe('reminderDeleted', (message) => {
       setReminders((prev) =>
         prev.filter((reminder) => reminder.id !== message.data.id)
       );
@@ -88,24 +93,30 @@ export default function DashboardTable() {
           </thead>
           <tbody>
             {reminders.map((reminder) => (
-              <tr key={reminder.id}>
-              <TodoItem
-                task={reminder.title}
-                initialCompleted={false}
-              />
-              <td className="border p-2">{reminder.description || "N/A"}</td>
-              <td className="border p-2">
-                {new Date(reminder.createdAt).toLocaleDateString()}
-              </td>
-              <td className="border p-2">
-                <button
-                  onClick={() => deleteReminder(reminder.id)}
-                  className="bg-red-500 text-white px-2 py-1 rounded"
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
+              <AnimatedRow
+                key={reminder.id}
+                id={reminder.id}
+                isDeleting={deletingId === reminder.id}
+                onAnimationEnd={handleRowAnimationEnd(reminder.id)}
+              >
+                <TodoItem
+                  task={reminder.title}
+                  initialCompleted={false}
+                />
+                <td className="border p-2">{reminder.description || 'N/A'}</td>
+                <td className="border p-2">
+                  {new Date(reminder.createdAt).toLocaleDateString()}
+                </td>
+                <td className="border p-2">
+                  <button
+                    disabled={deletingId === reminder.id}
+                    onClick={() => deleteReminder(reminder.id)}
+                    className="bg-red-500 text-white px-2 py-1 rounded disabled:opacity-50"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </AnimatedRow>
             ))}
           </tbody>
         </table>
