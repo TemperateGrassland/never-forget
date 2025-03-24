@@ -1,20 +1,12 @@
-import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
-    const session = await auth();
-
-    if (!session || !session.user?.id) {
-      return NextResponse.json({ success: false, error: "Unauthenticated" }, { status: 401 });
-    }
-
-    const userId = session.user.id;
-
-    // Fetch user with reminders
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
+    const users = await prisma.user.findMany({
+      where: {
+        phoneNumber: { not: null },
+      },
       include: {
         reminders: {
           orderBy: { createdAt: "desc" },
@@ -23,64 +15,71 @@ export async function GET(req: NextRequest) {
       },
     });
 
-    if (!user || user.reminders.length === 0) {
-      return NextResponse.json({ success: false, error: "No reminders found" }, { status: 404 });
+    if (users.length === 0) {
+      return NextResponse.json({ success: false, error: "No users found" }, { status: 404 });
     }
 
-    const { firstName, phoneNumber, reminders } = user;
+    let messagesSent = 0;
 
-    const reminderList = reminders
-      .map((reminder) => {
-        const dateLabel = new Date(reminder.createdAt).toLocaleDateString("en-GB", {
-          day: "numeric",
-          month: "short",
-          year: "numeric",
-        });
-        return `* ${reminder.title} (${dateLabel})`;
-      })
-      .join(" \r ");
+    for (const user of users) {
+      const { firstName, phoneNumber, reminders } = user;
 
-    const response = await fetch(
-      `https://graph.facebook.com/v17.0/${process.env.WHATSAPP_PHONE_ID}/messages`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.WHATSAPP_ACCESS_TOKEN}`,
-        },
-        body: JSON.stringify({
-          messaging_product: "whatsapp",
-          to: phoneNumber,
-          type: "template",
-          template: {
-            name: "reminder",
-            language: {
-              code: "en_GB",
-              policy: "deterministic",
-            },
-            components: [
-              {
-                type: "body",
-                parameters: [
-                  { type: "text", parameter_name: "text", text: name },
-                  { type: "text", parameter_name: "reminder_list", text: reminderList },
-                ],
-              },
-            ],
+      if (!phoneNumber || reminders.length === 0) continue;
+
+      const reminderList = reminders
+        .map((reminder) => {
+          const dateLabel = new Date(reminder.createdAt).toLocaleDateString("en-GB", {
+            day: "numeric",
+            month: "short",
+            year: "numeric",
+          });
+          return `* ${reminder.title} (${dateLabel})`;
+        })
+        .join(" \r ");
+
+      const res = await fetch(
+        `https://graph.facebook.com/v17.0/${process.env.WHATSAPP_PHONE_ID}/messages`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${process.env.WHATSAPP_ACCESS_TOKEN}`,
           },
-        }),
+          body: JSON.stringify({
+            messaging_product: "whatsapp",
+            to: phoneNumber,
+            type: "template",
+            template: {
+              name: "reminder",
+              language: {
+                code: "en_GB",
+                policy: "deterministic",
+              },
+              components: [
+                {
+                  type: "body",
+                  parameters: [
+                    { type: "text", parameter_name: "text", text: firstName },
+                    { type: "text", parameter_name: "reminder_list", text: reminderList },
+                  ],
+                },
+              ],
+            },
+          }),
+        }
+      );
+
+      const result = await res.json();
+      if (res.ok) {
+        messagesSent++;
+      } else {
+        console.error(`Failed to send to ${phoneNumber}: ${result.error?.message}`);
       }
-    );
-
-    const result = await response.json();
-
-    if (!response.ok) {
-      throw new Error(`Error: ${result.error?.message || "Failed to send message"}`);
     }
 
-    return NextResponse.json({ success: true, data: result });
+    return NextResponse.json({ success: true, messagesSent });
   } catch (error) {
-    console.error("WhatsApp API Error:", error);
+    console.error("WhatsApp cron error:", error);
     return NextResponse.json({ success: false, error: (error as Error).message }, { status: 500 });
   }
 }
