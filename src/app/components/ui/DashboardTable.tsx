@@ -3,12 +3,11 @@
 import { useState, useEffect } from "react";
 import { Reminder } from "@/types";
 import * as Ably from "ably";
-
+import TodoItem from "./TodoItem";
 
 export default function DashboardTable() {
   const [reminders, setReminders] = useState<Reminder[]>([]);
 
-  // Function to fetch reminders from the API
   const fetchReminders = async () => {
     try {
       const res = await fetch("/api/reminders");
@@ -21,38 +20,49 @@ export default function DashboardTable() {
     }
   };
 
+  const playFeedback = () => {
+    if (navigator.vibrate) navigator.vibrate(30);
+    const tickSound = new Audio("/bing.wav");
+    tickSound.volume = 0.4;
+    tickSound.currentTime = 0;
+    console.log("playing bing (from delete)");
+    tickSound.play().catch(() => {});
+  };
+  
   const deleteReminder = async (id: string) => {
     try {
       const res = await fetch(`/api/reminders/${id}`, {
         method: "DELETE",
       });
-
+  
       if (!res.ok) throw new Error("Failed to delete reminder");
-
-      // Update state immediately before Ably event is received
-      setReminders((prevReminders) => prevReminders.filter((reminder) => reminder.id !== id));
+  
+      setReminders((prevReminders) =>
+        prevReminders.filter((reminder) => reminder.id !== id)
+      );
+  
+      playFeedback(); // ✅ feedback after delete
     } catch (error) {
       console.error("Error deleting reminder:", error);
     }
   };
 
-  // Fetch reminders initially
   useEffect(() => {
     fetchReminders();
   }, []);
 
-  // WebSocket Connection to Listen for Updates
   useEffect(() => {
-    const client = new Ably.Realtime({ authUrl: "/api/ably-token" }); // Secure authentication
+    const client = new Ably.Realtime({ authUrl: "/api/ably-token" });
     const channel = client.channels.get("reminders");
 
     channel.subscribe("newReminder", (message) => {
-      setReminders((prevReminders) => [message.data, ...prevReminders]);
+      setReminders((prev) => [message.data, ...prev]);
     });
 
-    // Listen for deleted reminders
     channel.subscribe("reminderDeleted", (message) => {
-      setReminders((prevReminders) => prevReminders.filter((reminder) => reminder.id !== message.data.id));
+      setReminders((prev) =>
+        prev.filter((reminder) => reminder.id !== message.data.id)
+      );
     });
 
     return () => {
@@ -78,20 +88,24 @@ export default function DashboardTable() {
           </thead>
           <tbody>
             {reminders.map((reminder) => (
-              <tr key={reminder.id} className="border">
-                <td className="border p-2">{reminder.title}</td>
-                <td className="border p-2">{reminder.description || "N/A"}</td>
-                <td className="border p-2">
-                  {new Date(reminder.createdAt).toLocaleDateString()}
-                </td>
-                <td className="border p-2">
-                  <button
-                    onClick={() => deleteReminder(reminder.id)}
-                    className="bg-red-500 text-white px-2 py-1 rounded">
-                    Delete
-                  </button>
-                </td>
-              </tr>
+              <tr key={reminder.id}>
+              <TodoItem
+                task={reminder.title}
+                initialCompleted={false}
+              />
+              <td className="border p-2">{reminder.description || "N/A"}</td>
+              <td className="border p-2">
+                {new Date(reminder.createdAt).toLocaleDateString()}
+              </td>
+              <td className="border p-2">
+                <button
+                  onClick={() => deleteReminder(reminder.id)}
+                  className="bg-red-500 text-white px-2 py-1 rounded"
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
             ))}
           </tbody>
         </table>
