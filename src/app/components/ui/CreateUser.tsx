@@ -12,10 +12,41 @@ export default function CreateUser() {
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState('');
 
+  const validate = () => {
+    if (!firstName.trim() || !lastName.trim()) {
+      return 'First and last name are required.';
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return 'Invalid email format.';
+    }
+
+    if (!/^\+?\d{10,15}$/.test(phoneNumber)) {
+      return 'Invalid phone number.';
+    }
+
+    if (!dateOfBirth) {
+      return 'Date of birth is required.';
+    }
+
+    if (password.length < 8 || !/[0-9]/.test(password) || !/[A-Z]/.test(password)) {
+      return 'Password must be at least 8 characters long, contain an uppercase letter and a number.';
+    }
+
+    return null;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitting(true);
     setMessage('');
+
+    const error = validate();
+    if (error) {
+      setMessage(error);
+      return;
+    }
+
+    setSubmitting(true);
 
     const res = await fetch('/api/user', {
       method: 'POST',
@@ -56,7 +87,7 @@ export default function CreateUser() {
         value={firstName}
         onChange={(e) => setFirstName(e.target.value)}
         required
-        className="w-full px-3 py-2 border rounded"
+        className="w-full px-3 py-2 border rounded text-black"
       />
       <input
         type="text"
@@ -64,7 +95,7 @@ export default function CreateUser() {
         value={lastName}
         onChange={(e) => setLastName(e.target.value)}
         required
-        className="w-full px-3 py-2 border rounded"
+        className="w-full px-3 py-2 border rounded text-black"
       />
       <input
         type="email"
@@ -72,21 +103,23 @@ export default function CreateUser() {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         required
-        className="w-full px-3 py-2 border rounded"
+        className="w-full px-3 py-2 border rounded text-black"
       />
       <input
         type="tel"
         placeholder="Phone number"
         value={phoneNumber}
         onChange={(e) => setPhoneNumber(e.target.value)}
-        className="w-full px-3 py-2 border rounded"
+        required
+        className="w-full px-3 py-2 border rounded text-black"
       />
       <input
         type="date"
         placeholder="Date of birth"
         value={dateOfBirth}
         onChange={(e) => setDateOfBirth(e.target.value)}
-        className="w-full px-3 py-2 border rounded"
+        required
+        className="w-full px-3 py-2 border rounded text-black"
       />
       <input
         type="password"
@@ -94,7 +127,7 @@ export default function CreateUser() {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         required
-        className="w-full px-3 py-2 border rounded"
+        className="w-full px-3 py-2 border rounded text-black"
       />
 
       <button
@@ -105,7 +138,7 @@ export default function CreateUser() {
         {submitting ? 'Creating...' : 'Create User'}
       </button>
 
-      {message && <p className="text-sm text-gray-700 mt-2">{message}</p>}
+      {message && <p className="text-sm text-red-600 mt-2">{message}</p>}
     </form>
   );
 }
