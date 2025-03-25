@@ -4,6 +4,7 @@ import { auth } from "@/auth";
 import { LoginButton } from "./components/ui/SignIn";
 import AddReminderForm from "./components/ui/AddReminderForm";
 import DashboardTable from "./components/ui/DashboardTable";
+import CreateUser from "./components/ui/CreateUser";
 // import { loadStripe } from "@stripe/stripe-js";
 
 export default async function Page() {
@@ -41,8 +42,11 @@ export default async function Page() {
               🙈 You are not signed in
             </p>
             <LoginButton />
+            <CreateUser />
           </>
         )}
+
+
       </div>
     </>
   );
