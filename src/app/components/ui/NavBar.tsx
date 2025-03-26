@@ -19,12 +19,10 @@ const Navbar: React.FC = () => {
   {/* Left Column */}
   <div className="w-full text-center md:text-left">
   {session?.user ? (
-    <p className="text-sm md:text-base text-green-700 font-medium bg-green-100 px-4 py-2 rounded-md shadow-md">
-      ✅ Signed in: {session.user.email}
+    <p className="inline-block text-sm md:text-base text-green-700 font-medium bg-green-100 px-4 py-2 rounded-md shadow-md">      ✅ Signed in: {session.user.email}
     </p>
   ) : (
-    <p className="text-sm md:text-base text-red-600 font-medium bg-red-100 px-4 py-2 rounded-md shadow-md">
-      🙈 You are not signed in
+<p className="inline-block text-sm md:text-base text-green-700 font-medium bg-green-100 px-4 py-2 rounded-md shadow-md">      🙈 You are not signed in
     </p>
   )}
 </div>
