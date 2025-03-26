@@ -44,7 +44,7 @@ export default function DashboardTable() {
       <div className="flex items-center gap-4">
         <span>Reminder deleted.</span>
         <button
-          className="bg-blue-600 text-white text-sm px-2 py-1 rounded"
+          className="bg-blue-600 text-black text-sm px-2 py-1 rounded"
           onClick={() => {
             toast.dismiss(t.id);
             setReminders((prev) => [reminder, ...prev]);
@@ -95,11 +95,11 @@ export default function DashboardTable() {
 
   return (
     <div className="overflow-x-auto w-full">
-      <h2 className="text-xl font-bold mb-4">Reminders</h2>
+      <h2 className="text-xl font-bold mb-4 text-black">Reminders</h2>
       {reminders.length === 0 ? (
         <p>No reminders found.</p>
       ) : (
-        <table className="min-w-full table-auto border-collapse border border-gray-300">
+        <table className="min-w-full table-auto border-collapse border border-gray-300 text-black">
           <thead>
             <tr className="bg-gray-100">
               <th className="border p-2 text-left text-black">Title</th>
@@ -127,7 +127,7 @@ export default function DashboardTable() {
                 <td className="border p-2">
                   <button
                     onClick={() => deleteReminder(reminder.id)}
-                    className="bg-red-500 text-white px-2 py-1 rounded"
+                    className="bg-red-500 text-black px-2 py-1 rounded"
                   >
                     Delete
                   </button>

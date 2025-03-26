@@ -45,14 +45,14 @@ export default function AddReminderForm() {
   return (
     <form onSubmit={handleSubmit} className="p-4 border rounded-lg">
       <div className="flex justify-between items-center">
-        <h2 className="text-lg font-bold">Add New Reminder</h2>
+        <h2 className="text-lg font-bold text-black">Add New Reminder</h2>
         {/* ✅ Success & Error Message Display */}
         {success && <p className="text-green-500">{success}</p>}
         {error && <p className="text-red-500">{error}</p>}
       </div>
 
       <div className="mb-2">
-        <label className="block font-medium text-secondary">What do you want to remember?</label>
+        <label className="block font-medium text-secondary text-black">What do you want to remember?</label>
         <input
           type="text"
           value={title}
@@ -63,7 +63,7 @@ export default function AddReminderForm() {
       </div>
 
       <div className="mb-2">
-        <label className="block font-medium text-secondary">Description</label>
+        <label className="block font-medium text-secondary text-black">Description</label>
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
