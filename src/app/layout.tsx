@@ -29,7 +29,13 @@ export default async function RootLayout({
   return (
     <SessionProvider>
       <html lang="en">
-        <body className={`${geistSans.variable} ${geistMono.variable}`}>
+      <head>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Agrandir:wght@400;700&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+        <body className={`${geistSans.variable} ${geistMono.variable} font-agrandir`}>
           <Navbar />
           <main>{children}</main>
           <Toaster position="bottom-right" />

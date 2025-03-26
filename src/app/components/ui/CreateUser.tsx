@@ -79,7 +79,7 @@ export default function CreateUser() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 p-4 border rounded max-w-md">
-      <h2 className="text-xl font-semibold">Create New User</h2>
+      <h2 className="text-xl font-semibold text-black text-center">Create New User</h2>
 
       <input
         type="text"
@@ -129,7 +129,7 @@ export default function CreateUser() {
         required
         className="w-full px-3 py-2 border rounded text-black"
       />
-
+      <div className="text-center">
       <button
         type="submit"
         disabled={submitting}
@@ -137,6 +137,7 @@ export default function CreateUser() {
       >
         {submitting ? 'Creating...' : 'Create User'}
       </button>
+      </div>
 
       {message && <p className="text-sm text-red-600 mt-2">{message}</p>}
     </form>

@@ -18,12 +18,16 @@ const Navbar: React.FC = () => {
   <div className="container mx-auto grid grid-cols-2 items-center">
   {/* Left Column */}
   <div className="w-full text-center md:text-left">
-    {session?.user && (
-      <p className="text-sm md:text-base text-green-700 font-medium bg-green-100 px-4 py-2 rounded-md shadow-md">
+  {session?.user ? (
+    <p className="text-sm md:text-base text-green-700 font-medium bg-green-100 px-4 py-2 rounded-md shadow-md">
       ✅ Signed in: {session.user.email}
-      </p>
-    )}
-  </div>
+    </p>
+  ) : (
+    <p className="text-sm md:text-base text-red-600 font-medium bg-red-100 px-4 py-2 rounded-md shadow-md">
+      🙈 You are not signed in
+    </p>
+  )}
+</div>
   
       {/* Right Column */}
       <ul className="flex flex-wrap justify-center md:justify-end space-x-4">
@@ -51,7 +55,7 @@ const Navbar: React.FC = () => {
         ) : (
           <li>
             <Link href="/api/auth/signin" className="text-white hover:underline">
-              Login
+              Sign in
             </Link>
           </li>
         )}
