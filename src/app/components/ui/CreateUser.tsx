@@ -2,10 +2,11 @@
 
 import { useState } from 'react';
 
-export default function CreateUser() {
+export default function CreateUser({ prefillEmail = '' }: { prefillEmail?: string }) {
+  const [email, setEmail] = useState(prefillEmail);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
+  // const [email, setEmail] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [dateOfBirth, setDateOfBirth] = useState('');
   const [password, setPassword] = useState('');
@@ -79,7 +80,7 @@ export default function CreateUser() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 p-4 border rounded max-w-md">
-      <h2 className="text-xl font-semibold text-black text-center">Create New User</h2>
+      <h2 className="text-xl font-semibold text-black text-center">Sign up (it's fun)</h2>
 
       <input
         type="text"
