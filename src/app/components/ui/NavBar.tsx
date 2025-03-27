@@ -8,9 +8,9 @@ import { signOut } from "next-auth/react";
 const Navbar: React.FC = () => {
   const { data: session, status } = useSession();
 
-  if (status === "loading") {
-    return <p>Loading...</p>;
-  }
+  // if (status === "loading") {
+  //   return <p>Loading...</p>;
+  // }
 
   return (
     <nav className="bg-white border-b border-black px-4 py-3 shadow-sm">
