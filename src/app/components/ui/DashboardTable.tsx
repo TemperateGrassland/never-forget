@@ -103,8 +103,8 @@ export default function DashboardTable() {
           <thead>
             <tr className="bg-gray-100">
               <th className="border p-2 text-left text-black">Title</th>
-              <th className="border p-2 text-left text-black">Description</th>
-              <th className="border p-2 text-left text-black">Created</th>
+              {/* <th className="border p-2 text-left text-black">Description</th>
+              <th className="border p-2 text-left text-black">Created</th> */}
               <th className="border p-2 text-left text-black"></th>
             </tr>
           </thead>
@@ -121,9 +121,9 @@ export default function DashboardTable() {
                   initialCompleted={false}
                 />
                 <td className="border p-2">{reminder.description || 'N/A'}</td>
-                <td className="border p-2">
+                {/* <td className="border p-2">
                   {new Date(reminder.createdAt).toLocaleDateString()}
-                </td>
+                </td> */}
                 <td className="border p-2">
                   <button
                     onClick={() => deleteReminder(reminder.id)}
