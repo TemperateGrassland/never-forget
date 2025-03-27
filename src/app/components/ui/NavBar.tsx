@@ -13,8 +13,7 @@ const Navbar: React.FC = () => {
   // }
 
   return (
-    <nav className="bg-white border-b border-black px-4 py-3 shadow-sm">
-      <div className="container mx-auto grid grid-cols-2 items-center">
+<nav className="sticky top-0 z-50 bg-white border-b border-black px-4 py-3 shadow-sm">      <div className="container mx-auto grid grid-cols-2 items-center">
         {/* Left Column */}
         <div className="w-full text-center md:text-left">
           {session?.user ? (
