@@ -83,7 +83,7 @@ export default function CreateUser({ prefillEmail = '' }: { prefillEmail?: strin
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 p-4 border rounded max-w-md">
-      <h2 className="text-xl font-semibold text-black text-center">Sign up (it's fun)</h2>
+      <h2 className="text-xl font-semibold text-black text-center">Sign up</h2>
 
       <input
         type="text"
