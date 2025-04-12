@@ -1,5 +1,6 @@
 'use client';
 
+import { signIn } from 'next-auth/react';
 import { useState } from 'react';
 
 export default function CreateUser({ prefillEmail = '' }: { prefillEmail?: string }) {
@@ -66,13 +67,15 @@ export default function CreateUser({ prefillEmail = '' }: { prefillEmail?: strin
     setSubmitting(false);
 
     if (res.ok) {
-      setMessage('User created successfully.');
-      setFirstName('');
-      setLastName('');
-      setEmail('');
-      setPhoneNumber('');
-      setDateOfBirth('');
-      setPassword('');
+      
+      // Trigger magic link email sign-in
+      await signIn('email', {
+        email,
+        redirect: true,
+        callbackUrl: '/', // Redirect to home page after login
+      });
+
+      return;
     } else {
       setMessage(`Error: ${data.error || 'Unable to create user.'}`);
     }

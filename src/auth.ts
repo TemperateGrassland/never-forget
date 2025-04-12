@@ -19,14 +19,25 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         strategy: "database", 
     },
     debug: true,
-    callbacks: {
-      authorized({ auth }) {
-        return !!auth?.user; // Allow only authenticated users
-      },
-      async redirect({ url, baseUrl }) {
-        console.log("🔹 redirect callback triggered:", { url, baseUrl });
-        return baseUrl;
-      },
-    }
+    pages: {
+      signIn: '/auth/signin',
+    },
+    // callbacks: {
+    //   authorized({ auth }) {
+    //     return !!auth?.user; // Allow only authenticated users
+    //   },
+    //   async redirect({ url, baseUrl }) {
+    //     console.log("🔹 redirect callback triggered:", { url, baseUrl });
+    //     return baseUrl;
+    //   },
+    //   // I think this could help solve my issue with the signin/auth flow.
+    //   async signIn({ email }) {
+    //     if (email) {
+    //       return true;   //if the email exists in the User collection, email them a magic login link
+    //     } else {
+    //       return "/register";
+    //     }
+    //   },
+    // }
 });
 
