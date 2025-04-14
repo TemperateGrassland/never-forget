@@ -1,4 +1,3 @@
-// SignInPageContent.tsx
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -15,30 +14,8 @@ export default function SignInPageContent() {
     // Get CSRF token from the server
     getCsrfToken().then(token => setCsrfToken(token));
 
-    // First, try getting email from the top-level 'email' parameter.
-    let emailParam = searchParams.get('email');
-
-    // If not found, attempt to parse email from the callbackUrl.
-    if (!emailParam) {
-      const callbackUrl = searchParams.get('callbackUrl');
-      if (callbackUrl) {
-        try {
-          // Decode the callbackUrl once.
-          const decodedUrl = decodeURIComponent(callbackUrl);
-          // Create a URL object using the decoded URL. 
-          // Use window.location.origin as the base in case the URL is relative.
-          const urlObj = new URL(decodedUrl, window.location.origin);
-          // Get the email parameter from the decoded URL
-          let extractedEmail = urlObj.searchParams.get('email') || '';
-          // If the extracted email is still URL encoded, decode it.
-          extractedEmail = decodeURIComponent(extractedEmail);
-          emailParam = extractedEmail;
-        } catch (error) {
-          console.error("Error parsing email from callbackUrl:", error);
-        }
-      }
-    }
-
+    // Optionally pre-fill the email if passed as a query parameter
+    const emailParam = searchParams.get('email');
     if (emailParam) {
       setEmail(emailParam);
     }
@@ -67,7 +44,7 @@ export default function SignInPageContent() {
       ) : (
         <form
           method="post"
-          action="/api/auth/signin/email"
+          action="/api/auth/signin"
           onSubmit={handleSubmit}
           className="space-y-4"
         >

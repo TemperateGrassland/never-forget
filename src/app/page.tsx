@@ -1,11 +1,11 @@
 "use server";
 
-import { auth } from "@/auth";
 import { LoginButton } from "./components/ui/SignIn";
 import AddReminderForm from "./components/ui/AddReminderForm";
 import DashboardTable from "./components/ui/DashboardTable";
 import CreateUser from "./components/ui/CreateUser";
 import CheckUser from "./components/ui/CheckUser";
+import { auth } from "@/auth";
 // import { loadStripe } from "@stripe/stripe-js";
 
 export default async function Page() {
