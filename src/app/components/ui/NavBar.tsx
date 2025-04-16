@@ -47,6 +47,11 @@ const Navbar: React.FC = () => {
                 </Link>
               </li>
               <li>
+                <Link href="/daily-reminder" className="text-black hover:underline">
+                  Daily Reminders
+                </Link>
+              </li>
+              <li>
                 <button
                   onClick={() => signOut({ callbackUrl: "/" })}
                   className="text-black hover:underline"
