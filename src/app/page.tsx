@@ -14,12 +14,12 @@ export default async function Page() {
       alt="Never Forget Banner"
       className="w-full max-h-48 object-contain mt-0"
     />
-      <h1 className="text-center font-agrandir text-3xl text-black">helping you build strong habits</h1>
+      <h1 className="text-center font-agrandir text-3xl text-[#25D366] font-style: italic">helping you build strong habits</h1>
 
-      <div className="flex flex-col items-center mt-4">
+      <div className="flex flex-col items-center mt-4 text-emerald-500 font-style: italic">
         {session?.user ? (
           <>
-            <p> welcome to the club </p>
+            {/* <p> welcome to the club </p> */}
           </>
         ) : (
           <>
