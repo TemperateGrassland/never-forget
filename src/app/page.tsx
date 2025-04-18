@@ -8,27 +8,14 @@ export default async function Page() {
 
   return (
     <>
-    <div className="bg-white min-h-screen">
+    <div className="flex flex-col items-center gap-y-6 bg-white min-h-screen">
     <img
       src="/NeverForgetLogo.svg"
       alt="Never Forget Banner"
       className="w-full max-h-48 object-contain mt-0"
     />
-      <h1 className="text-center font-agrandir text-3xl text-[#25D366] font-style: italic">helping you build strong habits</h1>
-
-      <div className="flex flex-col items-center mt-4 text-emerald-500 font-style: italic">
-        {session?.user ? (
-          <>
-            {/* <p> welcome to the club </p> */}
-          </>
-        ) : (
-          <>
+      <h1 className="font-agrandir text-3xl text-[#25D366] font-style: italic">helping you build strong habits</h1>
        <CheckUser />
-          </>
-        )}
-
-
-      </div>
       </div>
     </>
   );
