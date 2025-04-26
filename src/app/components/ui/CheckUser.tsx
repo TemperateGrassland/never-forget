@@ -28,7 +28,7 @@ export default function CheckUser() {
     if (res.ok && data.exists) {
       console.log(`signing in with next auth v5's signin() using ${email}`)
       // signIn('email', { email: email });
-      signIn("email", {
+      signIn("mailgun", {
         email: email});
     } else {
       console.log("setting step to create")
