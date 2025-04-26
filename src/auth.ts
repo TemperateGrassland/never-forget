@@ -14,9 +14,9 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           from: process.env.EMAIL_FROM,   
         }),
       ],
-      secret: process.env.NEXTAUTH_SECRET, // Used for signing/encrypting JWTs and cookies
-      session: {
-        strategy: "database", 
+    secret: process.env.NEXTAUTH_SECRET, // Used for signing/encrypting JWTs and cookies
+    session: {
+    strategy: "database", 
     },
     debug: true,
     callbacks: {
