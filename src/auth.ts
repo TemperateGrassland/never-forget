@@ -19,27 +19,27 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     strategy: "database", 
     },
     debug: true,
-    callbacks: {
-      async signIn({ user, account, profile, email, credentials }) {
-        console.log("signing user in...")
-        // We expect the user object to be populated with an email at this point.
-        if (!user?.email) return false;
+    // callbacks: {
+    //   async signIn({ user, account, profile, email, credentials }) {
+    //     console.log("signing user in...")
+    //     // We expect the user object to be populated with an email at this point.
+    //     if (!user?.email) return false;
   
-        // Check the database: does this user already exist?
-        const exists = await checkUserExists(user.email);
+    //     // Check the database: does this user already exist?
+    //     const exists = await checkUserExists(user.email);
 
-        console.log("hitting signin() in auth.ts")
+    //     console.log("hitting signin() in auth.ts")
   
-        if (exists) {
-          // The user exists: allow NextAuth to sign them in.
-          return true;
-        } else {
-          // The user does not exist: redirect to the create user page.
-          // Returning a URL from the signIn callback will trigger a redirect.
-          return `/auth/create-user?email=${encodeURIComponent(user.email)}`;
-        }
-      },
-    }
+    //     if (exists) {
+    //       // The user exists: allow NextAuth to sign them in.
+    //       return true;
+    //     } else {
+    //       // The user does not exist: redirect to the create user page.
+    //       // Returning a URL from the signIn callback will trigger a redirect.
+    //       return `/auth/create-user?email=${encodeURIComponent(user.email)}`;
+    //     }
+    //   },
+    // }
 });
 
 async function checkUserExists(email: string): Promise<boolean> {

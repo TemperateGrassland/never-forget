@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
 
 const Navbar: React.FC = () => {
@@ -62,9 +62,10 @@ const Navbar: React.FC = () => {
             </>
           ) : (
             <li>
-              <Link href="/api/auth/signin" className="text-black hover:underline">
-                Sign in
-              </Link>
+              <button onClick={() => signIn()}
+                className="text-black hover:underline cursor-pointer">
+                  Sign In
+                  </button>
             </li>
           )}
         </ul>
