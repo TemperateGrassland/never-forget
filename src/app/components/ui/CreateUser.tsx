@@ -69,7 +69,7 @@ export default function CreateUser({ prefillEmail = '' }: { prefillEmail?: strin
     if (res.ok) {
       
       // Trigger magic link email sign-in
-      await signIn('email', {
+      signIn('email', {
         email
         // redirect: true,
         // callbackUrl: '/', // Redirect to home page after login
