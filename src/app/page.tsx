@@ -14,7 +14,7 @@ export default async function Page() {
       alt="Never Forget Banner"
       className="w-full max-h-48 object-contain mt-0"
     />
-      <h1 className="font-agrandir text-3xl text-[#25D366] font-style: italic">helping you build strong habits</h1>
+      <h1 className="font-agrandir text-3xl text-[#25D366]">building stronger habits</h1>
        <CheckUser />
       </div>
     </>
