@@ -18,11 +18,11 @@ export default function TodoItem({
   
       if (navigator.vibrate) navigator.vibrate(30);
   
-      const tickSound = new Audio("/bing.wav");
-      tickSound.volume = 0.4;
-      tickSound.currentTime = 0;
-      console.log('playing bing.')
-      tickSound.play().catch(() => {});
+      // const tickSound = new Audio("/bing.wav");
+      // tickSound.volume = 0.4;
+      // tickSound.currentTime = 0;
+      // console.log('playing bing.')
+      // tickSound.play().catch(() => {});
     };
   
     return (

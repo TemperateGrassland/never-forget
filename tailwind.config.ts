@@ -12,9 +12,9 @@ export default {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
-      // fontFamily: {
-      //   agrandir: ['"Agrandir"', 'sans-serif'],
-      // },
+      fontFamily: {
+        agrandir: ['"Agrandir"', 'sans-serif'],
+      },
     },
   },
   plugins: [],
