@@ -2,7 +2,7 @@ import NextAuth from 'next-auth';
 // import Nodemailer from "next-auth/providers/nodemailer"
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { PrismaClient } from "@prisma/client";
-// import Email from "next-auth/providers/email";
+import Email from "next-auth/providers/email";
 import Mailgun from "next-auth/providers/mailgun"
 
 const prisma = new PrismaClient();
@@ -11,7 +11,7 @@ const prisma = new PrismaClient();
 export const { auth, handlers, signIn, signOut } = NextAuth({
     adapter: PrismaAdapter(prisma),
     providers: [
-      Mailgun({
+      Email({
           apiKey: process.env.MAILGUN_API_KEY,
           server: process.env.EMAIL_SERVER, 
           from: process.env.EMAIL_FROM,   
