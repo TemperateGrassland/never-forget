@@ -16,7 +16,6 @@ model User {
   firstName     String?
   isActive      Boolean    @default(true)
   lastName      String?
-  passwordHash  String?
   phoneNumber   String?
   updatedAt     DateTime   @updatedAt
   reminders     Reminder[] // One-to-many relationship

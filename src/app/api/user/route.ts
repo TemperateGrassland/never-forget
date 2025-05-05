@@ -6,7 +6,6 @@ export async function POST(request: NextRequest) {
   try {
     const {
       email,
-      password,
       firstName,
       lastName,
       phoneNumber,
@@ -16,7 +15,6 @@ export async function POST(request: NextRequest) {
     // Basic validation
     if (
       !email ||
-      !password ||
       !firstName?.trim() ||
       !lastName?.trim()
     ) {
@@ -40,21 +38,6 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Validate password strength
-    if (
-      password.length < 8 ||
-      !/[0-9]/.test(password) ||
-      !/[A-Z]/.test(password)
-    ) {
-      return new Response(
-        JSON.stringify({
-          message:
-            "Password must be at least 8 characters long and include a number and uppercase letter.",
-        }),
-        { status: 400 }
-      );
-    }
-
     // Check if user already exists
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
@@ -63,14 +46,10 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
-
     // Create user
     const user = await prisma.user.create({
       data: {
         email,
-        passwordHash: hashedPassword,
         firstName: firstName.trim(),
         lastName: lastName.trim(),
         phoneNumber,

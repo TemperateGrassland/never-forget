@@ -10,7 +10,6 @@ export default function CreateUser({ prefillEmail = '' }: { prefillEmail?: strin
   // const [email, setEmail] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [dateOfBirth, setDateOfBirth] = useState('');
-  const [password, setPassword] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState('');
 
@@ -29,10 +28,6 @@ export default function CreateUser({ prefillEmail = '' }: { prefillEmail?: strin
 
     if (!dateOfBirth) {
       return 'Date of birth is required.';
-    }
-
-    if (password.length < 8 || !/[0-9]/.test(password) || !/[A-Z]/.test(password)) {
-      return 'Password must be at least 8 characters long, contain an uppercase letter and a number.';
     }
 
     return null;
@@ -59,7 +54,6 @@ export default function CreateUser({ prefillEmail = '' }: { prefillEmail?: strin
         email,
         phoneNumber,
         dateOfBirth,
-        password,
       }),
     });
 
@@ -122,14 +116,6 @@ export default function CreateUser({ prefillEmail = '' }: { prefillEmail?: strin
         placeholder="Date of birth"
         value={dateOfBirth}
         onChange={(e) => setDateOfBirth(e.target.value)}
-        required
-        className="w-full px-3 py-2 border rounded text-black"
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
         required
         className="w-full px-3 py-2 border rounded text-black"
       />

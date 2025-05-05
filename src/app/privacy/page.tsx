@@ -9,7 +9,7 @@ export default function PrivacyPage() {
         <hr />
         <h2>2. Information We Collect</h2>
         <ul>
-          <li><strong>Account Information:</strong> Name, email address, WhatsApp‑enabled phone number, hashed password</li>
+          <li><strong>Account Information:</strong> Name, email address, WhatsApp‑enabled phone number</li>
           <li><strong>Usage Data:</strong> Dates, times, and content of messages sent via WhatsApp; feature usage within our platform</li>
           <li><strong>Device & Technical Data:</strong> IP address, browser type, operating system, device identifiers, and log data</li>
           <li><strong>Support & Feedback:</strong> Any information you submit when contacting support or providing feedback</li>
