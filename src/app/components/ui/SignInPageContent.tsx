@@ -44,7 +44,7 @@ export default function SignInPageContent() {
       ) : (
         <form
           method="post"
-          action="/api/auth/signin"
+          action="/api/auth/signin/email"
           onSubmit={handleSubmit}
           className="space-y-4"
         >
