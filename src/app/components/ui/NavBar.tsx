@@ -35,7 +35,7 @@ const Navbar: React.FC = () => {
             </Link>
           </li>
           <li>
-            <Link href="/aboutus" className="text-black hover:underline">
+            <Link href="/privacy" className="text-black hover:underline">
               Privacy
             </Link>
           </li>

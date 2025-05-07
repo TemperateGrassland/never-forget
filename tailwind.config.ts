@@ -15,6 +15,18 @@ export default {
       fontFamily: {
         agrandir: ['"Agrandir"', 'sans-serif'],
       },
+      typography: {
+        black: {
+          css: {
+            color: '#000',
+            // headings, links etc. inherit from the base color unless you override:
+            h1: { color: '#000' },
+            h2: { color: '#000' },
+            h3: { color: '#000' },
+            a: { color: '#1d4ed8' }, 
+          }
+        }
+      }
     },
   },
   plugins: [],
