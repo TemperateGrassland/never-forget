@@ -7,7 +7,7 @@ export function LoginButton({ email }: { email?: string }) {
       email: email,
       redirect: true,
       // Ensure email is passed as its own query parameter.
-      callbackUrl: `/?email=${encodeURIComponent(email || "")}`,
+      callbackUrl: `/api/auth/signin/email=${encodeURIComponent(email || "")}`,
     });
   };
 

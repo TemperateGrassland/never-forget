@@ -22,9 +22,9 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     strategy: "database", 
     },
     debug: true,
-    pages: {
-      signIn: '/auth/signin',
-    },
+    // pages: {
+    //   signIn: '/auth/signin',
+    // },
 });
 
 
