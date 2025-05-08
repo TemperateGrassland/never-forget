@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import typography from '@tailwindcss/typography'
 
 export default {
   content: [
@@ -16,18 +17,16 @@ export default {
         agrandir: ['"Agrandir"', 'sans-serif'],
       },
       typography: {
-        black: {
+        DEFAULT: {
           css: {
-            color: '#000',
-            // headings, links etc. inherit from the base color unless you override:
+            color: '#000',      // base text
             h1: { color: '#000' },
             h2: { color: '#000' },
-            h3: { color: '#000' },
-            a: { color: '#1d4ed8' }, 
+            a: { color: '#1d4ed8' } 
           }
         }
       }
     },
   },
-  plugins: [],
+  plugins: [typography],
 } satisfies Config;
