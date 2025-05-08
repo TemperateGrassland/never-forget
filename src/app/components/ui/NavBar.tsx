@@ -29,16 +29,6 @@ const Navbar: React.FC = () => {
 
         {/* Right Column */}
         <ul className="flex flex-wrap justify-center md:justify-end space-x-4">
-          <li>
-            <Link href="/aboutus" className="text-black hover:underline">
-              About us
-            </Link>
-          </li>
-          <li>
-            <Link href="/privacy" className="text-black hover:underline">
-              Privacy
-            </Link>
-          </li>
           {session?.user ? (
             <>
               <li>

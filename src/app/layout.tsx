@@ -20,6 +20,7 @@ export const metadata: Metadata = {
 import { SessionProvider } from "next-auth/react";
 import Navbar from "./components/ui/NavBar";
 import { Toaster } from "react-hot-toast";
+import Footer from "./components/ui/Footer";
 
 export default async function RootLayout({
   children,
@@ -39,6 +40,7 @@ export default async function RootLayout({
           <Navbar />
           <main>{children}</main>
           <Toaster position="bottom-right" />
+          <Footer />
         </body>
       </html>  
     </SessionProvider>
