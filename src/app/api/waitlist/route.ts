@@ -17,7 +17,7 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json({ message: 'Added to waitlist' });
-  } catch (error: any) {
+  } catch (error) {
     if (error.code === 'P2002') {
       return NextResponse.json({ error: 'Email already exists' }, { status: 409 });
     }

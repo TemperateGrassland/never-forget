@@ -18,7 +18,7 @@ To use never forget, you must provide accurate information, including your name 
 
 3. Free Trial & Subscriptions
 
-New users are eligible for a free trial. After the trial period, a subscription is required to access never forget's features. If no subscription is started after the free trial, all user analytics and collected data will be deleted a few days after the trial period ends.
+New users are eligible for a free trial. After the trial period, a subscription is required to access never forget&rsquo;s features. If no subscription is started after the free trial, all user analytics and collected data will be deleted a few days after the trial period ends.
 
 4. Data Collection
 

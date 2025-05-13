@@ -20,19 +20,23 @@ export function WaitlistButton() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Enter your email"
-        required
-      />
-      <button type="submit" disabled={status === 'loading'}>
-        {status === 'loading' ? 'Submitting...' : 'Join Waitlist'}
-      </button>
-      {status === 'success' && <p>Thanks! You're on the list.</p>}
+    <>
+      {status !== 'success' && (
+        <form onSubmit={handleSubmit}>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Enter your email"
+            required
+          />
+          <button type="submit" disabled={status === 'loading'}>
+            {status === 'loading' ? 'Submitting...' : 'Join Waitlist'}
+          </button>
+        </form>
+      )}
+      {status === 'success' && <p className="text-black">Thanks! You are on the list.</p>}
       {status === 'error' && <p>Something went wrong.</p>}
-    </form>
-)
+    </>
+  )
 }
