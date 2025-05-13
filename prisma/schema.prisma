@@ -80,3 +80,9 @@ model Reminder {
   updatedAt   DateTime @updatedAt
   User        User     @relation(fields: [userId], references: [id])
 }
+
+model WaitlistEntry {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+}

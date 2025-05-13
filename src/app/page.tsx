@@ -1,6 +1,6 @@
 "use server";
 
-import CheckUser from "./components/ui/CheckUser";
+import { WaitlistButton } from "./components/ui/Waitlist";
 
 export default async function Page() {
 
@@ -28,6 +28,7 @@ export default async function Page() {
           <span className="mr-2">🔥</span>
           Track your habit streaks
         </h2>
+        <WaitlistButton />
         </div>
     </div>
     </>
