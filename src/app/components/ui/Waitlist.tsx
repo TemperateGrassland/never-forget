@@ -30,7 +30,11 @@ export function WaitlistButton() {
             placeholder="Enter your email"
             required
           />
-          <button type="submit" disabled={status === 'loading'}>
+          <button
+            type="submit"
+            disabled={status === 'loading'}
+            className="bg-[#075e54] text-white px-6 py-2 rounded-full shadow-lg hover:shadow-xl hover:scale-105 hover:bg-[#064c46] transition-all duration-300 ease-in-out animate-pulse"
+          >
             {status === 'loading' ? 'Submitting...' : 'Join Waitlist'}
           </button>
         </form>

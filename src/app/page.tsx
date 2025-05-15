@@ -15,7 +15,7 @@ export default async function Page() {
     />
     </div>
     <div className="items-center text-black flex flex-col px-4 sm:px-8 lg:px-16 max-w-screen-2xl mx-auto pb-16">
-      <h1>Daily actionable reminders to your Whatsapp — join the waitlist now.</h1>
+      <h1 className="mb-6 text-lg font-semibold text-center">Daily actionable reminders to your Whatsapp — join the waitlist now.</h1>
       <div>
       <WaitlistButton />
       </div>
