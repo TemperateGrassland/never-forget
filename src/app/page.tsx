@@ -14,28 +14,30 @@ export default async function Page() {
       className="w-full max-h-96 object-contain mt-0"
     />
     </div>
-    <div className="items-center text-black flex flex-col px-4 sm:px-8 lg:px-16 max-w-screen-xl mx-auto">
+    <div className="items-center text-black flex flex-col px-4 sm:px-8 lg:px-16 max-w-screen-2xl mx-auto pb-16">
       <h1>Daily actionable reminders to your Whatsapp — join the waitlist now.</h1>
       <div>
       <WaitlistButton />
       </div>
-      <div className="font-medium text-[#25D366] space-y-1">
-        <h2 className="flex items-center">
-          <span className="mr-2">✅</span>
-          Build better habits
-        </h2>
-        <h2 className="flex items-center">
-          <span className="mr-2">📱</span>
-          Integration with WhatsApp, no extra apps
-        </h2>
-        <h2 className="flex items-center">
-          <span className="mr-2">🔥</span>
-          Track your habit streaks
-        </h2>
-        <div className="w-full">
+      <div className="flex flex-col lg:flex-row items-start gap-8 w-full mt-8">
+        <div className="w-full lg:w-3/3">
           <Demo />
         </div>
+        <div className="w-full lg:w-1/2 font-medium text-[#25D366] space-y-1">
+          <h2 className="flex items-center">
+            <span className="mr-2">✅</span>
+            Build better habits
+          </h2>
+          <h2 className="flex items-center">
+            <span className="mr-2">📱</span>
+            Integration with WhatsApp, no extra apps
+          </h2>
+          <h2 className="flex items-center">
+            <span className="mr-2">🔥</span>
+            Track your habit streaks
+          </h2>
         </div>
+      </div>
     </div>
     </>
   );
