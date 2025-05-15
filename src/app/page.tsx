@@ -19,11 +19,11 @@ export default async function Page() {
       <div>
       <WaitlistButton />
       </div>
-      <div className="flex flex-col lg:flex-row items-start gap-8 w-full mt-8">
+      <div className="flex flex-col lg:flex-row items-start gap-2 w-full mt-8">
         <div className="w-full lg:w-3/3">
           <Demo />
         </div>
-        <div className="w-full lg:w-1/2 font-medium text-[#25D366] space-y-1">
+        <div className="w-full lg:w-1/2 font-medium text-[#25D366] text-lg lg:text-3xl space-y-2">
           <h2 className="flex items-center">
             <span className="mr-2">✅</span>
             Build better habits
