@@ -7,14 +7,14 @@ export default async function Page() {
 
   return (
     <>
-    <div className="flex justify-center bg-white mb-0">
+    <div className="flex flex-col justify-center bg-white mb-0 text-black">
     <img
       src="/NeverForgetLogo.svg"
       alt="Never Forget Banner"
       className="w-full max-h-96 object-contain mt-0"
     />
     </div>
-    <div className="items-center text-black flex flex-col px-4 sm:px-8 lg:px-16 max-w-screen-2xl mx-auto pb-16">
+    <div className="flex flex-col items-center text-black px-4 sm:px-8 lg:px-16 max-w-screen-2xl mx-auto pb-16">
       <h1 className="mb-6 text-lg font-semibold text-center">Daily actionable reminders to your Whatsapp — join the waitlist now.</h1>
       <div>
       <WaitlistButton />
@@ -34,7 +34,7 @@ export default async function Page() {
           </h2>
           <h2 className="flex items-center">
             <span className="mr-2">🔥</span>
-            Track your habit streaks
+            Remember the important things!
           </h2>
         </div>
       </div>
