@@ -16,7 +16,7 @@ export default async function Page() {
     </div>
     <div className="flex flex-col items-center text-black px-4 sm:px-8 lg:px-16 max-w-screen-2xl mx-auto pb-16">
       <h1 className="mb-6 text-lg font-semibold text-center">Daily actionable reminders to your Whatsapp — join the waitlist now.</h1>
-      <div>
+      <div className="w-full flex justify-center mb-4 sm:mb-6">
       <WaitlistButton />
       </div>
       <div className="flex flex-col lg:flex-row items-start gap-2 w-full mt-8">
