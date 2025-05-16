@@ -19,20 +19,20 @@ export default async function Page() {
       <div className="w-full flex justify-center mb-4 sm:mb-6">
       <WaitlistButton />
       </div>
-      <div className="flex flex-col lg:flex-row items-start gap-2 w-full mt-8">
-        <div className="w-full lg:w-3/3">
+      <div className="flex flex-col lg:flex-row items-start gap-4 w-full mt-8">
+        <div className="w-full lg:w-2/3">
           <Demo />
         </div>
-        <div className="w-full lg:w-1/2 font-medium text-[#25D366] text-lg lg:text-3xl space-y-2">
-          <h2 className="flex items-center">
+        <div className="w-full lg:w-1/3 font-medium text-[#25D366] text-lg lg:text-2xl space-y-4 text-center lg:text-left">
+          <h2 className="flex items-center justify-center lg:justify-start">
             <span className="mr-2">✅</span>
             Build better habits
           </h2>
-          <h2 className="flex items-center">
+          <h2 className="flex items-center justify-center lg:justify-start">
             <span className="mr-2">📱</span>
             Integration with WhatsApp, no extra apps
           </h2>
-          <h2 className="flex items-center">
+          <h2 className="flex items-center justify-center lg: justify-start">
             <span className="mr-2">🔥</span>
             Remember the important things!
           </h2>
