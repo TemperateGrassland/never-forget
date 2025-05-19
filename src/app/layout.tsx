@@ -42,6 +42,7 @@ export default async function RootLayout({
           <div className="flex flex-col justify-center items-center bg-white mb-4 text-black">
             <Logo />
           </div>
+
           <main className="flex-grow">
             {children}
           </main>
