@@ -42,13 +42,6 @@ export default async function RootLayout({
           <div className="flex flex-col justify-center items-center bg-white mb-4 text-black">
             <Logo />
           </div>
-          {/* <div className="flex flex-col justify-center bg-white mb-0 text-black">
-              <img
-                src="/NeverForgetLogo.svg"
-                alt="Never Forget Banner"
-                className="w-full max-h-96 object-contain mt-0"
-              />
-          </div> */}
           <main className="flex-grow">
             {children}
           </main>
