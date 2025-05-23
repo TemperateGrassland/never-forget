@@ -1,5 +1,6 @@
 "use server";
 
+import OnboardingToast from "./components/OnboardingToast";
 import Demo from "./components/ui/Demo";
 import { WaitlistButton } from "./components/ui/Waitlist";
 
@@ -16,7 +17,7 @@ export default async function Page() {
         <div className="w-full lg:w-2/3">
           <Demo />
         </div>
-        <div className="w-full lg:w-1/3 font-medium text-[#25D366] text-lg lg:text-2xl space-y-4 text-center lg:text-left">
+        <div className="w-full lg:w-1/3 text-[#25D366] text-lg lg:text-2xl space-y-4 text-center lg:text-left">
           <h2 className="flex items-center justify-center lg:justify-start">
             <span className="mr-2">✅</span>
             Build better habits
@@ -29,6 +30,7 @@ export default async function Page() {
             <span className="mr-2">🔥</span>
             Remember the important things!
           </h2>
+          <OnboardingToast />
         </div>
       </div>
     </div>

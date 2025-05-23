@@ -61,7 +61,7 @@ export default function DashboardTable() {
       if (!isUndone) {
         try {
           await fetch(`/api/reminders/${id}`, { method: 'DELETE' });
-          playFeedback();
+          // playFeedback();
         } catch (err) {
           console.error("Error deleting reminder:", err);
         }
@@ -89,7 +89,8 @@ export default function DashboardTable() {
 
     return () => {
       channel.unsubscribe();
-      client.close();
+      // commented out as this was causing an error 
+      // client.close();
     };
   }, []);
 
