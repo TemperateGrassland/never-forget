@@ -24,7 +24,7 @@ export default function OnboardingToast() {
             // });
             toast.custom((t) => (
                 <div className="bg-white px-4 py-3 text-black rounded shadow-md border max-w-md flex justify-between items-center gap-4">
-                  <span>📱 Add your phone number to receive WhatsApp reminders.</span>
+                  <span>📱 Add your phone number to your Profile and receive WhatsApp reminders.</span>
                   <button
                     onClick={() => toast.dismiss(t.id)}
                     className="ml-auto text-sm text-blue-600 hover:underline"
@@ -37,12 +37,20 @@ export default function OnboardingToast() {
               });
         }
 
-        if (data.reminderCount === 0) {
-            toast("⏰ Set your first reminder to start building better habits.", {
-            icon: "📝",
-            duration: 6000,
-            position: "top-center",
-            });
+        if (data.phoneNumber && data.reminderCount === 0) {
+            toast.custom((t) => (
+                <div className="bg-white px-4 py-3 text-black rounded shadow-md border max-w-md flex justify-between items-center gap-4">
+                  <span>📱 Add a reminder to start receiving daily WhatsApp reminders :D</span>
+                  <button
+                    onClick={() => toast.dismiss(t.id)}
+                    className="ml-auto text-sm text-blue-600 hover:underline"
+                  >
+                    Dismiss
+                  </button>
+                </div>
+              ), {
+                id: "missing-reminder-toast"
+              });
         }
 
         setChecked(true);
