@@ -22,10 +22,30 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     strategy: "database", 
     },
     debug: true,
-    // pages: {
-    //   signIn: '/auth/signin',
-    // },
-});
+    callback: {
+      async signIn({ user }) {
+        const existingUser = await prisma.user.findUnique({
+          where: { email: user.email },
+        });
+    
+        if (!existingUser) {
+          // This is a new user, create the record
+          await prisma.user.create({
+            data: {
+              email: user.email,
+              name: user.name || "",
+            },
+          });
+    
+          // ✅ Send welcome email here (Mailgun or serverless function)
+          await sendWelcomeEmail(user.email);
+        }
+    
+        return true;
+      },
+    }
+  }
+);
 
 
 

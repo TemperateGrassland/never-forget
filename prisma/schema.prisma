@@ -19,6 +19,7 @@ model User {
   phoneNumber   String?
   updatedAt     DateTime   @updatedAt
   reminders     Reminder[] // One-to-many relationship
+  hasReceivedWelcomeEmail Boolean  @default(false)
   accounts      Account[] // One-to-many relationship
   sessions      Session[] // One-to-many relationship
 }
