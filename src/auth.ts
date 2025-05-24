@@ -40,7 +40,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
             await prisma.user.create({
               data: {
                 email: user.email,
-                name: user.name || "",
+                firstName: user.name || "",
                 hasReceivedWelcomeEmail: true,
               },
             });
