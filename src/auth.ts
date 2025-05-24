@@ -4,6 +4,7 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { PrismaClient } from "@prisma/client";
 import Email from "next-auth/providers/email";
 import Mailgun from "next-auth/providers/mailgun"
+import { sendWelcomeEmail } from './lib/email';
 
 const prisma = new PrismaClient();
 
@@ -22,29 +23,33 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     strategy: "database", 
     },
     debug: true,
-    callback: {
+    callbacks: {
       async signIn({ user }) {
         const existingUser = await prisma.user.findUnique({
           where: { email: user.email },
         });
     
         if (!existingUser) {
-          // This is a new user, create the record
           await prisma.user.create({
             data: {
               email: user.email,
               name: user.name || "",
+              hasReceivedWelcomeEmail: true,
             },
           });
     
-          // ✅ Send welcome email here (Mailgun or serverless function)
           await sendWelcomeEmail(user.email);
+        } else if (!existingUser.hasReceivedWelcomeEmail) {
+          await sendWelcomeEmail(user.email);
+          await prisma.user.update({
+            where: { email: user.email },
+            data: { hasReceivedWelcomeEmail: true },
+          });
         }
     
         return true;
       },
     }
-  }
 );
 
 
