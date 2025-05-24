@@ -26,7 +26,7 @@ export default async function Page() {
             <span className="mr-2">📱</span>
             Integration with WhatsApp, no extra apps
           </h2>
-          <h2 className="flex items-center justify-center lg: justify-start">
+          <h2 className="flex items-center justify-center lg:justify-start">
             <span className="mr-2">🔥</span>
             Remember the important things!
           </h2>
