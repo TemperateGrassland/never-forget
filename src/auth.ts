@@ -22,7 +22,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     session: {
     strategy: "database", 
     },
-    debug: true,
+    // debug: true,
     callbacks: {
       async signIn({ user }) {
         if (!user.email) {
@@ -36,7 +36,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           });
 
           if (!existingUser) {
-            console.log(`Creating new user and sending welcome email to: ${user.email}`);
+            console.log(`Creating new user and sending welcome email to: ${user.id}`);
             await prisma.user.create({
               data: {
                 email: user.email,
@@ -47,14 +47,14 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
             await sendWelcomeEmail(user.email);
           } else if (!existingUser.hasReceivedWelcomeEmail) {
-            console.log(`Sending welcome email to existing user: ${user.email}`);
+            console.log(`Sending welcome email to existing user: ${user.id}`);
             await sendWelcomeEmail(user.email);
             await prisma.user.update({
               where: { email: user.email },
               data: { hasReceivedWelcomeEmail: true },
             });
           } else {
-            console.log(`User ${user.email} has already received the welcome email.`);
+            console.log(`User ${existingUser.id} has already received the welcome email.`);
           }
 
           return true;
