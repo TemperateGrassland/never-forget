@@ -36,11 +36,11 @@ const Navbar: React.FC = () => {
                   Profile
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link href="/habit-tracker" className="text-black hover:underline">
                   Habit Tracker
                 </Link>
-              </li>
+              </li> */}
               <li>
                 <Link href="/daily-reminder" className="text-black hover:underline">
                   Daily Reminders
