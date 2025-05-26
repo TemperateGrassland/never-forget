@@ -1,6 +1,6 @@
 "use server";
 
-import OnboardingToast from "./components/OnboardingToast";
+import OnboardingToast from "./components/ui/OnboardingToast";
 import Demo from "./components/ui/Demo";
 import { WaitlistButton } from "./components/ui/Waitlist";
 
