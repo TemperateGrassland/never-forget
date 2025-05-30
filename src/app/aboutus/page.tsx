@@ -44,7 +44,7 @@ const AboutUsPage: React.FC = () => {
             {brandName} is a product of <strong>{legalCompanyName}</strong>. 
           </p>
           <p className="text-lg text-gray-600 leading-relaxed">
-            {brandName}, delivers daily reminders to you via Whatsapp. {brandName} is designed to help individuals capture, organize, and recieve important information with unprecedented ease and utility.
+            {brandName}, delivers daily reminders to you via Whatsapp. {brandName} is designed to help individuals capture, organise, and recieve important information with unprecedented ease and utility.
           </p>
         </section>
 
