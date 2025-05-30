@@ -53,7 +53,7 @@ const AboutUsPage: React.FC = () => {
             Our Mission
           </h2>
           <p className="text-lg text-gray-600 mb-4 leading-relaxed">
-            {brandName}'s mission is to empower people to remember the important things by ensuring that no valuable thought, idea, or piece of information is lost or forgotten. {brandName} strives to make daily reminders intuitive, efficient, and accessible to everyone.
+            {brandName}&apos;s mission is to empower people to remember the important things by ensuring that no valuable thought, idea, or piece of information is lost or forgotten. {brandName} strives to make daily reminders intuitive, efficient, and accessible to everyone.
           </p>
         </section>
 
