@@ -42,6 +42,9 @@ export default function PrivacyPage() {
           <li>
             <strong>Usage Data:</strong> We may collect information about how you use the Service, such as the frequency and duration of your use.
           </li>
+          <li>
+          <strong>Usage Data with Google Analytics:</strong> When you visit our Site, we use Google Analytics to collect information about your interaction with our Site. This may include your IP address, your geographic location, browser type and version, operating system, referral source, length of visit, page views, and website navigation paths, as well as information about the timing, frequency, and pattern of your service use. This information is collected through the use of cookies and similar tracking technologies. This information is used to improve the offered never forget product.
+        </li>
         </ul>
       </section>
 
