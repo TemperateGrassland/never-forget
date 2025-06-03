@@ -1,13 +1,13 @@
 export default function PrivacyPage() {
   return (
-      <div className="privacy-policy-container p-4 md:p-8 text-black dark:text-black">
-      <h1 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">Privacy Policy for NeverForget.com</h1>
+      <div className="privacy-policy-container p-4 md:p-8 text-black dark:text-white">
+      <h1 className="text-3xl font-bold mb-6 text-black dark:text-white">Privacy Policy for NeverForget.com</h1>
       <p className="mb-4"><strong>Last Updated:</strong> June 3, 2025</p>
 
       <section className="mb-6">
-        <h2 className="text-2xl font-semibold mb-3 text-black-900 dark:text-black">1. Introduction</h2>
+        <h2 className="text-2xl font-semibold mb-3 text-black dark:text-white">1. Introduction</h2>
         <p className="mb-2">
-          Welcome to NeverForget.com (the &quot;Service&quot;, &quot;we,&quot; &quot;us&quot;, or &quot;our&quot;). We are committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website <a href="https://www.neverforget.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline dark:text-blue-400">https://www.neverforget.com</a> and use our WhatsApp reminder service. Please read this privacy policy carefully. If you do not agree with the terms of this privacy policy, please do not access the site or use our services.
+          Welcome to NeverForget.com (the &quot;Service&quot;, &quot;we,&quot; &quot;us&quot;, or &quot;our&quot;). We are committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website <a href="https://www.neverforget.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline dark:text-white">https://www.neverforget.com</a> and use our WhatsApp reminder service. Please read this privacy policy carefully. If you do not agree with the terms of this privacy policy, please do not access the site or use our services.
         </p>
         <p>
           We reserve the right to make changes to this Privacy Policy at any time and for any reason. We will alert you about any changes by updating the &quot;Last Updated&quot; date of this Privacy Policy.
@@ -15,11 +15,11 @@ export default function PrivacyPage() {
       </section>
 
       <section className="mb-6">
-        <h2 className="text-2xl font-semibold mb-3 text-black-900 dark:text-black">2. Information We Collect</h2>
+        <h2 className="text-2xl font-semibold mb-3 text-black dark:text-white">2. Information We Collect</h2>
         <p className="mb-2">
           We may collect information about you in a variety of ways. The information we may collect on the Site and via our Service includes:
         </p>
-        <h3 className="text-xl font-medium my-2 text-black-900 dark:text-black">Personal Data:</h3>
+        <h3 className="text-xl font-medium my-2 text-black dark:text-white">Personal Data:</h3>
         <ul className="list-disc list-inside mb-2 pl-4">
           <li>
             <strong>Phone Number:</strong> We collect your WhatsApp-enabled phone number when you voluntarily provide it to us to receive our reminder services.
@@ -34,7 +34,7 @@ export default function PrivacyPage() {
             <strong>Reminder Time/Date:</strong> We collect the time and date preferences you set for your reminders.
           </li>
         </ul>
-        <h3 className="text-xl font-medium my-2 text-black-900 dark:text-black">Derivative Data:</h3>
+        <h3 className="text-xl font-medium my-2 text-black dark:text-white">Derivative Data:</h3>
         <ul className="list-disc list-inside mb-2 pl-4">
           <li>
             <strong>IP Address:</strong> Information automatically collected by our servers when you access the Site, such as your IP address, browser type, operating system, access times, and the pages you have viewed directly before and after accessing the Site. This is standard for most web servers and helps us understand how our Service is being used and to prevent abuse.
@@ -49,7 +49,7 @@ export default function PrivacyPage() {
       </section>
 
       <section className="mb-6">
-        <h2 className="text-2xl font-semibold mb-3 text-black-900 dark:text-black">3. How We Use Your Information</h2>
+        <h2 className="text-2xl font-semibold mb-3 text-black dark:text-white">3. How We Use Your Information</h2>
         <p className="mb-2">
           Having accurate information about you permits us to provide you with a smooth, efficient, and customized experience. Specifically, we may use information collected about you via the Site or our Service to:
         </p>
@@ -67,11 +67,11 @@ export default function PrivacyPage() {
       </section>
 
       <section className="mb-6">
-        <h2 className="text-2xl font-semibold mb-3 text-black-900 dark:text-black">4. How We Share Your Information</h2>
+        <h2 className="text-2xl font-semibold mb-3 text-black dark:text-white">4. How We Share Your Information</h2>
         <p className="mb-2">
           We do not sell or rent your personal information to third parties. We may share information we have collected about you in certain situations:
         </p>
-        <h3 className="text-xl font-medium my-2 text-black-900 dark:text-black">With Third-Party Service Providers:</h3>
+        <h3 className="text-xl font-medium my-2 text-black dark:text-white">With Third-Party Service Providers:</h3>
         <ul className="list-disc list-inside mb-2 pl-4">
           <li>
             We share your phone number and the reminder message content with <strong>WhatsApp</strong> (owned by Meta Platforms, Inc.) as it is the platform used to deliver the reminder messages. Your interaction with WhatsApp is also governed by WhatsApp&apos;s own Privacy Policy and Terms of Service.
@@ -86,40 +86,40 @@ export default function PrivacyPage() {
             We may use other third-party vendors for services like email delivery (if you opt-in to email communications not related to direct service delivery), analytics, or customer support. We will only share information necessary for them to perform their designated functions and require them to maintain the confidentiality of your information.
           </li>
         </ul>
-        <h3 className="text-xl font-medium my-2 text-black-900 dark:text-black">By Law or to Protect Rights:</h3>
+        <h3 className="text-xl font-medium my-2 text-black dark:text-white">By Law or to Protect Rights:</h3>
         <p className="mb-2">
           If we believe the release of information about you is necessary to respond to legal process, to investigate or remedy potential violations of our policies, or to protect the rights, property, and safety of others, we may share your information as permitted or required by any applicable law, rule, or regulation.
         </p>
-        <h3 className="text-xl font-medium my-2 text-black-900 dark:text-black">Business Transfers:</h3>
+        <h3 className="text-xl font-medium my-2 text-black dark:text-white">Business Transfers:</h3>
         <p className="mb-2">
           We may share or transfer your information in connection with, or during negotiations of, any merger, sale of company assets, financing, or acquisition of all or a portion of our business to another company.
         </p>
-        <h3 className="text-xl font-medium my-2 text-black-900 dark:text-black">With Your Consent:</h3>
+        <h3 className="text-xl font-medium my-2 text-black dark:text-white">With Your Consent:</h3>
         <p>
           We may disclose your personal information for any other purpose with your consent.
         </p>
       </section>
 
       <section className="mb-6">
-        <h2 className="text-2xl font-semibold mb-3 text-gray-900 dark:text-black">5. Data Storage and International Transfers</h2>
+        <h2 className="text-2xl font-semibold mb-3 text-black dark:text-white">5. Data Storage and International Transfers</h2>
         <p className="mb-2">
           Your information, including personal data, is stored in a PostgreSQL database hosted on Neon. The servers for Neon and our website hosting provider, Vercel, may be located in various countries around the world. This means that your information may be transferred to — and maintained on — computers located outside of your state, province, country, or other governmental jurisdiction where the data protection laws may differ from those in your jurisdiction. We will take all steps reasonably necessary to ensure that your data is treated securely and in accordance with this Privacy Policy.
         </p>
       </section>
 
       <section className="mb-6">
-  <h2 className="text-2xl font-semibold mb-3 text-gray-900 dark:text-white">
+  <h2 className="text-2xl font-semibold mb-3 text-black dark:text-white">
      6. Cookies and Tracking Technologies
   </h2>
   <p className="mb-2">
     We use cookies, web beacons, tracking pixels, and other tracking technologies on the Site to help customize the Site and improve your experience. When you access the Site, your personal information is not collected through the use of tracking technology. Most browsers are set to accept cookies by default. You can remove or reject cookies, but be aware that such action could affect the availability and functionality of the Site.
   </p>
-  <h3 className="text-xl font-medium my-2 text-gray-900 dark:text-white">Google Analytics:</h3>
+  <h3 className="text-xl font-medium my-2 text-black dark:text-white">Google Analytics:</h3>
   <p className="mb-2">
-    We use Google Analytics, a web analytics service provided by Google, Inc. ("Google"). Google Analytics uses cookies to help us analyze how users use the Site. The information generated by the cookie about your use of the Site (including your IP address) will be transmitted to and stored by Google on servers in the United States and other countries.
+    We use Google Analytics, a web analytics service provided by Google, Inc. (&quot;Google&quot;). Google Analytics uses cookies to help us analyze how users use the Site. The information generated by the cookie about your use of the Site (including your IP address) will be transmitted to and stored by Google on servers in the United States and other countries.
   </p>
   <p className="mb-2">
-    Google will use this information for the purpose of evaluating your use of the Site, compiling reports on website activity for website operators, and providing other services relating to website activity and internet usage. Google may also transfer this information to third parties where required to do so by law, or where such third parties process the information on Google's behalf.
+    Google will use this information for the purpose of evaluating your use of the Site, compiling reports on website activity for website operators, and providing other services relating to website activity and internet usage. Google may also transfer this information to third parties where required to do so by law, or where such third parties process the information on Google&apos;s behalf.
   </p>
   <p className="mb-2">
      You can prevent your data from being used by Google Analytics by installing the Google Analytics opt-out browser add-on, available at <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline dark:text-blue-400">https://tools.google.com/dlpage/gaoptout</a>.
@@ -130,7 +130,7 @@ export default function PrivacyPage() {
 </section>
 
        <section className="mb-6">
-        <h2 className="text-2xl font-semibold mb-3 text-black-900 dark:text-black">7. Data Retention</h2>
+        <h2 className="text-2xl font-semibold mb-3 text-black dark:text-white">7. Data Retention</h2>
         <p className="mb-2">
           We will retain your personal information (phone number, email address, message content, reminder schedule) only for as long as is necessary for the purposes set out in this Privacy Policy, or as long as your account is active to receive reminders or other communications you have opted into. You can request the deletion of your data as described in &quot;Your Rights&quot; below. We may retain and use your information to the extent necessary to comply with our legal obligations (for example, if we are required to retain your data to comply with applicable laws), resolve disputes, and enforce our legal agreements and policies.
         </p>
@@ -140,14 +140,14 @@ export default function PrivacyPage() {
       </section>
 
       <section className="mb-6">
-        <h2 className="text-2xl font-semibold mb-3 text-black-900 dark:text-black">8. Data Security</h2>
+        <h2 className="text-2xl font-semibold mb-3 text-black dark:text-white">8. Data Security</h2>
         <p className="mb-2">
           We use administrative, technical, and physical security measures to help protect your personal information. This includes utilizing reputable hosting providers like Vercel and database services like Neon, who have their own security protocols. While we and our providers have taken reasonable steps to secure the personal information you provide to us, please be aware that despite our efforts, no security measures are perfect or impenetrable, and no method of data transmission can be guaranteed against any interception or other type of misuse. Any information disclosed online is vulnerable to interception and misuse by unauthorized parties. Therefore, we cannot guarantee complete security if you provide personal information.
         </p>
       </section>
 
       <section className="mb-6">
-        <h2 className="text-2xl font-semibold mb-3 text-black-900 dark:text-black">9. Your Rights</h2>
+        <h2 className="text-2xl font-semibold mb-3 text-black dark:text-white">9. Your Rights</h2>
         <p className="mb-2">
           Depending on your location and applicable data protection laws, you may have the following rights regarding your personal information:
         </p>
@@ -167,7 +167,7 @@ export default function PrivacyPage() {
       </section>
 
       <section className="mb-6">
-        <h2 className="text-2xl font-semibold mb-3 text-black-900 dark:text-black">10. Third-Party Services (WhatsApp, Vercel, Neon)</h2>
+        <h2 className="text-2xl font-semibold mb-3 text-black dark:text-white">10. Third-Party Services (WhatsApp, Vercel, Neon)</h2>
         <p className="mb-2">
           Our Service relies on WhatsApp (a service of Meta Platforms, Inc.) to deliver messages, Vercel for website hosting, and Neon for database hosting. When you use our Service, your data is processed by these third parties to facilitate the functioning of our application. We encourage you to review their respective Privacy Policies and Terms of Service:
         </p>
@@ -183,28 +183,28 @@ export default function PrivacyPage() {
       </section>
 
       <section className="mb-6">
-        <h2 className="text-2xl font-semibold mb-3 text-black-900 dark:text-black">11. Children&apos;s Privacy</h2>
+        <h2 className="text-2xl font-semibold mb-3 text-black dark:text-white">11. Children&apos;s Privacy</h2>
         <p className="mb-2">
           Our Service is not intended for use by children under the age of 13 (or a higher age if stipulated by applicable law in your jurisdiction). We do not knowingly collect personal information from children under 13. If we become aware that we have collected personal information from a child under 13 without verification of parental consent, we will take steps to remove that information from our servers. If you believe that we might have any information from or about a child under 13, please contact us.
         </p>
       </section>
 
       <section className="mb-6">
-        <h2 className="text-2xl font-semibold mb-3 text-black-900 dark:text-black">12. Changes to This Privacy Policy</h2>
+        <h2 className="text-2xl font-semibold mb-3 text-black dark:text-white">12. Changes to This Privacy Policy</h2>
         <p>
           We may update this Privacy Policy from time to time. The updated version will be indicated by an updated &quot;Last Updated&quot; date and the updated version will be effective as soon as it is accessible. We encourage you to review this Privacy Policy frequently to be informed of how we are protecting your information.
         </p>
       </section>
 
       <section>
-        <h2 className="text-2xl font-semibold mb-3 text-gray-900 dark:text-black">13. Contact Us</h2>
+        <h2 className="text-2xl font-semibold mb-3 text-black dark:text-black">13. Contact Us</h2>
         <p>
           If you have questions or comments about this Privacy Policy, or wish to exercise your rights, please contact us at:
         </p>
         <address className="mt-2 not-italic"> 
           neverforget.com<br />
           <a href="mailto:privacy@neverforget.com" className="text-blue-600 hover:underline dark:text-blue-400"><span className="text-blue-500 dark:text-blue-400">charlie@neverforget.com</span></a><br />
-          <span className="text-black-500 dark:text-black-400"> Unit A, 82 James Carter Road, Mildenhall, United Kingdom, IP28 7DE </span><br />
+          <span className="text-black dark:text-white"> Unit A, 82 James Carter Road, Mildenhall, United Kingdom, IP28 7DE </span><br />
         </address>
       </section>
     </div>
