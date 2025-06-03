@@ -44,7 +44,7 @@ const AboutUsPage: React.FC = () => {
             {brandName} is a product of <strong>{legalCompanyName}</strong>, a company registed in the United Kingdom with Companies House.
           </p>
           <p className="text-lg text-gray-600 leading-relaxed">
-            {brandName}, delivers daily reminders to you via Whatsapp. {brandName} is designed to help individuals capture, organise, and recieve important information with unprecedented ease and utility.
+            {brandName} delivers daily reminders via Whatsapp. {brandName} is designed to help individuals capture, organise, and recieve daily reminders with unprecedented ease and utility.
           </p>
         </section>
 
@@ -53,7 +53,7 @@ const AboutUsPage: React.FC = () => {
             Our Mission
           </h2>
           <p className="text-lg text-gray-600 mb-4 leading-relaxed">
-            {brandName}&apos;s mission is to empower people to remember the important things by ensuring that no valuable thought, idea, or piece of information is lost or forgotten. {brandName} strives to make daily reminders intuitive, efficient, and accessible to everyone.
+            {brandName}&apos;s mission is to help people remember the important things in life. {brandName} ensures no reminder is lost or forgotten. {brandName} strives to make daily reminders intuitive, efficient, and accessible to everyone.
           </p>
         </section>
 
@@ -65,7 +65,7 @@ const AboutUsPage: React.FC = () => {
             <div>
               <h3 className="text-xl font-medium text-gray-700">Privacy & Security</h3>
               <p className="text-lg text-gray-600 leading-relaxed">
-                Your trust is paramount. {brandName} is committed to protecting your personal information and the memories you entrust to {brandName}. We employ robust security measures and adhere to strict data privacy principles. To learn more about how we handle your data, please review our{' '}
+                Your trust is paramount. {brandName} is committed to protecting your personal information and the reminders you entrust to {brandName}. We employ robust security measures and adhere to strict data privacy principles. To learn more about how we handle your data, please review our{' '}
                 <Link href="/privacy-policy" legacyBehavior>
                   <a className="text-blue-600 hover:text-blue-800 underline">Privacy Policy</a>
                 </Link>.
@@ -74,7 +74,7 @@ const AboutUsPage: React.FC = () => {
             <div>
               <h3 className="text-xl font-medium text-gray-700">Transparency</h3>
               <p className="text-lg text-gray-600 leading-relaxed">
-                We believe in clear and honest communication - email me directly at {contactEmail}. Our terms of service and operational policies are designed to be understandable.
+                We believe in clear and honest communication - email me directly at {contactEmail} with any questions or concerns. 
               </p>
             </div>
           </div>
