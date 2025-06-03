@@ -41,7 +41,7 @@ const AboutUsPage: React.FC = () => {
             Who We Are
           </h2>
           <p className="text-lg text-gray-600 mb-4 leading-relaxed">
-            {brandName} is a product of <strong>{legalCompanyName}</strong>. 
+            {brandName} is a product of <strong>{legalCompanyName}</strong>, a company registed in the United Kingdom with Companies House.
           </p>
           <p className="text-lg text-gray-600 leading-relaxed">
             {brandName}, delivers daily reminders to you via Whatsapp. {brandName} is designed to help individuals capture, organise, and recieve important information with unprecedented ease and utility.
