@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Script from "next/script";
+import CookieConsent from "./components/ui/CookieConsent";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,7 +34,7 @@ export default async function RootLayout({
     <SessionProvider>
       <html lang="en">
       <head>
-        <Script
+        {/* <Script
           strategy="afterInteractive"
           src="https://www.googletagmanager.com/gtag/js?id=G-RG9V6NQR4C"
         />
@@ -48,7 +49,7 @@ export default async function RootLayout({
               gtag('config', 'G-RG9V6NQR4C');
             `,
           }}
-        />
+        /> */}
 
         <link
           href="https://fonts.googleapis.com/css2?family=Agrandir:wght@400;700&display=swap"
@@ -56,6 +57,7 @@ export default async function RootLayout({
         />
       </head>
         <body className={`flex flex-col min-h-screen ${geistSans.variable} ${geistMono.variable} font-agrandir`}>
+          <CookieConsent />
           <Navbar />
           <div className="flex flex-col justify-center items-center bg-white mb-4 text-black">
             <Logo />
