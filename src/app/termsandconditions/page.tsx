@@ -32,7 +32,7 @@ export default function TermsAndConditionsPage() {
       <section className="mb-6">
         <h2 className="text-2xl font-semibold mb-3 text-black dark:text-white">4. Data Collection</h2>
         <p className="text-black dark:text-white">
-          We collect personal data such as names or emails - more information can be found in the Privacy Policy. never forget also collects non-personal data including cookies and IP addresses to provide analytics services and improve the user experience. For more details, please refer to our Privacy Policy.
+          We collect personal data such as names or emails. never forget also collects non-personal data including cookies and IP addresses to provide analytics services and improve the user experience. For more details, please refer to our <a href="https://www.neverforget.one/privacy" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline dark:text-blue-400">Privacy Policy.</a>
         </p>
       </section>
 
