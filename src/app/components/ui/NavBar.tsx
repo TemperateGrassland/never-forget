@@ -1,12 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { signIn, useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
 
 const Navbar: React.FC = () => {
   const { data: session, status } = useSession();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   // if (status === "loading") {
   //   return <p>Loading...</p>;
@@ -25,50 +26,53 @@ const Navbar: React.FC = () => {
               🙈 You are not signed in
             </p>
           )}
-          <div className="mt-2">
-            {session?.user ? (
-              <button
-                onClick={() => signOut({ callbackUrl: "/" })}
-                className="text-black hover:underline text-sm"
-              >
-                Sign Out
-              </button>
-            ) : (
-              <button
-                onClick={() => signIn()}
-                className="text-black hover:underline text-sm"
-              >
-                Sign In
-              </button>
-            )}
-          </div>
         </div>
 
         {/* Right Column */}
-        <ul className="flex flex-wrap justify-center md:justify-end space-x-4">
+        <div className="w-full flex justify-end">
           {session?.user ? (
-            <>
-              <li>
-                <Link href="/profile" className="text-black hover:underline">
-                  Profile
-                </Link>
-              </li>
-              {/* <li>
-                <Link href="/habit-tracker" className="text-black hover:underline">
-                  Habit Tracker
-                </Link>
-              </li> */}
-              <li>
-                <Link
-                  href="/daily-reminder"
-                  className="bg-[#25D366] text-white px-3 py-1 rounded hover:bg-gray-800"
-                >
-                  📅 Daily Reminders
-                </Link>
-              </li>
-            </>
-          ) : null}
-        </ul>
+            <div className="relative inline-block text-left">
+              <button
+                onClick={() => setMenuOpen(!menuOpen)}
+                className="flex items-center space-x-2 bg-gray-100 p-2 rounded-full hover:bg-gray-200"
+              >
+                <span role="img" aria-label="user">
+                  🌊
+                </span>
+              </button>
+
+              {menuOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded shadow-lg z-50">
+                  <Link
+                    href="/profile"
+                    className="block px-4 py-2 text-black hover:bg-gray-100"
+                  >
+                    👤 Profile
+                  </Link>
+                  <Link
+                    href="/daily-reminder"
+                    className="block px-4 py-2 text-black hover:bg-gray-100"
+                  >
+                    📅 Daily Reminders
+                  </Link>
+                  <button
+                    onClick={() => signOut({ callbackUrl: "/" })}
+                    className="w-full text-left px-4 py-2 text-black hover:bg-gray-100"
+                  >
+                    👋 Sign Out
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <button
+              onClick={() => signIn()}
+              className="bg-[#25D366] text-white px-4 py-2 rounded"
+            >
+              Sign In
+            </button>
+          )}
+        </div>
       </div>
     </nav>
   );
