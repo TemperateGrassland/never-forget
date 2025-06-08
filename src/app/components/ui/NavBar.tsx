@@ -25,6 +25,23 @@ const Navbar: React.FC = () => {
               🙈 You are not signed in
             </p>
           )}
+          <div className="mt-2">
+            {session?.user ? (
+              <button
+                onClick={() => signOut({ callbackUrl: "/" })}
+                className="text-black hover:underline text-sm"
+              >
+                Sign Out
+              </button>
+            ) : (
+              <button
+                onClick={() => signIn()}
+                className="text-black hover:underline text-sm"
+              >
+                Sign In
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Right Column */}
@@ -42,27 +59,15 @@ const Navbar: React.FC = () => {
                 </Link>
               </li> */}
               <li>
-                <Link href="/daily-reminder" className="text-black hover:underline">
-                  Daily Reminders
+                <Link
+                  href="/daily-reminder"
+                  className="bg-[#25D366] text-white px-3 py-1 rounded hover:bg-gray-800"
+                >
+                  📅 Daily Reminders
                 </Link>
               </li>
-              <li>
-                <button
-                  onClick={() => signOut({ callbackUrl: "/" })}
-                  className="text-black hover:underline"
-                >
-                  Sign Out
-                </button>
-              </li>
             </>
-          ) : (
-            <li>
-              <button onClick={() => signIn()}
-                className="text-black hover:underline cursor-pointer">
-                  Sign In
-                  </button>
-            </li>
-          )}
+          ) : null}
         </ul>
       </div>
     </nav>
