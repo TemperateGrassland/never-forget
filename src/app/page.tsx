@@ -4,6 +4,11 @@ import OnboardingToast from "./components/ui/OnboardingToast";
 import Demo from "./components/ui/Demo";
 import { WaitlistButton } from "./components/ui/Waitlist";
 
+export const metadata = {
+  title: "Daily Reminders via Whatsapp | Never Forget",
+  description: "Set and manage daily WhatsApp reminders with Never Forget.",
+};
+
 export default async function Page() {
 
   return (
