@@ -22,25 +22,35 @@ export function WaitlistButton() {
   return (
     <>
       {status !== 'success' && (
-        <form onSubmit={handleSubmit}>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter your email"
-            required
-          />
-          <button
-            type="submit"
-            disabled={status === 'loading'}
-            className="bg-[#25D366] text-white m-4 px-6 py-2 rounded-full shadow-lg hover:shadow-xl hover:scale-105 hover:bg-[#25D366] transition-all duration-300 ease-in-out animate-pulse"
-          >
-            {status === 'loading' ? 'Submitting...' : 'Join Waitlist'}
-          </button>
-        </form>
+        <div className="flex justify-center">
+          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-center justify-center gap-2 w-full max-w-lg">
+            <label htmlFor="email" className="sr-only">Email address</label>
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email"
+              required
+              className="mx-auto block w-full max-w-md px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#25D366] focus:border-transparent"
+            />
+            <button
+              type="submit"
+              disabled={status === 'loading'}
+              className="whitespace-nowrap bg-[#25D366] text-white m-4 px-6 py-2 rounded-full shadow-lg hover:shadow-xl hover:scale-105 hover:bg-[#25D366] transition-all duration-300 ease-in-out animate-pulse"
+            >
+              {status === 'loading' ? 'Submitting...' : 'Join Waitlist'}
+            </button>
+          </form>
+        </div>
       )}
       {status === 'success' && <p className="text-black">Thanks! You are on the list.</p>}
-      {status === 'error' && <p>Something went wrong.</p>}
+      {status === 'error' && (
+        <p className="text-red-600 mt-2">Something went wrong. Please try again.</p>
+      )}
+      <p className="text-sm text-gray-600 text-center mt-2">
+        We’ll never spam or share your email.
+      </p>
     </>
   )
 }
