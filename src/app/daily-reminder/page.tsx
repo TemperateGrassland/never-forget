@@ -1,5 +1,7 @@
+import { Elements } from "@stripe/react-stripe-js";
 import AddReminderForm from "../components/ui/AddReminderForm";
 import DashboardTable from "../components/ui/DashboardTable";
+import CheckoutButton from "../components/ui/CheckoutButton";
 
 export default function DailyReminder() {
     return (

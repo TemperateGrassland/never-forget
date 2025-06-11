@@ -8,7 +8,11 @@ export default function CheckoutButton() {
   const stripe = useStripe();
 
   const handleCheckout = async () => {
-    const response = await fetch("/api/checkout", { method: "POST" });
+  const response = await fetch('/api/checkout', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ priceId: "price_1Q18QbF5x12WgiZJnCWN1enu" }),
+  });
     const { sessionId } = await response.json();
 
     if (stripe) {
