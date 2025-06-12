@@ -17,7 +17,7 @@ export default function CheckoutButton() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        priceId: "price_1Q18QbF5x12WgiZJnCWN1enu",
+        priceId: "price_1RYzNdF5x12WgiZJJjkYBZ8P",
         email: session.user.email,
       }),
     });
