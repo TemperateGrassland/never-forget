@@ -24,11 +24,6 @@ export default async function Page() {
             <WaitlistButton />
           </div>
         </div>
-        <div className="w-full max-w-3xl mb-6 text-xl sm:text-2xl lg:text-3xl font-agrandir text-center">
-          <h1>
-            Join the waitlist now and we will send you a notification when the service is ready.
-          </h1>
-        </div>
         <div className="flex flex-col lg:flex-row items-center justify-center gap-4 w-full mt-8">
           <div className="w-full lg:w-2/3">
             <Demo />
