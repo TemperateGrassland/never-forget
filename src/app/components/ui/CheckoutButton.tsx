@@ -1,18 +1,26 @@
 "use client";
 
 import React from "react";
-import { useStripe, useElements, Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
+import { useStripe } from "@stripe/react-stripe-js";
+import { useSession, signIn } from "next-auth/react";
 
 export default function CheckoutButton() {
   const stripe = useStripe();
+  const { data: session } = useSession();
 
   const handleCheckout = async () => {
-  const response = await fetch('/api/checkout', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ priceId: "price_1Q18QbF5x12WgiZJnCWN1enu" }),
-  });
+    if (!session?.user?.email) {
+      signIn();
+      return;
+    }
+    const response = await fetch('/api/checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        priceId: "price_1Q18QbF5x12WgiZJnCWN1enu",
+        email: session.user.email,
+      }),
+    });
     const { sessionId } = await response.json();
 
     if (stripe) {
@@ -25,5 +33,5 @@ export default function CheckoutButton() {
       Checkout
     </button>
   );
-};
+}
 
