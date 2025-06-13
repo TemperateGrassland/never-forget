@@ -24,6 +24,11 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     },
     // debug: true,
     callbacks: {
+      async session({ session, user }) {
+      session.user.id = user.id;
+      session.user.stripeCustomerId = user.stripeCustomerId;
+      return session;
+    },
       async signIn({ user }) {
         if (!user.email) {
           console.error("Sign-in attempt failed: missing user email.");

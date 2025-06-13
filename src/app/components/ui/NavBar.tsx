@@ -55,6 +55,12 @@ const Navbar: React.FC = () => {
                   >
                     📅 Daily Reminders
                   </Link>
+                  <Link
+                    href="/subscriptions"
+                    className="block px-4 py-2 text-black hover:bg-gray-100"
+                  >
+                    🤹 Manage Subscription
+                  </Link>
                   <button
                     onClick={() => signOut({ callbackUrl: "/" })}
                     className="w-full text-left px-4 py-2 text-black hover:bg-gray-100"

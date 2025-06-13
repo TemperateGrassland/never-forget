@@ -1,67 +1,63 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { loadStripe } from '@stripe/stripe-js';
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
+type Subscription = {
+  id: string;
+  status: string;
+  current_period_end: number;
+  plan: {
+    nickname: string;
+    amount: number;
+    interval: string;
+  };
+};
 
 export default function Subscriptions() {
-    type Plan = {
-        id: string;
-        name: string;
-        description: string;
-        price: number;
-        // interval: string;
-        price_id: string;
-      };
-      
-      const [plans, setPlans] = useState<Plan[]>([]);
+  const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
 
   useEffect(() => {
-    // Fetch subscription plans from your API
-    fetch('/api/subscription-plans')
-      .then(res => res.json())
-      .then((data: Plan[]) => setPlans(data));
+    const fetchSubscriptions = async () => {
+      try {
+        const res = await fetch('/api/get-subscription');
+        if (!res.ok) throw new Error(`Failed to fetch: ${res.status}`);
+        const data = await res.json();
+        setSubscriptions(data);
+      } catch (error) {
+        console.error("Error fetching subscriptions:", error);
+      }
+    };
+
+    fetchSubscriptions();
   }, []);
 
-  const handleSubscribe = async (priceId) => {
-    const stripe = await stripePromise;
-
-    if (!stripe) {
-        console.error("Stripe failed to initialise correctly - check the env var for the publishable key.")
-        return;
-    }
-
-    const { sessionId } = await fetch('/api/create-checkout-session', {
+  const handleCancel = async (subscriptionId: string) => {
+    const res = await fetch('/api/cancel-subscription', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ priceId }),
-    }).then(res => res.json());
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ subscriptionId }),
+    });
 
-    const result = await stripe.redirectToCheckout({ sessionId });
-
-    if (result.error) {
-      console.error(result.error);
+    if (res.ok) {
+      setSubscriptions(prev => prev.filter(sub => sub.id !== subscriptionId));
     }
   };
 
   return (
     <div>
-      <h1>Choose a Subscription Plan</h1>
-      {plans.length > 0 ? (
-  plans.map(plan => (
-    <div key={plan.id}>
-      <h2>{plan.name}</h2>
-      <p>{plan.description}</p>
-      {/* <p>Price: ${plan.price / 100} / {plan.interval}</p> */}
-      <button onClick={() => handleSubscribe(plan.price_id)}>Subscribe</button>
-    </div>
-  ))
-) : (
-  <p>Loading plans...</p>
-)}
+      <h1>Manage Your Subscription</h1>
+      {subscriptions.length > 0 ? (
+        subscriptions.map(sub => (
+          <div key={sub.id}>
+            <h2>{sub.plan.nickname}</h2>
+            <p>Status: {sub.status}</p>
+            <p>Renews on: {new Date(sub.current_period_end * 1000).toLocaleDateString()}</p>
+            <button onClick={() => handleCancel(sub.id)}>Cancel Subscription</button>
+          </div>
+        ))
+      ) : (
+        <p>No active subscriptions found.</p>
+      )}
     </div>
   );
 }
