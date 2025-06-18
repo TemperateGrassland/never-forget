@@ -40,26 +40,44 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
             where: { email: user.email },
           });
 
+          const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
           if (!existingUser) {
             console.log(`Creating new user and sending welcome email to: ${user.id}`);
+            const customer = await stripe.customers.create({
+              email: user.email,
+            });
+
             await prisma.user.create({
               data: {
                 email: user.email,
                 firstName: user.name || "",
                 hasReceivedWelcomeEmail: true,
+                stripeCustomerId: customer.id,
               },
             });
 
             await sendWelcomeEmail(user.email);
-          } else if (!existingUser.hasReceivedWelcomeEmail) {
-            console.log(`Sending welcome email to existing user: ${user.id}`);
-            await sendWelcomeEmail(user.email);
-            await prisma.user.update({
-              where: { email: user.email },
-              data: { hasReceivedWelcomeEmail: true },
-            });
           } else {
-            console.log(`User ${existingUser.id} has already received the welcome email.`);
+            if (!existingUser.stripeCustomerId) {
+              const customer = await stripe.customers.create({ email: user.email });
+
+              await prisma.user.update({
+                where: { email: user.email },
+                data: { stripeCustomerId: customer.id },
+              });
+            }
+
+            if (!existingUser.hasReceivedWelcomeEmail) {
+              console.log(`Sending welcome email to existing user: ${user.id}`);
+              await sendWelcomeEmail(user.email);
+              await prisma.user.update({
+                where: { email: user.email },
+                data: { hasReceivedWelcomeEmail: true },
+              });
+            } else {
+              console.log(`User ${existingUser.id} has already received the welcome email.`);
+            }
           }
 
           return true;

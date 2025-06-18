@@ -18,6 +18,7 @@ export async function GET() {
   const customerId = session.user.stripeCustomerId;
 
   if (!customerId) {
+    console.log("No customer id present - unable to find subscriptions")
     return NextResponse.json([], { status: 200 });
   }
 
