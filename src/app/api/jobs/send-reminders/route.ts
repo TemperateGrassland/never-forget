@@ -50,7 +50,7 @@ export async function GET() {
             to: phoneNumber,
             type: "template",
             template: {
-              name: "reminder",
+              name: "daily_reminder",
               language: {
                 code: "en_GB",
                 policy: "deterministic",
