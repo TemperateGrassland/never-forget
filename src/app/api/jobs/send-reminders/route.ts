@@ -52,7 +52,7 @@ export async function GET() {
             template: {
               name: "daily_reminder",
               language: {
-                code: "en_GB",
+                code: "en_US",
                 policy: "deterministic",
               },
               components: [
