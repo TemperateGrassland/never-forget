@@ -40,6 +40,7 @@ export async function POST(req: NextRequest) {
         },
         body: JSON.stringify({
           messaging_product: "whatsapp",
+          recipient_type: "individual",
           to: process.env.WHATSAPP_RECIPIENT_PHONE,
           type: "template",
           template: {
