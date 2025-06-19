@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
           to: process.env.WHATSAPP_RECIPIENT_PHONE,
           type: "template",
           template: {
-            name: "reminder",
+            name: "daily_reminder",
             language: {
               code: "en_GB",
               policy: "deterministic",
