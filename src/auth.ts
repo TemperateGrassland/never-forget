@@ -8,9 +8,9 @@ import { sendWelcomeEmail } from './lib/email';
 
 import Stripe from 'stripe';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-02-24.acacia',
-});
+// const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+//   apiVersion: '2025-02-24.acacia',
+// });
 
 const prisma = new PrismaClient();
 
@@ -46,7 +46,10 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
             where: { email: user.email },
           });
 
-          // const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+          
+      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: '2025-02-24.acacia',
+});
 
           if (!existingUser) {
             console.log(`Creating new user and sending welcome email to: ${user.id}`);
