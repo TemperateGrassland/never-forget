@@ -6,14 +6,9 @@ import Email from "next-auth/providers/email";
 import Mailgun from "next-auth/providers/mailgun"
 import { sendWelcomeEmail } from './lib/email';
 
-import Stripe from 'stripe';
-
-// const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-//   apiVersion: '2025-02-24.acacia',
-// });
+import { stripe } from '@/lib/stripe';
 
 const prisma = new PrismaClient();
-
   
 export const { auth, handlers, signIn, signOut } = NextAuth({
     adapter: PrismaAdapter(prisma),
@@ -45,11 +40,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           const existingUser = await prisma.user.findUnique({
             where: { email: user.email },
           });
-
-          
-      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-05-28.basil',
-});
 
           if (!existingUser) {
             console.log(`Creating new user and sending welcome email to: ${user.id}`);
