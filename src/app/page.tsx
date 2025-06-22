@@ -3,7 +3,6 @@ import Demo from "./components/ui/Demo";
 import { WaitlistButton } from "./components/ui/Waitlist";
 import CheckoutButton from "./components/ui/CheckoutButton";
 import StripeProvider from "./components/ui/StripeProvider";
-// import StripeProvider from "./components/ui/StripeProvider";
 
 export const metadata = {
   title: "Daily Reminders via Whatsapp | Never Forget",
