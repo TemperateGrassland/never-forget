@@ -35,7 +35,7 @@ export async function GET() {
           });
           return `* ${reminder.title} (${dateLabel})`;
         })
-        .join(" \n");
+        .join(" \r");
 
       const res = await fetch(
         `https://graph.facebook.com/v17.0/${process.env.WHATSAPP_PHONE_ID}/messages`,
