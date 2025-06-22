@@ -34,7 +34,7 @@
     "react-hot-toast": "^2.5.2",
     "socket.io": "^4.8.1",
     "socket.io-client": "^4.8.1",
-    "stripe": "^17.6.0",
+    "stripe": "^18.2.1",
     "supertest": "^7.0.0",
     "ws": "^8.18.1"
   },

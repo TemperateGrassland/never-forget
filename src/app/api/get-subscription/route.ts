@@ -29,7 +29,10 @@ export async function GET() {
   });
 
   const result = subscriptions.data.map(sub => {
-    const subscription = sub as ExpandedSubscription;
+    const subscription = sub as Stripe.Subscription & {
+      plan: Stripe.Plan;
+      current_period_end: number;
+    };
     const plan = subscription.plan;
     return {
       id: subscription.id,
