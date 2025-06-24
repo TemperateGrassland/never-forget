@@ -26,7 +26,7 @@ export default function AddReminderForm() {
       if (!res.ok) throw new Error('Failed to add reminder');
 
       setTitle('');
-      setSuccess('Reminder added successfully!'); // ✅ Success message
+      setSuccess('🎉'); // ✅ Success message
 
       // Clear success message after 3 seconds
       setTimeout(() => setSuccess(''), 3000);
@@ -45,7 +45,7 @@ export default function AddReminderForm() {
       <div className="flex justify-between items-center">
         <h2 className="text-lg font-bold text-black">Add New Reminder</h2>
         {/* ✅ Success & Error Message Display */}
-        {success && <p className="text-green-500">{success}</p>}
+        {success && <p className="text-green-500 animate-spinGrowFade text-xl">{success}</p>}
         {error && <p className="text-red-500">{error}</p>}
       </div>
 

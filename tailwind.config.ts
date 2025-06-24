@@ -9,6 +9,16 @@ export default {
   ],
   theme: {
     extend: {
+      keyframes: {
+        spinGrowFade: {
+          '0%': { transform: 'scale(1) rotate(0deg)', opacity: '1' },
+          '50%': { transform: 'scale(1.5) rotate(180deg)', opacity: '1' },
+          '100%': { transform: 'scale(0) rotate(360deg)', opacity: '0' },
+        },
+      },
+      animation: {
+        spinGrowFade: 'spinGrowFade 1s ease-in-out forwards',
+      },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
