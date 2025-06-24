@@ -4,7 +4,6 @@ import { useState } from 'react';
 
 export default function AddReminderForm() {
   const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -21,13 +20,12 @@ export default function AddReminderForm() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ title, description }),
+        body: JSON.stringify(title),
       });
 
       if (!res.ok) throw new Error('Failed to add reminder');
 
       setTitle('');
-      setDescription('');
       setSuccess('Reminder added successfully!'); // ✅ Success message
 
       // Clear success message after 3 seconds
@@ -59,15 +57,6 @@ export default function AddReminderForm() {
           onChange={(e) => setTitle(e.target.value)}
           className="w-full p-2 border rounded-md text-black"
           required
-        />
-      </div>
-
-      <div className="mb-2">
-        <label className="block font-medium text-secondary text-black">Description</label>
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          className="w-full p-2 border rounded-md text-black"
         />
       </div>
 

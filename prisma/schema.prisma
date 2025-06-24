@@ -75,7 +75,6 @@ enum ReminderFrequency {
 model Reminder {
   id          String   @id @default(uuid())
   title       String
-  description String? // Ensure this is an optional field
   userId      String
   isComplete  Boolean  @default(false)
   createdAt   DateTime @default(now())

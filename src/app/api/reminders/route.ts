@@ -30,7 +30,6 @@ export async function GET(req: Request) {
       reminders: reminders.map((r) => ({
         id: r.id,
         title: r.title,
-        description: r.description ?? "N/A",
         userId: r.userId,
         isComplete: r.isComplete,
         createdAt: r.createdAt.toISOString(), // ✅ Convert Date to string
@@ -50,7 +49,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { title, description } = await req.json();
+    const title = await req.json();
     if (!title) {
       return NextResponse.json({ error: "Title is required" }, { status: 400 });
     }
@@ -65,7 +64,6 @@ export async function POST(req: Request) {
     const reminder = await prisma.reminder.create({
       data: {
         title,
-        description,
         userId: user.id,
       },
     });
