@@ -46,7 +46,8 @@ export default function DashboardTable() {
 
     toast((t) => (
       <div className="flex items-center gap-4">
-        <span>Reminder deleted.</span>
+        {/* TODO it would be cool to add in a selection of positive feedback here */}
+        <span>Nice work!</span>
         <button
           className="bg-blue-600 text-black text-sm px-2 py-1 rounded"
           onClick={() => {
