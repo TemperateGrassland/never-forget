@@ -19,3 +19,8 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.text-white-outline {
+  color: white;
+  -webkit-text-stroke: 0.1px black;
+}

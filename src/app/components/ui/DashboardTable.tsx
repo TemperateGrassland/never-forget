@@ -6,10 +6,14 @@ import * as Ably from 'ably';
 import AnimatedRow from './AnimatedRow';
 import TodoItem from './TodoItem';
 import toast from 'react-hot-toast';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 export default function DashboardTable() {
   const [reminders, setReminders] = useState<Reminder[]>([]);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [selectedDateById, setSelectedDateById] = useState<{ [id: string]: Date | null }>({});
+  const [selectedDropdownById, setSelectedDropdownById] = useState<{ [id: string]: string }>({});
 
   const fetchReminders = async () => {
     try {
@@ -106,6 +110,7 @@ export default function DashboardTable() {
               <th className="border p-2 text-left text-black">Title</th>
               {/* <th className="border p-2 text-left text-black">Description</th>
               <th className="border p-2 text-left text-black">Created</th> */}
+              <th className="border p-2 text-left text-black">To Do By</th>
               <th className="border p-2 text-left text-black"></th>
             </tr>
           </thead>
@@ -121,16 +126,46 @@ export default function DashboardTable() {
                   task={reminder.title}
                   initialCompleted={false}
                 />
-                <td className="border p-2">{reminder.description || 'N/A'}</td>
+                <td className="border p-2">
+                  <select
+                    value={selectedDropdownById[reminder.id] || ""}
+                    className="border rounded px-2 py-1 text-black bg-white"
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setSelectedDropdownById((prev) => ({ ...prev, [reminder.id]: value }));
+                      if (value !== "date") {
+                        // Handle preset values here if needed
+                      }
+                    }}
+                  >
+                    <option value="" disabled>Select</option>
+                    <option value="today">Today</option>
+                    <option value="tomorrow">Tomorrow</option>
+                    <option value="date">Date...</option>
+                  </select>
+                  {selectedDropdownById[reminder.id] === "date" && (
+                    <div className="mt-2">
+                      <DatePicker
+                        selected={selectedDateById[reminder.id] || null}
+                        onChange={(date) =>
+                          setSelectedDateById((prev) => ({ ...prev, [reminder.id]: date }))
+                        }
+                        minDate={new Date()}
+                        className="border p-1 rounded"
+                        placeholderText="Pick a date"
+                      />
+                    </div>
+                  )}
+                </td>
                 {/* <td className="border p-2">
                   {new Date(reminder.createdAt).toLocaleDateString()}
                 </td> */}
                 <td className="border p-2">
                   <button
                     onClick={() => deleteReminder(reminder.id)}
-                    className="bg-red-500 text-black px-2 py-1 rounded"
+                    className="bg-[#25D366] px-2 py-1 rounded text-white-outline"
                   >
-                    Delete
+                    Complete
                   </button>
                 </td>
               </AnimatedRow>
