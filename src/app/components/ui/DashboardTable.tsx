@@ -163,7 +163,7 @@ export default function DashboardTable() {
                 <td className="border p-2">
                   <button
                     onClick={() => deleteReminder(reminder.id)}
-                    className="bg-[#25D366] px-2 py-1 rounded text-white-outline"
+                    className="bg-[#25D366] text-black px-2 py-1 rounded"
                   >
                     Complete
                   </button>
