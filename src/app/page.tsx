@@ -3,6 +3,8 @@ import Demo from "./components/ui/Demo";
 import { WaitlistButton } from "./components/ui/Waitlist";
 import CheckoutButton from "./components/ui/CheckoutButton";
 import StripeProvider from "./components/ui/StripeProvider";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
 export const metadata = {
   title: "Daily Reminders via Whatsapp | Never Forget",
@@ -10,6 +12,10 @@ export const metadata = {
 };
 
 export default async function Page() {
+  const session = await auth();
+  if (session?.user) {
+    redirect("/daily-reminder");
+  }
 
   return (
     <>
