@@ -34,3 +34,21 @@ export async function DELETE(req: NextRequest, params: { params: Promise<{ id: s
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
+
+export async function PATCH(req: NextRequest, params: { params: Promise<{ id: string }> }) {
+  const { dueDate } = await req.json();
+  const id = (await params?.params).id;
+
+  if (!id || typeof id !== "string") {
+    return NextResponse.json({ error: "Invalid or missing Reminder ID" }, { status: 400 });
+  }
+
+  const updated = await prisma.reminder.update({
+    where: { id },
+    data: {
+      dueDate: dueDate ? new Date(dueDate) : null,
+    },
+  });
+
+  return NextResponse.json({ updated });
+}

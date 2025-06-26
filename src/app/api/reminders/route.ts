@@ -34,6 +34,7 @@ export async function GET(req: Request) {
         isComplete: r.isComplete,
         createdAt: r.createdAt.toISOString(), // ✅ Convert Date to string
         updatedAt: r.updatedAt.toISOString(), // ✅ Convert Date to string
+        dueDate: r.dueDate.toISOString(), // ✅ Convert Date to string
       })),
     });
   } catch (error) {

@@ -14,14 +14,47 @@ export default function DashboardTable() {
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [selectedDateById, setSelectedDateById] = useState<{ [id: string]: Date | null }>({});
   const [selectedDropdownById, setSelectedDropdownById] = useState<{ [id: string]: string }>({});
+  const [emojiVisibleById, setEmojiVisibleById] = useState<{ [id: string]: boolean }>({});
 
-  const fetchReminders = async () => {
+const fetchReminders = async () => {
     try {
       const res = await fetch('/api/reminders');
       if (!res.ok) throw new Error('Failed to fetch reminders');
 
       const data = await res.json();
       setReminders(data.reminders);
+
+      // Initialize selected dates and dropdowns
+      const initialDateById: { [id: string]: Date | null } = {};
+      const initialDropdownById: { [id: string]: string } = {};
+
+      data.reminders.forEach((reminder: Reminder) => {
+        if (reminder.dueDate) {
+          const dueDate = new Date(reminder.dueDate);
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+          const tomorrow = new Date(today);
+          tomorrow.setDate(tomorrow.getDate() + 1);
+
+          const normalizedDue = new Date(dueDate);
+          normalizedDue.setHours(0, 0, 0, 0);
+
+          const isSameDay = (a: Date, b: Date) => a.getTime() === b.getTime();
+
+          if (isSameDay(normalizedDue, today)) {
+            initialDropdownById[reminder.id] = 'today';
+          } else if (isSameDay(normalizedDue, tomorrow)) {
+            initialDropdownById[reminder.id] = 'tomorrow';
+          } else {
+            initialDropdownById[reminder.id] = 'date';
+          }
+
+          initialDateById[reminder.id] = normalizedDue;
+        }
+      });
+
+      setSelectedDateById(initialDateById);
+      setSelectedDropdownById(initialDropdownById);
     } catch (error) {
       console.error('Error fetching reminders:', error);
     }
@@ -134,8 +167,28 @@ export default function DashboardTable() {
                     onChange={(e) => {
                       const value = e.target.value;
                       setSelectedDropdownById((prev) => ({ ...prev, [reminder.id]: value }));
-                      if (value !== "date") {
-                        // Handle preset values here if needed
+
+                      let newDate: Date | null = null;
+                      if (value === "today") {
+                        newDate = new Date();
+                      } else if (value === "tomorrow") {
+                        newDate = new Date();
+                        newDate.setDate(newDate.getDate() + 1);
+                      }
+
+                      if (newDate) {
+                        setSelectedDateById((prev) => ({ ...prev, [reminder.id]: newDate }));
+                        setEmojiVisibleById((prev) => ({ ...prev, [reminder.id]: true }));
+                        setTimeout(() => {
+                          setEmojiVisibleById((prev) => ({ ...prev, [reminder.id]: false }));
+                        }, 1500);
+                        fetch(`/api/reminders/${reminder.id}`, {
+                          method: 'PATCH',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ dueDate: newDate }),
+                        }).catch((err) => {
+                          console.error('Failed to update due date:', err);
+                        });
                       }
                     }}
                   >
@@ -144,13 +197,33 @@ export default function DashboardTable() {
                     <option value="tomorrow">Tomorrow</option>
                     <option value="date">Date...</option>
                   </select>
+                  {emojiVisibleById[reminder.id] && (
+                    <span className="ml-2 animate-spinGrowFade text-xl">📅</span>
+                  )}
+                  {selectedDateById[reminder.id] && (
+                    <div className="text-sm text-gray-700 mt-1">
+                      Due: {selectedDateById[reminder.id]?.toLocaleDateString('en-GB')}
+                    </div>
+                  )}
                   {selectedDropdownById[reminder.id] === "date" && (
                     <div className="mt-2">
                       <DatePicker
                         selected={selectedDateById[reminder.id] || null}
-                        onChange={(date) =>
-                          setSelectedDateById((prev) => ({ ...prev, [reminder.id]: date }))
-                        }
+                        onChange={(date) => {
+                          setSelectedDateById((prev) => ({ ...prev, [reminder.id]: date }));
+                          setEmojiVisibleById((prev) => ({ ...prev, [reminder.id]: true }));
+                          setTimeout(() => {
+                            setEmojiVisibleById((prev) => ({ ...prev, [reminder.id]: false }));
+                          }, 1500);
+                          console.log('updating dueDate...')
+                          fetch(`/api/reminders/${reminder.id}`, {
+                            method: 'PATCH',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ dueDate: date }),
+                          }).catch((err) => {
+                            console.error('Failed to update due date:', err);
+                          });
+                        }}
                         minDate={new Date()}
                         className="border p-1 rounded"
                         placeholderText="Pick a date"
@@ -174,6 +247,25 @@ export default function DashboardTable() {
           </tbody>
         </table>
       )}
+      <style>{`
+        @keyframes spinGrowFade {
+          0% {
+            transform: scale(1) rotate(0deg);
+            opacity: 1;
+          }
+          50% {
+            transform: scale(1.8) rotate(180deg);
+            opacity: 1;
+          }
+          100% {
+            transform: scale(1) rotate(360deg);
+            opacity: 0;
+          }
+        }
+        .animate-spinGrowFade {
+          animation: spinGrowFade 1.5s ease-in-out;
+        }
+      `}</style>
     </div>
   );
 }
