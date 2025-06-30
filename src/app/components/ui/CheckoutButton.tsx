@@ -30,7 +30,7 @@ export default function CheckoutButton() {
 
   return (
     <button onClick={handleCheckout} className="bg-blue-500 text-white p-2 rounded">
-      Checkout
+      💚 Try it out
     </button>
   );
 }

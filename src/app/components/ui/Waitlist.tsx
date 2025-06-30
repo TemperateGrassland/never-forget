@@ -50,11 +50,11 @@ export function WaitlistButton() {
       )}
       <div className="w-full max-w-3xl mb-6 text-xl sm:text-2xl lg:text-3xl font-agrandir text-center">
           <h1>
-            Join the waitlist now and receive a notification when the service is ready.
+            Join the waitlist — we’ll let you know as soon as we’re live!
           </h1>
       </div>
       <p className="text-sm text-gray-600 text-center mt-2">
-        We’ll never spam or share your email.
+        No spam. No sharing. Pinky promise.
       </p>
     </>
   )
