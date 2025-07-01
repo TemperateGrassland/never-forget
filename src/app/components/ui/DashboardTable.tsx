@@ -134,18 +134,18 @@ const fetchReminders = async () => {
 
   return (
     <div className="overflow-x-auto w-full">
-      <h2 className="text-xl font-bold mb-4 text-black">Reminders</h2>
+      <h2 className="text-xl font-bold mb-4 text-black"></h2>
       {reminders.length === 0 ? (
         <p className='text-black'>No reminders found.</p>
       ) : (
         <table className="min-w-full table-auto border-collapse border border-gray-300 text-black">
           <thead>
             <tr className="bg-gray-100">
-              <th className="border p-2 text-left text-black">Title</th>
+              <th className="border p-2 text-left text-black">Reminder</th>
               {/* <th className="border p-2 text-left text-black">Description</th>
               <th className="border p-2 text-left text-black">Created</th> */}
               <th className="border p-2 text-left text-black">To Do By</th>
-              <th className="border p-2 text-left text-black"></th>
+              <th className="border p-2 text-left text-black"> To Done?</th>
             </tr>
           </thead>
           <tbody>
@@ -211,7 +211,7 @@ const fetchReminders = async () => {
                       <option value="clear">Clear</option>
                     </select>
                   ) : (
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-col items-start gap-1">
                       <DatePicker
                         selected={selectedDateById[reminder.id] || null}
                         onChange={(date) => {
