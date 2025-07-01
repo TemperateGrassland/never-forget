@@ -10,12 +10,14 @@ export default function DailyReminder() {
         {/* <h1 className="text-black flex flex-col items-center">daily reminders to your Whatsapp</h1> */}
 
               <div className="mt-6">
+                <AddReminderForm />
+              </div>
+              
+              <div className="mt-6">
                 <DashboardTable />
               </div>
 
-              <div className="mt-6">
-                <AddReminderForm />
-              </div>
+              
 
               {/* Stripe Checkout (Currently Disabled) */}
               {/* <Elements stripe={stripePromise}>
