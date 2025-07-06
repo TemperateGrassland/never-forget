@@ -21,7 +21,7 @@ export default async function Page() {
     <>
     <div className="w-full flex justify-center">
       <div className="flex flex-col items-center text-black px-4 sm:px-6 lg:px-12 max-w-screen-2xl w-full mx-auto pb-8 text-center">
-        <h1 className="w-full max-w-3xl mb-4 text-4xl sm:text-2xl lg:text-3xl font-agrandir text-center">
+        <h1 className="w-full max-w-3xl mb-4 text-4xl sm:text-2xl lg:text-3xl text-center">
           Get daily nudges to stay on track — straight to your WhatsApp.
         </h1>
         <h2 className="mb-3">Tiny reminders. Big wins.</h2>

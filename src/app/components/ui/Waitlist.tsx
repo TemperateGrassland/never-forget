@@ -48,7 +48,7 @@ export function WaitlistButton() {
       {status === 'error' && (
         <p className="text-red-600 mt-2">Something went wrong. Please try again.</p>
       )}
-      <div className="w-full max-w-3xl mb-6 text-xl sm:text-2xl lg:text-3xl font-agrandir text-center">
+      <div className="w-full max-w-3xl mb-6 text-xl sm:text-2xl lg:text-3xl text-center">
           <h1>
             Join the waitlist — we’ll let you know as soon as we’re live!
           </h1>

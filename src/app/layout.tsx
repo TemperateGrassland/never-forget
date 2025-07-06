@@ -1,18 +1,7 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Script from "next/script";
 import CookieConsent from "./components/ui/CookieConsent";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: "NeverForget",
@@ -56,7 +45,7 @@ export default async function RootLayout({
           rel="stylesheet"
         />
       </head>
-        <body className={`flex flex-col min-h-screen ${geistSans.variable} ${geistMono.variable} font-agrandir`}>
+        <body className="flex flex-col min-h-screen font-agrandir">
           <CookieConsent />
           <Navbar />
           <div className="flex flex-col justify-center items-center bg-white mb-2 text-black">

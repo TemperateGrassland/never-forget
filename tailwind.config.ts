@@ -24,7 +24,7 @@ export default {
         foreground: "var(--foreground)",
       },
       fontFamily: {
-        agrandir: ['"Agrandir"', 'sans-serif'],
+        agrandir: ['Agrandir', 'sans-serif'],
       },
       typography: {
         DEFAULT: {
