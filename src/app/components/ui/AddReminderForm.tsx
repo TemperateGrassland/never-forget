@@ -43,7 +43,7 @@ export default function AddReminderForm() {
   return (
     <form onSubmit={handleSubmit} className="p-4 border rounded-lg">
       <div className="flex justify-between items-center">
-        <h2 className="text-lg font-bold text-black">Add New Reminder</h2>
+        <h2 className="text-lg font-bold text-black">Add new reminder</h2>
         {/* ✅ Success & Error Message Display */}
         {success && <p className="text-green-500 animate-spinGrowFade text-xl">{success}</p>}
         {error && <p className="text-red-500">{error}</p>}
