@@ -50,9 +50,9 @@ export default function AddReminderForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-4 border rounded-lg">
+    <form onSubmit={handleSubmit} className="p-4 border-2 border-[#25D366] rounded-lg">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-bold text-black">Add new reminder</h2>
+        <h2 className="text-lg font-bold text-black">small gains, big wins</h2>
         {/* ✅ Success & Error Message Display */}
         {success && <p className="text-green-500 animate-spinGrowFade text-xl">{success}</p>}
         {error && <p className="text-red-500">{error}</p>}
@@ -60,21 +60,21 @@ export default function AddReminderForm() {
 
       <div className="mb-4">
         <label className="block font-medium text-secondary text-black mb-2">
-          Send daily reminders to Whatsapp
+          send daily reminders to Whatsapp
         </label>
         <input
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           className="w-full p-2 border rounded-md text-black"
-          placeholder="Enter your reminder..."
+          placeholder="Create new reminder..."
           required
         />
       </div>
 
       <div className="mb-4">
         <label className="block font-medium text-secondary text-black mb-2">
-          Due date (optional)
+          due date (optional)
         </label>
         <DatePicker
           selected={dueDate}
@@ -89,7 +89,7 @@ export default function AddReminderForm() {
 
       <button
         type="submit"
-        className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-md w-full transition-colors"
+        className="bg-[#25D366] hover:bg-[#128C7E] text-white p-2 rounded-md w-full transition-colors font-semibold"
         disabled={loading}
       >
         {loading ? 'Adding...' : 'Add Reminder'}
