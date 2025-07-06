@@ -67,7 +67,7 @@ export default function AddReminderForm() {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           className="w-full p-2 border rounded-md text-black"
-          placeholder="Create new reminder..."
+          placeholder="create new reminder..."
           required
         />
       </div>
@@ -92,7 +92,7 @@ export default function AddReminderForm() {
         className="bg-[#25D366] hover:bg-[#128C7E] text-white p-2 rounded-md w-full transition-colors font-semibold"
         disabled={loading}
       >
-        {loading ? 'Adding...' : 'Add Reminder'}
+        {loading ? 'adding...' : 'add reminder'}
       </button>
     </form>
   );
