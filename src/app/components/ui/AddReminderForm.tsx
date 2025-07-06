@@ -1,9 +1,12 @@
 'use client';
 
 import { useState } from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 export default function AddReminderForm() {
   const [title, setTitle] = useState('');
+  const [dueDate, setDueDate] = useState<Date | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -15,17 +18,23 @@ export default function AddReminderForm() {
     setSuccess('');
 
     try {
+      const requestBody = {
+        title,
+        dueDate: dueDate ? dueDate.toISOString().split('T')[0] : null,
+      };
+
       const res = await fetch('/api/reminders', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(title),
+        body: JSON.stringify(requestBody),
       });
 
       if (!res.ok) throw new Error('Failed to add reminder');
 
       setTitle('');
+      setDueDate(null);
       setSuccess('🎉'); // ✅ Success message
 
       // Clear success message after 3 seconds
@@ -42,27 +51,45 @@ export default function AddReminderForm() {
 
   return (
     <form onSubmit={handleSubmit} className="p-4 border rounded-lg">
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-bold text-black">Add new reminder</h2>
         {/* ✅ Success & Error Message Display */}
         {success && <p className="text-green-500 animate-spinGrowFade text-xl">{success}</p>}
         {error && <p className="text-red-500">{error}</p>}
       </div>
 
-      <div className="mb-2">
-        <label className="block font-medium text-secondary text-black">Send daily reminders to Whatsapp</label>
+      <div className="mb-4">
+        <label className="block font-medium text-secondary text-black mb-2">
+          Send daily reminders to Whatsapp
+        </label>
         <input
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           className="w-full p-2 border rounded-md text-black"
+          placeholder="Enter your reminder..."
           required
+        />
+      </div>
+
+      <div className="mb-4">
+        <label className="block font-medium text-secondary text-black mb-2">
+          Due date (optional)
+        </label>
+        <DatePicker
+          selected={dueDate}
+          onChange={(date) => setDueDate(date)}
+          minDate={new Date()}
+          className="w-full p-2 border rounded-md text-black"
+          placeholderText="Select a due date (optional)"
+          dateFormat="dd/MM/yyyy"
+          isClearable
         />
       </div>
 
       <button
         type="submit"
-        className="bg-blue-500 text-white p-2 rounded-md"
+        className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-md w-full transition-colors"
         disabled={loading}
       >
         {loading ? 'Adding...' : 'Add Reminder'}
