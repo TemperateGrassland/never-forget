@@ -50,7 +50,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const title = await req.json();
+    const body = await req.json();
+    const title = typeof body === 'string' ? body : body.title;
+    const dueDate = typeof body === 'object' ? body.dueDate : null;
+
     if (!title) {
       return NextResponse.json({ error: "Title is required" }, { status: 400 });
     }
@@ -61,11 +64,29 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
+    // Validate and parse the dueDate if provided
+    let parsedDueDate: Date | null = null;
+    if (dueDate) {
+      try {
+        // Handle both YYYY-MM-DD and full ISO string formats
+        const dateString = dueDate.includes('T') ? dueDate : `${dueDate}T00:00:00.000Z`;
+        parsedDueDate = new Date(dateString);
+        
+        // Validate the date is valid
+        if (isNaN(parsedDueDate.getTime())) {
+          return NextResponse.json({ error: "Invalid date format" }, { status: 400 });
+        }
+      } catch (error) {
+        return NextResponse.json({ error: "Invalid date format" }, { status: 400 });
+      }
+    }
+
     // Save reminder in Prisma
     const reminder = await prisma.reminder.create({
       data: {
         title,
         userId: user.id,
+        dueDate: parsedDueDate,
       },
     });
 

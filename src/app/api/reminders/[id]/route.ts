@@ -43,10 +43,27 @@ export async function PATCH(req: NextRequest, params: { params: Promise<{ id: st
     return NextResponse.json({ error: "Invalid or missing Reminder ID" }, { status: 400 });
   }
 
+  // Validate and parse the dueDate
+  let parsedDueDate: Date | null = null;
+  if (dueDate) {
+    try {
+      // Handle both YYYY-MM-DD and full ISO string formats
+      const dateString = dueDate.includes('T') ? dueDate : `${dueDate}T00:00:00.000Z`;
+      parsedDueDate = new Date(dateString);
+      
+      // Validate the date is valid
+      if (isNaN(parsedDueDate.getTime())) {
+        return NextResponse.json({ error: "Invalid date format" }, { status: 400 });
+      }
+    } catch (error) {
+      return NextResponse.json({ error: "Invalid date format" }, { status: 400 });
+    }
+  }
+
   const updated = await prisma.reminder.update({
     where: { id },
     data: {
-      dueDate: dueDate ? new Date(dueDate) : null,
+      dueDate: parsedDueDate,
     },
   });
 

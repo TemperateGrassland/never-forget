@@ -9,14 +9,78 @@ import toast from 'react-hot-toast';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
+// Interface for API response format
+interface ApiReminder {
+  id: string;
+  title: string;
+  userId: string;
+  isComplete: boolean;
+  createdAt: string;
+  updatedAt: string;
+  dueDate: string | null;
+}
+
+
+
+const getReminderStatus = (dueDate: string | Date | null): { status: 'overdue' | 'due-today' | 'due-soon' | 'future' | 'no-date'; daysDiff: number } => {
+  if (!dueDate) {
+    return { status: 'no-date', daysDiff: 0 };
+  }
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  
+  const due = dueDate instanceof Date ? dueDate : new Date(dueDate);
+  due.setHours(0, 0, 0, 0);
+  
+  const diffTime = due.getTime() - today.getTime();
+  const daysDiff = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+  if (daysDiff < 0) {
+    return { status: 'overdue', daysDiff: Math.abs(daysDiff) };
+  } else if (daysDiff === 0) {
+    return { status: 'due-today', daysDiff: 0 };
+  } else if (daysDiff <= 3) {
+    return { status: 'due-soon', daysDiff };
+  } else {
+    return { status: 'future', daysDiff };
+  }
+};
+
+const StatusBadge: React.FC<{ status: string; daysDiff: number }> = ({ status, daysDiff }) => {
+  const getBadgeContent = () => {
+    switch (status) {
+      case 'overdue':
+        return { text: `OVERDUE ${daysDiff} day${daysDiff > 1 ? 's' : ''}`, className: 'bg-red-500 text-white' };
+      case 'due-today':
+        return { text: 'DUE TODAY', className: 'bg-orange-500 text-white' };
+      case 'due-soon':
+        return { text: `DUE IN ${daysDiff} day${daysDiff > 1 ? 's' : ''}`, className: 'bg-yellow-500 text-black' };
+      case 'future':
+        return { text: `DUE IN ${daysDiff} day${daysDiff > 1 ? 's' : ''}`, className: 'bg-green-500 text-white' };
+      default:
+        return { text: 'NO DUE DATE', className: 'bg-gray-400 text-white' };
+    }
+  };
+
+  const badge = getBadgeContent();
+  
+  return (
+    <span className={`inline-block px-2 py-1 text-xs font-semibold rounded-full ${badge.className}`}>
+      {badge.text}
+    </span>
+  );
+};
+
 export default function DashboardTable() {
-  const [reminders, setReminders] = useState<Reminder[]>([]);
+  const [reminders, setReminders] = useState<ApiReminder[]>([]);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [selectedDateById, setSelectedDateById] = useState<{ [id: string]: Date | null }>({});
   const [selectedDropdownById, setSelectedDropdownById] = useState<{ [id: string]: string }>({});
   const [emojiVisibleById, setEmojiVisibleById] = useState<{ [id: string]: boolean }>({});
+  const [tick, setTick] = useState(0);
 
-const fetchReminders = async () => {
+  const fetchReminders = async () => {
     try {
       const res = await fetch('/api/reminders');
       if (!res.ok) throw new Error('Failed to fetch reminders');
@@ -28,7 +92,7 @@ const fetchReminders = async () => {
       const initialDateById: { [id: string]: Date | null } = {};
       const initialDropdownById: { [id: string]: string } = {};
 
-      data.reminders.forEach((reminder: Reminder) => {
+      data.reminders.forEach((reminder: ApiReminder) => {
         if (reminder.dueDate) {
           const dueDate = new Date(reminder.dueDate);
           const today = new Date();
@@ -132,6 +196,35 @@ const fetchReminders = async () => {
     };
   }, []);
 
+  // Add timer to force re-render every minute
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTick((t) => t + 1);
+    }, 60 * 1000); // every minute
+    return () => clearInterval(interval);
+  }, []);
+
+  // Sort reminders: overdue first, then by due date
+  const sortedReminders = [...reminders].sort((a, b) => {
+    const statusA = getReminderStatus(a.dueDate);
+    const statusB = getReminderStatus(b.dueDate);
+    
+    // Overdue items first
+    if (statusA.status === 'overdue' && statusB.status !== 'overdue') return -1;
+    if (statusB.status === 'overdue' && statusA.status !== 'overdue') return 1;
+    
+    // Then by due date (earliest first)
+    if (a.dueDate && b.dueDate) {
+      return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
+    }
+    
+    // Items with due dates before those without
+    if (a.dueDate && !b.dueDate) return -1;
+    if (!a.dueDate && b.dueDate) return 1;
+    
+    return 0;
+  });
+
   return (
     <div className="overflow-x-auto w-full">
       <h2 className="text-xl font-bold mb-4 text-black"></h2>
@@ -143,264 +236,398 @@ const fetchReminders = async () => {
             <thead>
               <tr className="bg-gray-100">
                 <th className="border p-2 text-left text-black">Reminder</th>
-                {/* <th className="border p-2 text-left text-black">Description</th>
-                <th className="border p-2 text-left text-black">Created</th> */}
+                <th className="border p-2 text-left text-black">Status</th>
                 <th className="border p-2 text-left text-black">To Do By</th>
-                <th className="border p-2 text-left text-black"> To Done?</th>
+                <th className="border p-2 text-left text-black">To Done?</th>
               </tr>
             </thead>
             <tbody>
-              {reminders.map((reminder) => (
-                <AnimatedRow
-                  key={reminder.id}
-                  id={reminder.id}
-                  isDeleting={deletingId === reminder.id}
-                  onAnimationEnd={() => {}}
-                >
-                  <TodoItem
-                    task={reminder.title}
-                    initialCompleted={false}
-                  />
-                  <td className="border p-2">
-                    {selectedDropdownById[reminder.id] !== "date" ? (
-                      <select
-                        value={selectedDropdownById[reminder.id] || ""}
-                        className="border rounded px-2 py-1 text-black bg-white text-base"
-                        onChange={(e) => {
-                          const value = e.target.value;
-                          setSelectedDropdownById((prev) => ({ ...prev, [reminder.id]: value }));
+              {sortedReminders.map((reminder) => {
+                const status = getReminderStatus(reminder.dueDate);
+                const isOverdue = status.status === 'overdue';
+                
+                return (
+                  <tr 
+                    key={reminder.id}
+                    className={`${deletingId === reminder.id ? 'animate-pulse opacity-50' : ''} ${isOverdue ? 'bg-red-50 border-l-4 border-l-red-500' : ''}`}
+                  >
+                    <TodoItem
+                      task={reminder.title}
+                      initialCompleted={false}
+                    />
+                    <td className="border p-2">
+                      <StatusBadge status={status.status} daysDiff={status.daysDiff} />
+                    </td>
+                    <td className="border p-2">
+                      {selectedDropdownById[reminder.id] !== "date" ? (
+                        <select
+                          value={selectedDropdownById[reminder.id] || ""}
+                          className="border rounded px-2 py-1 text-black bg-white text-base"
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setSelectedDropdownById((prev) => ({ ...prev, [reminder.id]: value }));
 
-                          let newDate: Date | null = null;
-                          if (value === "today") {
-                            newDate = new Date();
-                          } else if (value === "tomorrow") {
-                            newDate = new Date();
-                            newDate.setDate(newDate.getDate() + 1);
-                          } else if (value === "clear") {
-                            // Clear due date
-                            setSelectedDateById((prev) => ({ ...prev, [reminder.id]: null }));
-                            fetch(`/api/reminders/${reminder.id}`, {
-                              method: 'PATCH',
-                              headers: { 'Content-Type': 'application/json' },
-                              body: JSON.stringify({ dueDate: null }),
-                            }).catch((err) => {
-                              console.error('Failed to clear due date:', err);
-                            });
-                            return;
-                          }
+                            let newDate: Date | null = null;
+                            if (value === "today") {
+                              newDate = new Date();
+                            } else if (value === "tomorrow") {
+                              newDate = new Date();
+                              newDate.setDate(newDate.getDate() + 1);
+                            } else if (value === "clear") {
+                              // Clear due date
+                              setSelectedDateById((prev) => ({ ...prev, [reminder.id]: null }));
+                              fetch(`/api/reminders/${reminder.id}`, {
+                                method: 'PATCH',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ dueDate: null }),
+                              })
+                              .then(response => {
+                                if (!response.ok) {
+                                  throw new Error(`HTTP error! status: ${response.status}`);
+                                }
+                                return response.json();
+                              })
+                              .then((data) => {
+                                // Update local state immediately
+                                setReminders((prev) => 
+                                  prev.map((r) => 
+                                    r.id === reminder.id 
+                                      ? { ...r, dueDate: null }
+                                      : r
+                                  )
+                                );
+                              })
+                              .catch((err) => {
+                                console.error('Failed to clear due date:', err);
+                                // Revert the UI state on error
+                                setSelectedDateById((prev) => ({ ...prev, [reminder.id]: null }));
+                                setSelectedDropdownById((prev) => ({ ...prev, [reminder.id]: '' }));
+                              });
+                              return;
+                            }
 
-                          if (newDate) {
-                            setSelectedDateById((prev) => ({ ...prev, [reminder.id]: newDate }));
-                            setEmojiVisibleById((prev) => ({ ...prev, [reminder.id]: true }));
-                            setTimeout(() => {
-                              setEmojiVisibleById((prev) => ({ ...prev, [reminder.id]: false }));
-                            }, 1500);
-                            fetch(`/api/reminders/${reminder.id}`, {
-                              method: 'PATCH',
-                              headers: { 'Content-Type': 'application/json' },
-                              body: JSON.stringify({ dueDate: newDate.toISOString().split('T')[0] }),
-                            }).catch((err) => {
-                              console.error('Failed to update due date:', err);
-                            });
-                          }
-                        }}
-                      >
-                        <option value="" disabled>Select</option>
-                        <option value="today">Today</option>
-                        <option value="tomorrow">Tomorrow</option>
-                        <option value="date">Date...</option>
-                        <option value="clear">Clear</option>
-                      </select>
-                    ) : (
-                      <div className="flex flex-col items-start gap-1">
-                        <DatePicker
-                          selected={selectedDateById[reminder.id] || null}
-                          onChange={(date) => {
-                            setSelectedDateById((prev) => ({ ...prev, [reminder.id]: date }));
-                            setEmojiVisibleById((prev) => ({ ...prev, [reminder.id]: true }));
-                            setTimeout(() => {
-                              setEmojiVisibleById((prev) => ({ ...prev, [reminder.id]: false }));
-                            }, 1500);
-                            fetch(`/api/reminders/${reminder.id}`, {
-                              method: 'PATCH',
-                              headers: { 'Content-Type': 'application/json' },
-                              body: JSON.stringify({ dueDate: date ? date.toISOString().split('T')[0] : null }),
-                            }).catch((err) => {
-                              console.error('Failed to update due date:', err);
-                            });
+                            if (newDate) {
+                              setSelectedDateById((prev) => ({ ...prev, [reminder.id]: newDate }));
+                              setEmojiVisibleById((prev) => ({ ...prev, [reminder.id]: true }));
+                              setTimeout(() => {
+                                setEmojiVisibleById((prev) => ({ ...prev, [reminder.id]: false }));
+                              }, 1500);
+                              fetch(`/api/reminders/${reminder.id}`, {
+                                method: 'PATCH',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ dueDate: newDate.toISOString().split('T')[0] }),
+                              })
+                              .then(response => {
+                                if (!response.ok) {
+                                  throw new Error(`HTTP error! status: ${response.status}`);
+                                }
+                                return response.json();
+                              })
+                              .then((data) => {
+                                // Update local state immediately
+                                setReminders((prev) => 
+                                  prev.map((r) => 
+                                    r.id === reminder.id 
+                                      ? { ...r, dueDate: newDate.toISOString().split('T')[0] }
+                                      : r
+                                  )
+                                );
+                              })
+                              .catch((err) => {
+                                console.error('Failed to update due date:', err);
+                                // Revert the UI state on error
+                                setSelectedDateById((prev) => ({ ...prev, [reminder.id]: null }));
+                                setSelectedDropdownById((prev) => ({ ...prev, [reminder.id]: '' }));
+                              });
+                            }
                           }}
-                          minDate={new Date()}
-                          className="border p-1 rounded"
-                          placeholderText="Pick a date"
-                          dateFormat="dd/MM/yyyy"
-                        />
-                        <button
-                          className="text-sm text-blue-600 underline"
-                          onClick={() =>
-                            setSelectedDropdownById((prev) => ({ ...prev, [reminder.id]: '' }))
-                          }
                         >
-                          Reset date
-                        </button>
-                      </div>
-                    )}
-                    {emojiVisibleById[reminder.id] && (
-                      <span className="ml-2 animate-spinGrowFade text-xl">📅</span>
-                    )}
-                  </td>
-                  {/* <td className="border p-2">
-                    {new Date(reminder.createdAt).toLocaleDateString()}
-                  </td> */}
-                  <td className="border p-2">
-                    <button
-                      onClick={() => deleteReminder(reminder.id)}
-                      className="text-2xl"
-                    >
-                      ✅
-                    </button>
-                  </td>
-                </AnimatedRow>
-              ))}
+                          <option value="" disabled>Select</option>
+                          <option value="today">Today</option>
+                          <option value="tomorrow">Tomorrow</option>
+                          <option value="date">Date...</option>
+                          <option value="clear">Clear</option>
+                        </select>
+                      ) : (
+                        <div className="flex flex-col items-start gap-1">
+                          <DatePicker
+                            selected={selectedDateById[reminder.id] || null}
+                            onChange={(date) => {
+                              setSelectedDateById((prev) => ({ ...prev, [reminder.id]: date }));
+                              setEmojiVisibleById((prev) => ({ ...prev, [reminder.id]: true }));
+                              setTimeout(() => {
+                                setEmojiVisibleById((prev) => ({ ...prev, [reminder.id]: false }));
+                              }, 1500);
+                              fetch(`/api/reminders/${reminder.id}`, {
+                                method: 'PATCH',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ dueDate: date ? date.toISOString().split('T')[0] : null }),
+                              })
+                              .then(response => {
+                                if (!response.ok) {
+                                  throw new Error(`HTTP error! status: ${response.status}`);
+                                }
+                                return response.json();
+                              })
+                              .then((data) => {
+                                // Update local state immediately
+                                setReminders((prev) => 
+                                  prev.map((r) => 
+                                    r.id === reminder.id 
+                                      ? { ...r, dueDate: date ? date.toISOString().split('T')[0] : null }
+                                      : r
+                                  )
+                                );
+                              })
+                              .catch((err) => {
+                                console.error('Failed to update due date:', err);
+                                // Revert the UI state on error
+                                setSelectedDateById((prev) => ({ ...prev, [reminder.id]: null }));
+                              });
+                            }}
+                            minDate={new Date()}
+                            className="border p-1 rounded"
+                            placeholderText="Pick a date"
+                            dateFormat="dd/MM/yyyy"
+                          />
+                          <button
+                            className="text-sm text-blue-600 underline"
+                            onClick={() =>
+                              setSelectedDropdownById((prev) => ({ ...prev, [reminder.id]: '' }))
+                            }
+                          >
+                            Reset date
+                          </button>
+                        </div>
+                      )}
+                      {emojiVisibleById[reminder.id] && (
+                        <span className="ml-2 animate-spinGrowFade text-xl">📅</span>
+                      )}
+                    </td>
+                    <td className="border p-2">
+                      <button
+                        onClick={() => deleteReminder(reminder.id)}
+                        className="text-2xl"
+                      >
+                        ✅
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         )}
       </div>
 
       <div className="block md:hidden space-y-4">
-        {reminders.map((reminder) => (
-          <div
-            key={reminder.id}
-            className="p-4 border rounded shadow-sm bg-white text-black"
-          >
-            <div className="font-semibold">{reminder.title}</div>
-            <div className="mt-2">
-              <div className="text-sm font-medium mb-1">To Do By:</div>
-              {selectedDropdownById[reminder.id] !== 'date' ? (
-                <select
-                  value={selectedDropdownById[reminder.id] || ''}
-                  className="border rounded px-2 py-1 text-black bg-white text-base"
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    setSelectedDropdownById((prev) => ({
-                      ...prev,
-                      [reminder.id]: value,
-                    }));
-
-                    let newDate: Date | null = null;
-                    if (value === 'today') {
-                      newDate = new Date();
-                    } else if (value === 'tomorrow') {
-                      newDate = new Date();
-                      newDate.setDate(newDate.getDate() + 1);
-                    } else if (value === 'clear') {
-                      setSelectedDateById((prev) => ({
-                        ...prev,
-                        [reminder.id]: null,
-                      }));
-                      fetch(`/api/reminders/${reminder.id}`, {
-                        method: 'PATCH',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ dueDate: null }),
-                      }).catch((err) => {
-                        console.error('Failed to clear due date:', err);
-                      });
-                      return;
-                    }
-
-                    if (newDate) {
-                      setSelectedDateById((prev) => ({
-                        ...prev,
-                        [reminder.id]: newDate,
-                      }));
-                      setEmojiVisibleById((prev) => ({
-                        ...prev,
-                        [reminder.id]: true,
-                      }));
-                      setTimeout(() => {
-                        setEmojiVisibleById((prev) => ({
-                          ...prev,
-                          [reminder.id]: false,
-                        }));
-                      }, 1500);
-                      fetch(`/api/reminders/${reminder.id}`, {
-                        method: 'PATCH',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                          dueDate: newDate.toISOString().split('T')[0],
-                        }),
-                      }).catch((err) => {
-                        console.error('Failed to update due date:', err);
-                      });
-                    }
-                  }}
-                >
-                  <option value="" disabled>Select</option>
-                  <option value="today">Today</option>
-                  <option value="tomorrow">Tomorrow</option>
-                  <option value="date">Date...</option>
-                  <option value="clear">Clear</option>
-                </select>
-              ) : (
-                <div className="flex flex-col items-start gap-1">
-                  <DatePicker
-                    selected={selectedDateById[reminder.id] || null}
-                    onChange={(date) => {
-                      setSelectedDateById((prev) => ({
-                        ...prev,
-                        [reminder.id]: date,
-                      }));
-                      setEmojiVisibleById((prev) => ({
-                        ...prev,
-                        [reminder.id]: true,
-                      }));
-                      setTimeout(() => {
-                        setEmojiVisibleById((prev) => ({
-                          ...prev,
-                          [reminder.id]: false,
-                        }));
-                      }, 1500);
-                      fetch(`/api/reminders/${reminder.id}`, {
-                        method: 'PATCH',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                          dueDate: date ? date.toISOString().split('T')[0] : null,
-                        }),
-                      }).catch((err) => {
-                        console.error('Failed to update due date:', err);
-                      });
-                    }}
-                    minDate={new Date()}
-                    className="border p-1 rounded"
-                    placeholderText="Pick a date"
-                    dateFormat="dd/MM/yyyy"
-                  />
-                  <button
-                    className="text-sm text-blue-600 underline"
-                    onClick={() =>
+        {sortedReminders.map((reminder) => {
+          const status = getReminderStatus(reminder.dueDate);
+          const isOverdue = status.status === 'overdue';
+          
+          return (
+            <div
+              key={reminder.id}
+              className={`p-4 border rounded shadow-sm text-black ${
+                isOverdue 
+                  ? 'bg-red-50 border-red-300 border-l-4 border-l-red-500' 
+                  : 'bg-white'
+              }`}
+            >
+              <div className={`font-semibold ${isOverdue ? 'text-red-700' : 'text-black'}`}>
+                {reminder.title}
+              </div>
+              <div className="mt-2 mb-2">
+                <StatusBadge status={status.status} daysDiff={status.daysDiff} />
+              </div>
+              <div className="mt-2">
+                <div className="text-sm font-medium mb-1">To Do By:</div>
+                {selectedDropdownById[reminder.id] !== 'date' ? (
+                  <select
+                    value={selectedDropdownById[reminder.id] || ''}
+                    className="border rounded px-2 py-1 text-black bg-white text-base"
+                    onChange={(e) => {
+                      const value = e.target.value;
                       setSelectedDropdownById((prev) => ({
                         ...prev,
-                        [reminder.id]: '',
-                      }))
-                    }
+                        [reminder.id]: value,
+                      }));
+
+                      let newDate: Date | null = null;
+                      if (value === 'today') {
+                        newDate = new Date();
+                      } else if (value === 'tomorrow') {
+                        newDate = new Date();
+                        newDate.setDate(newDate.getDate() + 1);
+                      } else if (value === 'clear') {
+                        setSelectedDateById((prev) => ({
+                          ...prev,
+                          [reminder.id]: null,
+                        }));
+                        fetch(`/api/reminders/${reminder.id}`, {
+                          method: 'PATCH',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ dueDate: null }),
+                        })
+                        .then(response => {
+                          if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                          }
+                          return response.json();
+                        })
+                        .then((data) => {
+                          // Update local state immediately
+                          setReminders((prev) => 
+                            prev.map((r) => 
+                              r.id === reminder.id 
+                                ? { ...r, dueDate: null }
+                                : r
+                            )
+                          );
+                        })
+                        .catch((err) => {
+                          console.error('Failed to clear due date:', err);
+                          // Revert the UI state on error
+                          setSelectedDateById((prev) => ({ ...prev, [reminder.id]: null }));
+                          setSelectedDropdownById((prev) => ({ ...prev, [reminder.id]: '' }));
+                        });
+                        return;
+                      }
+
+                      if (newDate) {
+                        setSelectedDateById((prev) => ({
+                          ...prev,
+                          [reminder.id]: newDate,
+                        }));
+                        setEmojiVisibleById((prev) => ({
+                          ...prev,
+                          [reminder.id]: true,
+                        }));
+                        setTimeout(() => {
+                          setEmojiVisibleById((prev) => ({
+                            ...prev,
+                            [reminder.id]: false,
+                          }));
+                        }, 1500);
+                        fetch(`/api/reminders/${reminder.id}`, {
+                          method: 'PATCH',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({
+                            dueDate: newDate.toISOString().split('T')[0],
+                          }),
+                        })
+                        .then(response => {
+                          if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                          }
+                          return response.json();
+                        })
+                        .then((data) => {
+                          // Update local state immediately
+                          setReminders((prev) => 
+                            prev.map((r) => 
+                              r.id === reminder.id 
+                                ? { ...r, dueDate: newDate.toISOString().split('T')[0] }
+                                : r
+                            )
+                          );
+                        })
+                        .catch((err) => {
+                          console.error('Failed to update due date:', err);
+                          // Revert the UI state on error
+                          setSelectedDateById((prev) => ({ ...prev, [reminder.id]: null }));
+                          setSelectedDropdownById((prev) => ({ ...prev, [reminder.id]: '' }));
+                        });
+                      }
+                    }}
                   >
-                    Reset date
-                  </button>
-                </div>
-              )}
-              {emojiVisibleById[reminder.id] && (
-                <span className="ml-2 animate-spinGrowFade text-xl">📅</span>
-              )}
+                    <option value="" disabled>Select</option>
+                    <option value="today">Today</option>
+                    <option value="tomorrow">Tomorrow</option>
+                    <option value="date">Date...</option>
+                    <option value="clear">Clear</option>
+                  </select>
+                ) : (
+                  <div className="flex flex-col items-start gap-1">
+                    <DatePicker
+                      selected={selectedDateById[reminder.id] || null}
+                      onChange={(date) => {
+                        setSelectedDateById((prev) => ({
+                          ...prev,
+                          [reminder.id]: date,
+                        }));
+                        setEmojiVisibleById((prev) => ({
+                          ...prev,
+                          [reminder.id]: true,
+                        }));
+                        setTimeout(() => {
+                          setEmojiVisibleById((prev) => ({
+                            ...prev,
+                            [reminder.id]: false,
+                          }));
+                        }, 1500);
+                        fetch(`/api/reminders/${reminder.id}`, {
+                          method: 'PATCH',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({
+                            dueDate: date ? date.toISOString().split('T')[0] : null,
+                          }),
+                        })
+                        .then(response => {
+                          if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                          }
+                          return response.json();
+                        })
+                        .then((data) => {
+                          // Update local state immediately
+                          setReminders((prev) => 
+                            prev.map((r) => 
+                              r.id === reminder.id 
+                                ? { ...r, dueDate: date ? date.toISOString().split('T')[0] : null }
+                                : r
+                            )
+                          );
+                        })
+                        .catch((err) => {
+                          console.error('Failed to update due date:', err);
+                          // Revert the UI state on error
+                          setSelectedDateById((prev) => ({ ...prev, [reminder.id]: null }));
+                        });
+                      }}
+                      minDate={new Date()}
+                      className="border p-1 rounded"
+                      placeholderText="Pick a date"
+                      dateFormat="dd/MM/yyyy"
+                    />
+                    <button
+                      className="text-sm text-blue-600 underline"
+                      onClick={() =>
+                        setSelectedDropdownById((prev) => ({
+                          ...prev,
+                          [reminder.id]: '',
+                        }))
+                      }
+                    >
+                      Reset date
+                    </button>
+                  </div>
+                )}
+                {emojiVisibleById[reminder.id] && (
+                  <span className="ml-2 animate-spinGrowFade text-xl">📅</span>
+                )}
+              </div>
+              <div className="mt-3">
+                <button
+                  onClick={() => deleteReminder(reminder.id)}
+                  className="text-2xl"
+                >
+                  ✅
+                </button>
+              </div>
             </div>
-            <div className="mt-3">
-              <button
-                onClick={() => deleteReminder(reminder.id)}
-                className="text-2xl"
-              >
-                ✅
-              </button>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       <style>{`
