@@ -59,11 +59,11 @@ export default async function RootLayout({
         <body className={`flex flex-col min-h-screen ${geistSans.variable} ${geistMono.variable} font-agrandir`}>
           <CookieConsent />
           <Navbar />
-          <div className="flex flex-col justify-center items-center bg-white mb-4 text-black">
+          <div className="flex flex-col justify-center items-center bg-white mb-2 text-black">
             <Logo />
           </div>
 
-          <main className="flex-grow">
+          <main className="flex-1">
             {children}
           </main>
           <Toaster position="bottom-right" />

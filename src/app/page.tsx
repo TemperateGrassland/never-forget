@@ -19,22 +19,22 @@ export default async function Page() {
 
   return (
     <>
-    <div className="w-full min-h-screen flex justify-center">
-      <div className="flex flex-col items-center text-black px-4 sm:px-8 lg:px-16 max-w-screen-2xl w-full mx-auto pb-16 text-center">
-        <h1 className="w-full max-w-3xl mb-6 text-4xl sm:text-2xl lg:text-3xl font-agrandir text-center">
+    <div className="w-full flex justify-center">
+      <div className="flex flex-col items-center text-black px-4 sm:px-6 lg:px-12 max-w-screen-2xl w-full mx-auto pb-8 text-center">
+        <h1 className="w-full max-w-3xl mb-4 text-4xl sm:text-2xl lg:text-3xl font-agrandir text-center">
           Get daily nudges to stay on track — straight to your WhatsApp.
         </h1>
-        <h2>Tiny reminders. Big wins.</h2>
-        <div className="w-full flex justify-center mb-4 sm:mb-6">
+        <h2 className="mb-3">Tiny reminders. Big wins.</h2>
+        <div className="w-full flex justify-center mb-3 sm:mb-4">
           <div className="w-full max-w-md">
             <WaitlistButton />
           </div>
         </div>
-        <div className="flex flex-col lg:flex-row items-center justify-center gap-4 w-full mt-8">
+        <div className="flex flex-col lg:flex-row items-center justify-center gap-3 w-full mt-4">
           <div className="w-full lg:w-2/3">
             <Demo />
           </div>
-          <div className="w-full max-w-xl text-[#25D366] text-xl lg:text-2xl space-y-4 text-center">
+          <div className="w-full max-w-xl text-[#25D366] text-xl lg:text-2xl space-y-3 text-center">
             <h2 className="flex items-center justify-center lg:justify-start">
               <span className="mr-2">✅</span>
               Build habits that stick

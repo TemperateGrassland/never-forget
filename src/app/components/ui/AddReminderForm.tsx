@@ -50,7 +50,7 @@ export default function AddReminderForm() {
       </div>
 
       <div className="mb-2">
-        <label className="block font-medium text-secondary text-black">What do you want to remember?</label>
+        <label className="block font-medium text-secondary text-black">Send daily reminders to Whatsapp</label>
         <input
           type="text"
           value={title}
