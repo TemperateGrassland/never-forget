@@ -27,14 +27,7 @@ export async function GET() {
       if (!phoneNumber || reminders.length === 0) continue;
 
       const reminderList = reminders
-        .map((reminder) => {
-          const dateLabel = new Date(reminder.createdAt).toLocaleDateString("en-GB", {
-            day: "numeric",
-            month: "short",
-            year: "numeric",
-          });
-          return `* ${reminder.title} (${dateLabel})`;
-        })
+        .map((reminder) => `* ${reminder.title}`)
         .join(" \r");
 
       const res = await fetch(
