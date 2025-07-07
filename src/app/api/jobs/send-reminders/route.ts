@@ -26,6 +26,8 @@ export async function GET() {
 
       if (!phoneNumber || reminders.length === 0) continue;
 
+      // TODO trigger a message to be sent that prompts user to add a reminder
+
       const reminderList = reminders
         .map((reminder) => `* ${reminder.title}`)
         .join(" \r");
