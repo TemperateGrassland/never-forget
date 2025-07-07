@@ -229,8 +229,8 @@ export default function DashboardTable() {
 
   // Ensure dropdown/date state is initialized for all reminders (including new ones)
   useEffect(() => {
-    let updatedDateById = { ...selectedDateById };
-    let updatedDropdownById = { ...selectedDropdownById };
+    const updatedDateById = { ...selectedDateById };
+    const updatedDropdownById = { ...selectedDropdownById };
     let changed = false;
     reminders.forEach((reminder) => {
       if (reminder.dueDate && !updatedDateById[reminder.id]) {
