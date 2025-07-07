@@ -92,9 +92,28 @@ export async function POST(req: Request) {
 
     // ✅ Broadcast reminder to WebSocket clients
     const channel = ably.channels.get("reminders");
-    await channel.publish("newReminder", reminder);
+    await channel.publish("newReminder", {
+      id: reminder.id,
+      title: reminder.title,
+      userId: reminder.userId,
+      isComplete: reminder.isComplete,
+      createdAt: reminder.createdAt.toISOString(),
+      updatedAt: reminder.updatedAt.toISOString(),
+      dueDate: reminder.dueDate ? reminder.dueDate.toISOString() : null,
+    });
 
-    return NextResponse.json({ message: "Reminder saved", reminder });
+    return NextResponse.json({
+      message: "Reminder saved",
+      reminder: {
+        id: reminder.id,
+        title: reminder.title,
+        userId: reminder.userId,
+        isComplete: reminder.isComplete,
+        createdAt: reminder.createdAt.toISOString(),
+        updatedAt: reminder.updatedAt.toISOString(),
+        dueDate: reminder.dueDate ? reminder.dueDate.toISOString() : null,
+      },
+    });
   } catch (error) {
     console.error("Error saving reminder:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });

@@ -20,7 +20,7 @@ export default function AddReminderForm() {
     try {
       const requestBody = {
         title,
-        dueDate: dueDate ? dueDate.toISOString().split('T')[0] : null,
+        dueDate: dueDate ? dueDate.toISOString() : null,
       };
 
       const res = await fetch('/api/reminders', {

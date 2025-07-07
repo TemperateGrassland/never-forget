@@ -180,7 +180,30 @@ export default function DashboardTable() {
     const channel = client.channels.get('reminders');
 
     channel.subscribe('newReminder', (message) => {
-      setReminders((prev) => [message.data, ...prev]);
+      const r = message.data;
+      // Normalize dueDate to ISO string if present
+      const dueDateISO = r.dueDate ? new Date(r.dueDate).toISOString() : null;
+      setReminders((prev) => [
+        { ...r, dueDate: dueDateISO },
+        ...prev,
+      ]);
+      // Update dropdown and date state for the new reminder
+      if (dueDateISO) {
+        const dueDateObj = new Date(dueDateISO);
+        setSelectedDateById((prev) => ({ ...prev, [r.id]: dueDateObj }));
+        // Dropdown logic (same as fetchReminders)
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const normalizedDue = new Date(dueDateObj);
+        normalizedDue.setHours(0, 0, 0, 0);
+        const isSameDay = (a, b) => a.getTime() === b.getTime();
+        let dropdownValue = 'date';
+        if (isSameDay(normalizedDue, today)) dropdownValue = 'today';
+        else if (isSameDay(normalizedDue, tomorrow)) dropdownValue = 'tomorrow';
+        setSelectedDropdownById((prev) => ({ ...prev, [r.id]: dropdownValue }));
+      }
     });
 
     channel.subscribe('reminderDeleted', (message) => {
@@ -203,6 +226,36 @@ export default function DashboardTable() {
     }, 60 * 1000); // every minute
     return () => clearInterval(interval);
   }, []);
+
+  // Ensure dropdown/date state is initialized for all reminders (including new ones)
+  useEffect(() => {
+    let updatedDateById = { ...selectedDateById };
+    let updatedDropdownById = { ...selectedDropdownById };
+    let changed = false;
+    reminders.forEach((reminder) => {
+      if (reminder.dueDate && !updatedDateById[reminder.id]) {
+        const dueDate = new Date(reminder.dueDate);
+        updatedDateById[reminder.id] = dueDate;
+        // Dropdown logic
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const normalizedDue = new Date(dueDate);
+        normalizedDue.setHours(0, 0, 0, 0);
+        const isSameDay = (a, b) => a.getTime() === b.getTime();
+        let dropdownValue = 'date';
+        if (isSameDay(normalizedDue, today)) dropdownValue = 'today';
+        else if (isSameDay(normalizedDue, tomorrow)) dropdownValue = 'tomorrow';
+        updatedDropdownById[reminder.id] = dropdownValue;
+        changed = true;
+      }
+    });
+    if (changed) {
+      setSelectedDateById(updatedDateById);
+      setSelectedDropdownById(updatedDropdownById);
+    }
+  }, [reminders]);
 
   // Sort reminders: overdue first, then by due date
   const sortedReminders = [...reminders].sort((a, b) => {
