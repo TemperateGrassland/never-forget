@@ -285,13 +285,13 @@ export default function DashboardTable() {
         {reminders.length === 0 ? (
           <p className='text-black'>No reminders found.</p>
         ) : (
-          <table className="min-w-full table-auto border-collapse border border-gray-300 text-black">
+          <table className="min-w-full table-auto border-collapse border border-gray-300 text-black text-center">
             <thead>
               <tr className="bg-gray-100">
-                <th className="border p-2 text-left text-black">Reminder</th>
-                <th className="border p-2 text-left text-black">Status</th>
-                <th className="border p-2 text-left text-black">To Do By</th>
-                <th className="border p-2 text-left text-black">To Done?</th>
+                <th className="border p-2 text-center text-black">Reminder</th>
+                <th className="border p-2 text-center text-black">Status</th>
+                <th className="border p-2 text-center text-black">To Do By</th>
+                <th className="border p-2 text-center text-black">To Done?</th>
               </tr>
             </thead>
             <tbody>
@@ -304,15 +304,17 @@ export default function DashboardTable() {
                     key={reminder.id}
                     className={`${deletingId === reminder.id ? 'animate-pulse opacity-50' : ''} ${isOverdue ? 'bg-red-50 border-l-4 border-l-red-500' : ''}`}
                   >
-                    <TodoItem
-                      task={reminder.title}
-                      initialCompleted={false}
-                    />
-                    <td className="border p-2">
+                    <td className="border p-2 text-center align-middle">
+                      <TodoItem
+                        task={reminder.title}
+                        initialCompleted={false}
+                      />
+                    </td>
+                    <td className="border p-2 text-center align-middle">
                       <StatusBadge status={status.status} daysDiff={status.daysDiff} />
                     </td>
-                    <td className="border p-2">
-                      <div className="flex flex-col items-start gap-1">
+                    <td className="border p-2 text-center align-middle">
+                      <div className="flex flex-col items-center gap-1">
                         <DatePicker
                           selected={selectedDateById[reminder.id] || null}
                           onChange={(date) => {
@@ -347,12 +349,12 @@ export default function DashboardTable() {
                             });
                           }}
                           minDate={new Date()}
-                          className="border p-1 rounded"
+                          className="border p-1 rounded text-center"
                           placeholderText="Pick a date"
                           dateFormat="dd/MM/yyyy"
                         />
                         <button
-                          className="text-sm text-blue-600 underline"
+                          className="text-sm text-blue-600 underline text-center"
                           onClick={() => setSelectedDateById((prev) => ({ ...prev, [reminder.id]: null }))}
                         >
                           Reset date
@@ -362,10 +364,10 @@ export default function DashboardTable() {
                         <span className="ml-2 animate-spinGrowFade text-xl">📅</span>
                       )}
                     </td>
-                    <td className="border p-2">
+                    <td className="border p-2 text-center align-middle">
                       <button
                         onClick={() => deleteReminder(reminder.id)}
-                        className="text-2xl"
+                        className="text-2xl text-center"
                       >
                         ✅
                       </button>
@@ -390,7 +392,7 @@ export default function DashboardTable() {
                 isOverdue 
                   ? 'bg-red-50 border-red-300 border-l-4 border-l-red-500' 
                   : 'bg-white'
-              }`}
+              } items-center text-center`}
             >
               <div className={`font-semibold ${isOverdue ? 'text-red-700' : 'text-black'}`}>
                 {reminder.title}
@@ -400,7 +402,7 @@ export default function DashboardTable() {
               </div>
               <div className="mt-2">
                 <div className="text-sm font-medium mb-1">To Do By:</div>
-                <div className="flex flex-col items-start gap-1">
+                <div className="flex flex-col items-center gap-1">
                   <DatePicker
                     selected={selectedDateById[reminder.id] || null}
                     onChange={(date) => {
@@ -435,12 +437,12 @@ export default function DashboardTable() {
                       });
                     }}
                     minDate={new Date()}
-                    className="border p-1 rounded"
+                    className="border p-1 rounded text-center"
                     placeholderText="Pick a date"
                     dateFormat="dd/MM/yyyy"
                   />
                   <button
-                    className="text-sm text-blue-600 underline"
+                    className="text-sm text-blue-600 underline text-center"
                     onClick={() => setSelectedDateById((prev) => ({ ...prev, [reminder.id]: null }))}
                   >
                     Reset date
@@ -453,7 +455,7 @@ export default function DashboardTable() {
               <div className="mt-3">
                 <button
                   onClick={() => deleteReminder(reminder.id)}
-                  className="text-2xl"
+                  className="text-2xl text-center"
                 >
                   ✅
                 </button>
