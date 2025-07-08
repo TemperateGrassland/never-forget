@@ -22,9 +22,18 @@ export default async function Page() {
     <>
       {/* Hero Section */}
       <div className="w-full flex flex-col items-center py-10 bg-white shadow-sm relative z-10">
+        {/* New bullet points from tagline */}
+        <div className="flex items-center gap-2 text-black text-xl font-semibold justify-center text-center">
+            ✅ Tiny reminders
+          </div>
+          <div className="flex items-center gap-2 text-black text-xl font-semibold justify-center text-center">
+            🔥 Big wins
+          </div>
+          <div className="flex items-center gap-2 text-black text-xl font-semibold justify-center text-center mb-8">
+            📱 Delivered daily to your WhatsApp
+          </div>
         {/* <Image src="/NeverForgetLogo.svg" alt="Never Forget Logo" width={180} height={60} className="mb-4" /> */}
         <h1 className="text-4xl sm:text-5xl font-agrandir font-extrabold text-[#25D366] mb-2 tracking-tight animate-fadeIn">Start for Free. Stay on Track.</h1>
-        <p className="text-lg sm:text-xl text-black mb-6 animate-fadeIn delay-100">Tiny reminders. Big wins. Delivered daily to your WhatsApp.</p>
       </div>
 
       {/* Offer Section */}
@@ -79,7 +88,7 @@ export default async function Page() {
                 <span className="text-base sm:text-lg">Regular WhatsApp nudges</span>
               </div>
             </div>
-            <p className="text-base text-black mb-6 text-center">Upgrade for more power and flexibility.</p>
+            <p className="text-base text-black mb-6 text-center">Track daily progress with streaks.</p>
             <a
               href="/register?plan=pro"
               className="inline-block bg-[#25D366] hover:bg-[#1ebe5d] text-white font-bold py-2 px-6 rounded-full text-lg shadow-lg transition-colors duration-200 font-agrandir"
@@ -99,9 +108,18 @@ export default async function Page() {
         </div>
       </div> */}
 
+      {/* Mission Statement Section */}
+      <div className="w-full flex flex-col items-center mt-10 px-4">
+        <h2 className="text-2xl sm:text-3xl font-bold text-[#25D366] mb-4 font-agrandir text-center">Our Mission</h2>
+        <div className="max-w-2xl text-lg sm:text-xl text-black text-center leading-relaxed space-y-4">
+          <p>To help people show up for the things that matter —<br/>with one tiny nudge at a time.</p>
+          <p>Because building a better life isn’t about big moments —<br/>it’s about remembering to do the small things, consistently.<br/>And that’s what we’re here for.<br/><span className="font-bold text-[#25D366]">Every. Single. Day.</span></p>
+        </div>
+      </div>
+
       {/* Benefits Section */}
       <div className="w-full flex flex-col items-center mt-10 space-y-2">
-        <div className="flex flex-col items-center justify-center gap-10 w-full max-w-2xl animate-fadeInUp delay-200 text-center">
+        {/* <div className="flex flex-col items-center justify-center gap-10 w-full max-w-2xl animate-fadeInUp delay-200 text-center">
           <div className="flex items-center gap-2 text-[#25D366] text-xl font-semibold justify-center text-center">
             ✅ Build habits that stick
           </div>
@@ -111,7 +129,7 @@ export default async function Page() {
           <div className="flex items-center gap-2 text-[#25D366] text-xl font-semibold justify-center text-center">
             🔥 Never miss what matters
           </div>
-        </div>
+        </div> */}
         <OnboardingToast />
       </div>
 
