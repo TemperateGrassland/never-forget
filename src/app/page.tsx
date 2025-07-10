@@ -24,13 +24,13 @@ export default async function Page() {
       {/* Hero Section */}
       <div className="w-full flex flex-col items-center py-8 bg-white shadow-sm relative z-10 px-4">
         <div className="flex flex-col items-center w-full max-w-md mx-auto">
-          <div className="flex items-center gap-2 text-black text-lg sm:text-xl font-semibold justify-center text-center">
+          <div className="flex items-center text-black text-lg sm:text-xl font-semibold justify-center text-center">
             ✅ Tiny reminders
           </div>
-          <div className="flex items-center gap-2 text-black text-lg sm:text-xl font-semibold justify-center text-center">
+          <div className="flex items-center text-black text-lg sm:text-xl font-semibold justify-center text-center">
             🔥 Big wins
           </div>
-          <div className="flex items-center gap-2 text-black text-lg sm:text-xl font-semibold justify-center text-center mb-6">
+          <div className="flex items-center text-black text-lg sm:text-xl font-semibold justify-center text-center mb-6">
             📱 Delivered daily to your WhatsApp
           </div>
           <h1 className="text-3xl sm:text-4xl font-agrandir font-extrabold text-[#25D366] mb-2 tracking-tight animate-fadeIn text-center">Start for Free. Stay on Track.</h1>
