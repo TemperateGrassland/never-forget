@@ -21,10 +21,10 @@ export default function OfferSection() {
        <span className="text-base sm:text-lg">Up to five reminders to help you remember what matters</span>
      </div>
    </div>
-   <p className="text-base text-black mb-6 text-center">No credit card. No fuss. Just daily wins.</p>
+   <p className="text-base text-black text-center">No credit card. No fuss. Just daily wins.</p>
    <a
      href="/register"
-     className="w-full bg-[#25D366] hover:bg-[#1ebe5d] text-white font-bold py-3 px-6 rounded-full text-lg shadow-lg transition-colors duration-200 font-agrandir animate-bounce text-center"
+     className="w-full bg-[#25D366] hover:bg-[#1ebe5d] text-white font-bold py-3 px-6 rounded-full text-lg shadow-lg transition-colors duration-200 font-agrandir text-center"
      style={{ boxShadow: '0 2px 8px 0 #25D36633' }}
    >
      👉 Join now — for free!
@@ -46,9 +46,12 @@ export default function OfferSection() {
        <span className="mr-2 text-xl">🔔</span>
        <span className="text-base sm:text-lg">Regular WhatsApp nudges</span>
      </div>
+     <div className="flex items-center justify-center bg-[#f6fdf9] rounded-lg p-2 w-full">
+        <span className="mr-2 text-xl">🥓</span>
+        <span className="text-base sm:text-lg">Track daily progress with streaks</span>
+     </div>
    </div>
-   <span className="mr-2 text-xl">🥓</span>
-   <p className="text-base text-black mb-6 text-center">Track daily progress with streaks.</p>
+   
    <a
      href="/register?plan=pro"
      className="w-full bg-[#25D366] hover:bg-[#1ebe5d] text-white font-bold py-3 px-6 rounded-full text-lg shadow-lg transition-colors duration-200 font-agrandir text-center"
@@ -59,3 +62,4 @@ export default function OfferSection() {
  </div>
 </div>
 </>);
+}
