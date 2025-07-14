@@ -73,7 +73,7 @@ const Navbar: React.FC = () => {
           ) : (
             <button
               onClick={() => signIn()}
-              className="bg-[#25D366] text-white px-4 py-2 rounded"
+              className="bg-[#12BC00] text-white px-4 py-2 rounded"
             >
               Sign In
             </button>

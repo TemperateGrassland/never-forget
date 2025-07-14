@@ -12,7 +12,7 @@ export default async function Page() {
       alt="Never Forget Banner"
       className="w-full max-h-96 object-contain mt-0"
     />
-              <h1 className="text-3xl text-[#25D366]">building stronger habits</h1>
+              <h1 className="text-3xl text-[#12BC00]">building stronger habits</h1>
        <CheckUser />
       </div>
     </>

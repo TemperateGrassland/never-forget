@@ -50,7 +50,7 @@ export default function AddReminderForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-4 border-2 border-[#25D366] rounded-lg">
+    <form onSubmit={handleSubmit} className="p-4 border-2 border-[#12BC00] rounded-lg">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-bold text-black">small gains, big wins</h2>
         {/* ✅ Success & Error Message Display */}
@@ -89,7 +89,7 @@ export default function AddReminderForm() {
 
       <button
         type="submit"
-        className="bg-[#25D366] hover:bg-[#128C7E] text-white p-2 rounded-md w-full transition-colors font-semibold"
+        className="bg-[#12BC00] hover:bg-[#128C7E] text-white p-2 rounded-md w-full transition-colors font-semibold"
         disabled={loading}
       >
         {loading ? 'adding...' : 'add reminder'}
