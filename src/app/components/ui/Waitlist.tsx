@@ -32,12 +32,12 @@ export function WaitlistButton() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
               required
-              className="mx-auto block w-full max-w-md px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#12BC00] focus:border-transparent"
+              className="mx-auto block w-full max-w-md px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#25d366] focus:border-transparent"
             />
             <button
               type="submit"
               disabled={status === 'loading'}
-              className="whitespace-nowrap bg-[#12BC00] text-white m-4 px-6 py-2 rounded-full shadow-lg hover:shadow-xl hover:scale-105 hover:bg-[#12BC00] transition-all duration-300 ease-in-out animate-pulse"
+              className="whitespace-nowrap bg-[#25d366] text-white m-4 px-6 py-2 rounded-full shadow-lg hover:shadow-xl hover:scale-105 hover:bg-[#25d366] transition-all duration-300 ease-in-out animate-pulse"
             >
               {status === 'loading' ? 'Submitting...' : 'Join Waitlist'}
             </button>

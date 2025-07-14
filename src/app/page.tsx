@@ -33,7 +33,7 @@ export default async function Page() {
           <div className="flex items-center text-black text-lg sm:text-xl font-semibold justify-center text-center mb-6">
             📱 Delivered daily to your WhatsApp
           </div>
-          <h1 className="text-3xl sm:text-4xl font-agrandir font-extrabold text-[#12BC00] mb-2 tracking-tight animate-fadeIn text-center">Start for Free. Stay on Track.</h1>
+          <h1 className="text-3xl sm:text-4xl font-agrandir font-extrabold text-[#25d366] mb-2 tracking-tight animate-fadeIn text-center">Start for Free. Stay on Track.</h1>
         </div>
       </div>
 
@@ -41,31 +41,31 @@ export default async function Page() {
 
       {/* Demo Section
       <div className="w-full flex flex-col items-center mt-12">
-        <div className="mb-4 text-[#12BC00] font-bold text-xl animate-fadeInUp">See it in action</div>
+        <div className="mb-4 text-[#25d366] font-bold text-xl animate-fadeInUp">See it in action</div>
         <div className="w-full max-w-3xl bg-white rounded-xl shadow-md p-6 animate-fadeInUp delay-100">
           <Demo />
         </div>
       </div> */}
 
       {/* Mission Statement Section */}
-      <div className="w-full flex flex-col items-center mt-12 px-4">
-        <h2 className="text-2xl sm:text-3xl font-bold text-[#12BC00] mb-4 font-agrandir text-center">Our Mission</h2>
+      {/* <div className="w-full flex flex-col items-center mt-12 px-4">
+        <h2 className="text-2xl sm:text-3xl font-bold text-[#25d366] mb-4 font-agrandir text-center">Our Mission</h2>
         <div className="max-w-2xl text-base sm:text-xl text-black text-center leading-relaxed space-y-4">
           <p>To help people show up for the things that matter —<br/>with one tiny nudge at a time.</p>
-          <p>Because building a better life isn’t about big moments —<br/>it’s about remembering to do the small things, consistently.<br/>And that’s what we’re here for.<br/><span className="font-bold text-[#12BC00]">Every. Single. Day.</span></p>
+          <p>Because building a better life isn’t about big moments —<br/>it’s about remembering to do the small things, consistently.<br/>And that’s what we’re here for.<br/><span className="font-bold text-[#25d366]">Every. Single. Day.</span></p>
         </div>
-      </div>
+      </div> */}
 
       {/* Benefits Section */}
       <div className="w-full flex flex-col items-center mt-8 px-4">
         {/* <div className="flex flex-col items-center justify-center gap-10 w-full max-w-2xl animate-fadeInUp delay-200 text-center">
-          <div className="flex items-center gap-2 text-[#12BC00] text-xl font-semibold justify-center text-center">
+          <div className="flex items-center gap-2 text-[#25d366] text-xl font-semibold justify-center text-center">
             ✅ Build habits that stick
           </div>
-          <div className="flex items-center gap-2 text-[#12BC00] text-xl font-semibold justify-center text-center">
+          <div className="flex items-center gap-2 text-[#25d366] text-xl font-semibold justify-center text-center">
             📱 Works with WhatsApp — no extra apps needed
           </div>
-          <div className="flex items-center gap-2 text-[#12BC00] text-xl font-semibold justify-center text-center">
+          <div className="flex items-center gap-2 text-[#25d366] text-xl font-semibold justify-center text-center">
             🔥 Never miss what matters
           </div>
         </div> */}
