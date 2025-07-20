@@ -17,11 +17,11 @@ export default function OnboardingToast() {
         const data = await res.json();
 
         if (!data.phoneNumber) {
-            // toast("📱 Add your phone number to start receiving WhatsApp reminders.", {
-            // icon: "🔔",
-            // duration: 6000,
-            // position: "top-center",
-            // });
+            toast("📱 Add your phone number to start receiving WhatsApp reminders.", {
+            icon: "🔔",
+            duration: 6000,
+            position: "top-center",
+            });
             toast.custom((t) => (
                 <div className="bg-white px-4 py-3 text-black rounded shadow-md border max-w-md flex justify-between items-center gap-4">
                   <span>📱 Add your phone number to your Profile and receive WhatsApp reminders.</span>

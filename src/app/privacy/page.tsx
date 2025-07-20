@@ -203,7 +203,7 @@ export default function PrivacyPage() {
         </p>
         <address className="mt-2 not-italic"> 
           neverforget.com<br />
-          <a href="mailto:privacy@neverforget.com" className="text-blue-600 hover:underline dark:text-blue-400"><span className="text-blue-500 dark:text-blue-400">charlie@neverforget.com</span></a><br />
+          <a href="mailto:privacy@neverforget.com" className="text-blue-600 hover:underline dark:text-blue-400"><span className="text-blue-500 dark:text-blue-400">charlie@neverforget.one</span></a><br />
           <span className="text-black dark:text-white"> Unit A, 82 James Carter Road, Mildenhall, United Kingdom, IP28 7DE </span><br />
         </address>
       </section>
