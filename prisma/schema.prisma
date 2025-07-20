@@ -49,7 +49,7 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
+  phoneNumber  String?
   // Mark userId as unique to enforce one-to-one relationship
   // @@unique([userId])
 }
