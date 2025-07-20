@@ -69,7 +69,6 @@ export default async function Page() {
             🔥 Never miss what matters
           </div>
         </div> */}
-        <OnboardingToast />
       </div>
 
       {/* Animations */}

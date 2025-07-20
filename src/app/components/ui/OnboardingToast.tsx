@@ -10,11 +10,16 @@ export default function OnboardingToast() {
 
     useEffect(() => {
     const checkUserProfile = async () => {
-        if (status !== "authenticated" || !session?.user?.email || checked) return;
+        if (status !== "authenticated" || !session?.user?.email || checked){
+
+          console.log("Check skipped")
+          return;
+        } 
 
         try {
         const res = await fetch(`/api/user/profile?email=${session.user.email}`);
         const data = await res.json();
+        console.log(`phone number ${data.phoneNumber}`)
 
         if (!data.phoneNumber) {
             toast("📱 Add your phone number to start receiving WhatsApp reminders.", {

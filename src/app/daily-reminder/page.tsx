@@ -2,6 +2,7 @@ import { Elements } from "@stripe/react-stripe-js";
 import AddReminderForm from "../components/ui/AddReminderForm";
 import DashboardTable from "../components/ui/DashboardTable";
 import CheckoutButton from "../components/ui/CheckoutButton";
+import OnboardingToast from "../components/ui/OnboardingToast";
 
 export default function DailyReminder() {
     return (
@@ -17,7 +18,10 @@ export default function DailyReminder() {
                 <DashboardTable />
               </div>
 
-              
+              <div className="mt-6">
+                <OnboardingToast />
+              </div>
+
 
               {/* Stripe Checkout (Currently Disabled) */}
               {/* <Elements stripe={stripePromise}>
