@@ -28,7 +28,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       async session({ session, user }) {
       session.user.id = user.id;
       session.user.stripeCustomerId = user.stripeCustomerId;
-      session.user.phoneNumber = user.phoneNumber;
       return session;
     },
       async signIn({ user }) {
