@@ -86,6 +86,11 @@ export default function ProfilePage() {
 
   return (
     <div className="max-w-lg mx-auto p-6 bg-white shadow-md rounded-lg">
+      {(!user.firstName || !user.lastName || !user.phoneNumber) && (
+        <p className="mb-4 text-center text-red-600 font-agrandir">
+          Please complete your profile before moving on to set reminders.
+        </p>
+      )}
       <h1 className="text-2xl font-bold text-center text-black">Your Profile</h1>
       <form onSubmit={handleSubmit} className="mt-6 space-y-4">
         <div>
@@ -95,7 +100,7 @@ export default function ProfilePage() {
             name="firstName"
             value={user.firstName}
             onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded-md text-black"
+            className={`w-full p-2 border rounded-md text-black ${!user.firstName ? 'border-green-500 animate-pulse' : 'border-gray-300'}`}
             required
           />
         </div>
@@ -107,7 +112,7 @@ export default function ProfilePage() {
             name="lastName"
             value={user.lastName}
             onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded-md text-black"
+            className={`w-full p-2 border rounded-md text-black ${!user.lastName ? 'border-green-500 animate-pulse' : 'border-gray-300'}`}
             required
           />
         </div>
@@ -130,13 +135,14 @@ export default function ProfilePage() {
             name="phoneNumber"
             value={user.phoneNumber}
             onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded-md text-black"
+            className={`w-full p-2 border rounded-md text-black ${!user.phoneNumber ? 'border-green-500 animate-pulse' : 'border-gray-300'}`}
+            required
           />
         </div>
 
         <button
           type="submit"
-          className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-700"
+          className="w-full bg-[#25d366] text-black p-2 rounded-md hover:bg-blue-700"
           disabled={updating}
         >
           {updating ? "Updating..." : "Update Profile"}

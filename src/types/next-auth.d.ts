@@ -7,10 +7,12 @@ declare module "next-auth" {
       id: string;
       email: string;
       stripeCustomerId?: string | null;
+      phoneNumber?: string | null;
     };
   }
 
   interface User {
     stripeCustomerId?: string | null;
+    phoneNumber?: string | null;
   }
 }
