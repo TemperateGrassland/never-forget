@@ -22,24 +22,22 @@ export default function OnboardingToast() {
         console.log(`phone number ${data.phoneNumber}`)
 
         if (!data.phoneNumber) {
-            toast("📱 Add your phone number to start receiving WhatsApp reminders.", {
-            icon: "🔔",
-            duration: 6000,
-            position: "top-center",
-            });
             toast.custom((t) => (
-                <div className="bg-white px-4 py-3 text-black rounded shadow-md border max-w-md flex justify-between items-center gap-4">
-                  <span>📱 Add your phone number to your Profile and receive WhatsApp reminders.</span>
-                  <button
-                    onClick={() => toast.dismiss(t.id)}
-                    className="ml-auto text-sm text-blue-600 hover:underline"
-                  >
-                    Dismiss
-                  </button>
+                <div className="bg-[#25d366] px-4 py-3 text-black rounded shadow-md border border-green-700 max-w-md flex justify-between items-center gap-4 font-agrandir">
+                    <span className="text-sm md:text-base">
+                        Add your phone number to your Profile and receive WhatsApp reminders.
+                    </span>
+                    <button
+                        onClick={() => toast.dismiss(t.id)}
+                        className="ml-auto text-sm text-black font-semibold hover:underline"
+                    >
+                        Dismiss
+                    </button>
                 </div>
-              ), {
-                id: "missing-phone-toast"
-              });
+            ), {
+                id: "missing-phone-toast-inline",
+                position: "top-center"
+            });
         }
 
         if (data.phoneNumber && data.reminderCount === 0) {
