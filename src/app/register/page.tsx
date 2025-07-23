@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 
 export default function RegisterPage() {
   const router = useRouter();
-  const [formData, setFormData] = useState({ name: "", email: "" });
+  const [formData, setFormData] = useState({ firstName: "", lastName: "", email: "", phoneNumber: "" });
   const [error, setError] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,11 +36,23 @@ export default function RegisterPage() {
       {error && <p className="text-red-500">{error}</p>}
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-gray-700">Name</label>
+          <label className="block text-gray-700">First Name</label>
           <input
             type="text"
-            name="name"
-            value={formData.name}
+            name="firstName"
+            value={formData.firstName}
+            onChange={handleChange}
+            className="w-full p-2 border border-gray-300 rounded-md"
+            required
+          />
+        </div>
+
+        <div>
+          <label className="block text-gray-700">Last Name</label>
+          <input
+            type="text"
+            name="lastName"
+            value={formData.lastName}
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded-md"
             required
@@ -59,7 +71,19 @@ export default function RegisterPage() {
           />
         </div>
 
-        <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-700">
+        <div>
+          <label className="block text-gray-700">Phone number</label>
+          <input
+            type="text"
+            name="phoneNumber"
+            value={formData.phoneNumber}
+            onChange={handleChange}
+            className="w-full p-2 border border-gray-300 rounded-md"
+            required
+          />
+        </div>
+
+        <button type="submit" className="w-full bg-[#25d366] text-black p-2 rounded-md hover:bg-[#128C7E]">
           Register
         </button>
       </form>
