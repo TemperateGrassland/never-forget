@@ -15,6 +15,9 @@ export default async function DailyReminder() {
 
     return (
         <div className="w-full max-w-5xl mx-auto p-4">
+            <h1 className="block font-medium text-secondary text-black mb-2 text-center">
+          never forget sends you a daily WhatsApp nudge when a reminder is due within 7 days or less
+        </h1>
             <div className="mt-6">
                 <AddReminderForm />
             </div>

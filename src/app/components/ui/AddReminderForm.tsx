@@ -4,9 +4,16 @@ import { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
+const REMINDER_FREQUENCY = [
+  { label: 'Daily', value: 'daily' },
+  { label: 'Weekly', value: 'weekly' },
+  { label: 'Monthly', value: 'monthly' },
+];
+
 export default function AddReminderForm() {
   const [title, setTitle] = useState('');
   const [dueDate, setDueDate] = useState<Date | null>(null);
+  const [frequency, setFrequency] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -21,6 +28,7 @@ export default function AddReminderForm() {
       const requestBody = {
         title,
         dueDate: dueDate ? dueDate.toISOString() : null,
+        frequency,
       };
 
       const res = await fetch('/api/reminders', {
@@ -35,6 +43,7 @@ export default function AddReminderForm() {
 
       setTitle('');
       setDueDate(null);
+      setFrequency('');
       setSuccess('🎉'); // ✅ Success message
 
       // Clear success message after 3 seconds
@@ -49,6 +58,8 @@ export default function AddReminderForm() {
     }
   };
 
+  const showFrequencyStep = title.trim() !== '' && dueDate !== null;
+
   return (
     <form onSubmit={handleSubmit} className="p-4 border-2 border-[#25d366] rounded-lg">
       <div className="flex justify-between items-center mb-4">
@@ -57,11 +68,7 @@ export default function AddReminderForm() {
         {success && <p className="text-green-500 animate-spinGrowFade text-xl">{success}</p>}
         {error && <p className="text-red-500">{error}</p>}
       </div>
-
       <div className="mb-4">
-        <label className="block font-medium text-secondary text-black mb-2">
-          send daily reminders to Whatsapp
-        </label>
         <input
           type="text"
           value={title}
@@ -87,10 +94,36 @@ export default function AddReminderForm() {
         />
       </div>
 
+      {showFrequencyStep && (
+        <div
+          className="mb-4 transition-opacity duration-500 ease-in-out opacity-100"
+          style={{ animation: 'fadeIn 0.5s ease-in-out' }}
+        >
+          <label className="block font-medium text-secondary text-black mb-2">
+            reminder frequency
+          </label>
+          <select
+            value={frequency}
+            onChange={(e) => setFrequency(e.target.value)}
+            className="w-full p-2 border rounded-md text-black"
+            required
+          >
+            <option value="" disabled>
+              Select frequency
+            </option>
+            {REMINDER_FREQUENCY.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+
       <button
         type="submit"
         className="bg-[#25d366] hover:bg-[#128C7E] text-black p-2 rounded-md w-full transition-colors font-semibold"
-        disabled={loading}
+        disabled={loading || (showFrequencyStep && frequency === '')}
       >
         {loading ? 'adding...' : 'add reminder'}
       </button>
