@@ -1,7 +1,5 @@
-import { Elements } from "@stripe/react-stripe-js";
 import AddReminderForm from "../components/ui/AddReminderForm";
 import DashboardTable from "../components/ui/DashboardTable";
-import CheckoutButton from "../components/ui/CheckoutButton";
 import OnboardingToast from "../components/ui/OnboardingToast";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
