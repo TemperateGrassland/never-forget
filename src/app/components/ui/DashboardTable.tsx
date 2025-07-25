@@ -291,7 +291,7 @@ export default function DashboardTable() {
                 <th className="border p-2 text-center text-black">Reminder</th>
                 <th className="border p-2 text-center text-black">Status</th>
                 <th className="border p-2 text-center text-black">To Do By</th>
-                <th className="border p-2 text-center text-black">To Done?</th>
+                <th className="border p-2 text-center text-black">Done?</th>
               </tr>
             </thead>
             <tbody>
