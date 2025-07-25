@@ -81,6 +81,7 @@ model Reminder {
   updatedAt   DateTime @updatedAt
   User        User     @relation(fields: [userId], references: [id])
   dueDate     DateTime?
+  frequency   ReminderFrequency @default(NONE)
 }
 
 model WaitlistEntry {
