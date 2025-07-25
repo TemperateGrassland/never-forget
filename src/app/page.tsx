@@ -1,11 +1,5 @@
-import OnboardingToast from "./components/ui/OnboardingToast";
-import Demo from "./components/ui/Demo";
-import { WaitlistButton } from "./components/ui/Waitlist";
-import CheckoutButton from "./components/ui/CheckoutButton";
-import StripeProvider from "./components/ui/StripeProvider";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import Image from 'next/image';
 import OfferSection from "./components/ui/OfferSection";
 
 export const metadata = {
