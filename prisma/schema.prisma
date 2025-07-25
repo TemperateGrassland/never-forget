@@ -63,11 +63,8 @@ model VerificationToken {
 }
 
 enum ReminderFrequency {
-  NONE // No repeat
-  DAILY // Every day
-  EVERY_OTHER_DAY // Every other day
+  NONE // Default to daily
   WEEKLY // Once a week
-  WEEKEND // Every weekend
   MONTHLY // Once a month
   YEARLY // Once a year
 }
