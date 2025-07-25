@@ -6,6 +6,9 @@ import CookieConsent from "./components/ui/CookieConsent";
 export const metadata: Metadata = {
   title: "NeverForget",
   description: "Improve your life, use NeverForget",
+  icons: {
+    icon: '/favicon.ico',
+  },
 };
 
 import { SessionProvider } from "next-auth/react";
