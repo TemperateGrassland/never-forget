@@ -1,3 +1,4 @@
+import { ReminderProvider } from "@/context/ReminderContext";
 import AddReminderForm from "../components/ui/AddReminderForm";
 import DashboardTable from "../components/ui/DashboardTable";
 import OnboardingToast from "../components/ui/OnboardingToast";
@@ -16,6 +17,7 @@ export default async function DailyReminder() {
             <h1 className="block font-medium text-secondary text-black mb-2 text-center">
           never forget sends you a daily WhatsApp nudge when a reminder is due within 7 days or less
         </h1>
+        <ReminderProvider>
             <div className="mt-6">
                 <AddReminderForm />
             </div>
@@ -23,6 +25,7 @@ export default async function DailyReminder() {
             <div className="mt-6">
                 <DashboardTable />
             </div>
+        </ReminderProvider>
 
             <div className="mt-6">
                 <OnboardingToast />

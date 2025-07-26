@@ -1,9 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Reminder } from '@/types';
+import { useReminderContext } from '../../../context/ReminderContext';
 import * as Ably from 'ably';
-import AnimatedRow from './AnimatedRow';
 import TodoItem from './TodoItem';
 import toast from 'react-hot-toast';
 import DatePicker from 'react-datepicker';
@@ -79,6 +78,9 @@ export default function DashboardTable() {
   const [selectedDropdownById, setSelectedDropdownById] = useState<{ [id: string]: string }>({});
   const [emojiVisibleById, setEmojiVisibleById] = useState<{ [id: string]: boolean }>({});
   const [tick, setTick] = useState(0);
+
+  // Use ReminderContext for editing
+  const { selectedReminder, setSelectedReminder } = useReminderContext();
 
   const fetchReminders = async () => {
     try {
@@ -309,6 +311,20 @@ export default function DashboardTable() {
                         task={reminder.title}
                         initialCompleted={false}
                       />
+                    {/* Edit button for desktop */}
+                    <button
+                      className="ml-2 px-2 py-1 text-xs bg-blue-200 hover:bg-blue-400 rounded text-black"
+                      onClick={() =>
+                        setSelectedReminder({
+                          id: reminder.id,
+                          title: reminder.title,
+                          dueDate: reminder.dueDate ? new Date(reminder.dueDate) : null,
+                          frequency: reminder.frequency || 'weekly', // fallback
+                        })
+                      }
+                    >
+                      Edit
+                    </button>
                     </td>
                     <td className="border p-2 text-center align-middle">
                       <StatusBadge status={status.status} daysDiff={status.daysDiff} />
@@ -396,6 +412,20 @@ export default function DashboardTable() {
             >
               <div className={`font-semibold ${isOverdue ? 'text-red-700' : 'text-black'}`}>
                 {reminder.title}
+                {/* Edit button for mobile */}
+                <button
+                  className="ml-2 px-2 py-1 text-xs bg-blue-200 hover:bg-blue-400 rounded text-black"
+                  onClick={() =>
+                    setSelectedReminder({
+                      id: reminder.id,
+                      title: reminder.title,
+                      dueDate: reminder.dueDate ? new Date(reminder.dueDate) : null,
+                      frequency: reminder.frequency || 'weekly',
+                    })
+                  }
+                >
+                  Edit
+                </button>
               </div>
               <div className="mt-2 mb-2">
                 <StatusBadge status={status.status} daysDiff={status.daysDiff} />

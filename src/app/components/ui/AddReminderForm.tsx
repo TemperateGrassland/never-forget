@@ -1,22 +1,37 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useReminderContext } from '../../../context/ReminderContext';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
 const REMINDER_FREQUENCY = [
-  { label: 'Daily', value: 'daily' },
-  { label: 'Weekly', value: 'weekly' },
-  { label: 'Monthly', value: 'monthly' },
+  { label: 'Weekly - you want to be reminded about this every week', value: 'weekly' },
+  { label: 'Monthly - for events that repeat once a month', value: 'monthly' },
+  { label: 'Yearly - birthdays and anniversaries', value: 'yearly' }
 ];
 
 export default function AddReminderForm() {
+  const { selectedReminder, setSelectedReminder } = useReminderContext();  
   const [title, setTitle] = useState('');
   const [dueDate, setDueDate] = useState<Date | null>(null);
   const [frequency, setFrequency] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+
+  // If editing, populate fields from selectedReminder
+  useEffect(() => {
+    if (selectedReminder) {
+      setTitle(selectedReminder.title || '');
+      setDueDate(selectedReminder.dueDate ? new Date(selectedReminder.dueDate) : null);
+      setFrequency(selectedReminder.frequency || '');
+    } else {
+      setTitle('');
+      setDueDate(null);
+      setFrequency('');
+    }
+  }, [selectedReminder]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,25 +46,41 @@ export default function AddReminderForm() {
         frequency,
       };
 
-      const res = await fetch('/api/reminders', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestBody),
-      });
+      let res;
+      if (selectedReminder && selectedReminder.id) {
+        // Editing existing reminder
+        res = await fetch(`/api/reminders/${selectedReminder.id}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestBody),
+        });
+      } else {
+        // Creating new reminder
+        res = await fetch('/api/reminders', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestBody),
+        });
+      }
 
-      if (!res.ok) throw new Error('Failed to add reminder');
+      if (!res.ok) throw new Error(selectedReminder ? 'Failed to update reminder' : 'Failed to add reminder');
 
       setTitle('');
       setDueDate(null);
       setFrequency('');
-      setSuccess('🎉'); // ✅ Success message
+      setSuccess('🎉');
+
+      // Reset selectedReminder after submit
+      setSelectedReminder(null);
 
       // Clear success message after 3 seconds
       setTimeout(() => setSuccess(''), 3000);
     } catch (error) {
-      setError('Failed to add reminder. Please try again.'); // ✅ Error message
+      setError(selectedReminder ? 'Failed to update reminder. Please try again.' : 'Failed to add reminder. Please try again.');
 
       // Clear error message after 3 seconds
       setTimeout(() => setError(''), 3000);
@@ -57,8 +88,6 @@ export default function AddReminderForm() {
       setLoading(false);
     }
   };
-
-  const showFrequencyStep = title.trim() !== '' && dueDate !== null;
 
   return (
     <form onSubmit={handleSubmit} className="p-4 border-2 border-[#25d366] rounded-lg">
@@ -94,39 +123,44 @@ export default function AddReminderForm() {
         />
       </div>
 
-      {showFrequencyStep && (
-        <div
-          className="mb-4 transition-opacity duration-500 ease-in-out opacity-100"
-          style={{ animation: 'fadeIn 0.5s ease-in-out' }}
+      <div className="mb-6">
+        <label className="block font-medium text-secondary text-black mb-2">
+          reminder frequency
+        </label>
+        <select
+          value={frequency}
+          onChange={(e) => setFrequency(e.target.value)}
+          className="w-full p-2 border rounded-md text-black"
+          required
         >
-          <label className="block font-medium text-secondary text-black mb-2">
-            reminder frequency
-          </label>
-          <select
-            value={frequency}
-            onChange={(e) => setFrequency(e.target.value)}
-            className="w-full p-2 border rounded-md text-black"
-            required
-          >
-            <option value="" disabled>
-              Select frequency
+          <option value="" disabled>
+            Select frequency
+          </option>
+          {REMINDER_FREQUENCY.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
             </option>
-            {REMINDER_FREQUENCY.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
-
+          ))}
+        </select>
+      </div>
       <button
         type="submit"
         className="bg-[#25d366] hover:bg-[#128C7E] text-black p-2 rounded-md w-full transition-colors font-semibold"
-        disabled={loading || (showFrequencyStep && frequency === '')}
+        disabled={loading || frequency === ''}
       >
-        {loading ? 'adding...' : 'add reminder'}
+        {loading
+          ? (selectedReminder ? 'updating...' : 'adding...')
+          : (selectedReminder ? 'update reminder' : 'add reminder')}
       </button>
+      {selectedReminder && (
+        <button
+          type="button"
+          className="mt-2 bg-gray-200 hover:bg-gray-300 text-black p-2 rounded-md w-full transition-colors font-semibold"
+          onClick={() => setSelectedReminder(null)}
+        >
+          Cancel edit
+        </button>
+      )}
     </form>
   );
 }
