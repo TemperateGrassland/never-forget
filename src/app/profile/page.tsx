@@ -19,13 +19,6 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
 
-  // Redirect if not authenticated
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/login");
-    }
-  }, [status, router]);
-
   // Fetch profile data from API
   useEffect(() => {
     async function fetchProfile() {
