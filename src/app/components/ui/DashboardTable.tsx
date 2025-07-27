@@ -17,6 +17,7 @@ interface ApiReminder {
   createdAt: string;
   updatedAt: string;
   dueDate: string | null;
+  frequency: string | null;
 }
 
 
@@ -369,12 +370,6 @@ export default function DashboardTable() {
                           placeholderText="Pick a date"
                           dateFormat="dd/MM/yyyy"
                         />
-                        <button
-                          className="text-sm text-blue-600 underline text-center"
-                          onClick={() => setSelectedDateById((prev) => ({ ...prev, [reminder.id]: null }))}
-                        >
-                          Reset date
-                        </button>
                       </div>
                       {emojiVisibleById[reminder.id] && (
                         <span className="ml-2 animate-spinGrowFade text-xl">📅</span>
