@@ -37,10 +37,12 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         }
 
         try {
+          // Find the user if it exists in the database
           const existingUser = await prisma.user.findUnique({
             where: { email: user.email },
           });
 
+          // Create the stripe customer object, add a new user entry in the db and send welcome email for new users.
           if (!existingUser) {
             console.log(`Creating new user and sending welcome email to: ${user.id}`);
             const customer = await stripe.customers.create({
@@ -58,27 +60,31 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
             await sendWelcomeEmail(user.email);
           } else {
+              // TODO Maybe I can remove this? I already create a stripe customer object above when there is no user? what edges cases are being handled here?
             if (!existingUser.stripeCustomerId) {
-              const customer = await stripe.customers.create({ email: user.email });
+              console.warn(`User ${existingUser.id} doesn't have an associated stripe customer object, investigate why`)
+              // const customer = await stripe.customers.create({ email: user.email });
 
-              await prisma.user.update({
-                where: { email: user.email },
-                data: { stripeCustomerId: customer.id },
-              });
+              // await prisma.user.update({
+              //   where: { email: user.email },
+              //   data: { stripeCustomerId: customer.id },
+              // });
             }
 
             if (!existingUser.hasReceivedWelcomeEmail) {
-              console.log(`Sending welcome email to existing user: ${user.id}`);
-              await sendWelcomeEmail(user.email);
-              await prisma.user.update({
-                where: { email: user.email },
-                data: { hasReceivedWelcomeEmail: true },
-              });
+              console.warn(`User ${existingUser.id} doesn't have an associated User entry in postgres, investigate why`)
+
+
+              // console.log(`Sending welcome email to existing user: ${user.id}`);
+              // await sendWelcomeEmail(user.email);
+              // await prisma.user.update({
+              //   where: { email: user.email },
+              //   data: { hasReceivedWelcomeEmail: true },
+              // });
             } else {
               console.log(`User ${existingUser.id} has already received the welcome email.`);
             }
           }
-
           return true;
         } catch (error) {
           console.error("Error during sign-in callback:", error);
