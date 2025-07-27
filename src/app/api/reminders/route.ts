@@ -53,6 +53,7 @@ export async function POST(req: Request) {
     const body = await req.json();
     const title = typeof body === 'string' ? body : body.title;
     const dueDate = typeof body === 'object' ? body.dueDate : null;
+    const frequency = typeof body === 'object' ? body.frequency : undefined;
 
     if (!title) {
       return NextResponse.json({ error: "Title is required" }, { status: 400 });
@@ -87,6 +88,7 @@ export async function POST(req: Request) {
         title,
         userId: user.id,
         dueDate: parsedDueDate,
+        frequency,
       },
     });
 
@@ -100,6 +102,7 @@ export async function POST(req: Request) {
       createdAt: reminder.createdAt.toISOString(),
       updatedAt: reminder.updatedAt.toISOString(),
       dueDate: reminder.dueDate ? reminder.dueDate.toISOString() : null,
+      frequency: reminder.frequency,
     });
 
     return NextResponse.json({
@@ -112,6 +115,7 @@ export async function POST(req: Request) {
         createdAt: reminder.createdAt.toISOString(),
         updatedAt: reminder.updatedAt.toISOString(),
         dueDate: reminder.dueDate ? reminder.dueDate.toISOString() : null,
+        frequency: reminder.frequency,
       },
     });
   } catch (error) {

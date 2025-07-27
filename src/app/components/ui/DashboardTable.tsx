@@ -302,6 +302,7 @@ export default function DashboardTable() {
               <tr className="bg-gray-100">
                 <th className="border p-2 text-center text-black">Reminder</th>
                 <th className="border p-2 text-center text-black">Status</th>
+                <th className="border p-2 text-center text-black">Frequency</th>
                 <th className="border p-2 text-center text-black">To Do By</th>
                 <th className="border p-2 text-center text-black"></th>
               </tr>
@@ -324,6 +325,9 @@ export default function DashboardTable() {
                     </td>
                     <td className="border p-2 text-center align-middle">
                       <StatusBadge status={status.status} daysDiff={status.daysDiff} />
+                    </td>
+                    <td className="border p-2 text-center align-middle capitalize">
+                      {reminder.frequency?.toLowerCase() || 'none'}
                     </td>
                     <td className="border p-2 text-center align-middle">
                       <div className="flex flex-col items-center gap-1">
