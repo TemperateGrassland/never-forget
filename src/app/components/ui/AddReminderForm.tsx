@@ -6,13 +6,14 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
 const REMINDER_FREQUENCY = [
-  { label: 'Weekly - you want to be reminded about this every week', value: 'weekly' },
-  { label: 'Monthly - for events that repeat once a month', value: 'monthly' },
-  { label: 'Yearly - birthdays and anniversaries', value: 'yearly' }
+  { label: 'None (one-time reminder)', value: 'NONE' },
+  { label: 'Weekly - you want to be reminded about this every week', value: 'WEEKLY' },
+  { label: 'Monthly - for events that repeat once a month', value: 'MONTHLY' },
+  { label: 'Yearly - birthdays and anniversaries', value: 'YEARLY' }
 ];
 
 export default function AddReminderForm() {
-  const { selectedReminder, setSelectedReminder } = useReminderContext();  
+  const { selectedReminder, setSelectedReminder, refetchReminders } = useReminderContext();  
   const [title, setTitle] = useState('');
   const [dueDate, setDueDate] = useState<Date | null>(null);
   const [frequency, setFrequency] = useState('');
@@ -25,7 +26,7 @@ export default function AddReminderForm() {
     if (selectedReminder) {
       setTitle(selectedReminder.title || '');
       setDueDate(selectedReminder.dueDate ? new Date(selectedReminder.dueDate) : null);
-      setFrequency(selectedReminder.frequency || '');
+      setFrequency((selectedReminder.frequency || '').toUpperCase());
     } else {
       setTitle('');
       setDueDate(null);
@@ -76,6 +77,8 @@ export default function AddReminderForm() {
 
       // Reset selectedReminder after submit
       setSelectedReminder(null);
+      // Refresh reminders in the dashboard
+      refetchReminders?.();
 
       // Clear success message after 3 seconds
       setTimeout(() => setSuccess(''), 3000);

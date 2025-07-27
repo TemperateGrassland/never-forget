@@ -215,8 +215,17 @@ export default function DashboardTable() {
       );
     });
 
+    channel.subscribe('reminderUpdated', (message) => {
+    const updated = message.data;
+    setReminders((prev) =>
+      prev.map((r) => (r.id === updated.id ? { ...r, ...updated } : r))
+    );
+  });
+
     return () => {
-      channel.unsubscribe();
+        channel.unsubscribe('newReminder');
+        channel.unsubscribe('reminderDeleted');
+        channel.unsubscribe('reminderUpdated');
       // commented out as this was causing an error 
       // client.close();
     };
@@ -294,7 +303,7 @@ export default function DashboardTable() {
                 <th className="border p-2 text-center text-black">Reminder</th>
                 <th className="border p-2 text-center text-black">Status</th>
                 <th className="border p-2 text-center text-black">To Do By</th>
-                <th className="border p-2 text-center text-black">Done?</th>
+                <th className="border p-2 text-center text-black"></th>
               </tr>
             </thead>
             <tbody>
@@ -312,20 +321,6 @@ export default function DashboardTable() {
                         task={reminder.title}
                         initialCompleted={false}
                       />
-                    {/* Edit button for desktop */}
-                    <button
-                      className="ml-2 px-2 py-1 text-xs bg-blue-200 hover:bg-blue-400 rounded text-black"
-                      onClick={() =>
-                        setSelectedReminder({
-                          id: reminder.id,
-                          title: reminder.title,
-                          dueDate: reminder.dueDate ? new Date(reminder.dueDate) : null,
-                          frequency: reminder.frequency || 'weekly', // fallback
-                        })
-                      }
-                    >
-                      Edit
-                    </button>
                     </td>
                     <td className="border p-2 text-center align-middle">
                       <StatusBadge status={status.status} daysDiff={status.daysDiff} />
@@ -375,12 +370,25 @@ export default function DashboardTable() {
                         <span className="ml-2 animate-spinGrowFade text-xl">📅</span>
                       )}
                     </td>
-                    <td className="border p-2 text-center align-middle">
+                    <td className="border p-2 text-center align-middle space-x-2">
                       <button
                         onClick={() => deleteReminder(reminder.id)}
-                        className="text-2xl text-center"
+                        className="text-2xl"
                       >
                         ✅
+                      </button>
+                      <button
+                        onClick={() =>
+                          setSelectedReminder({
+                            id: reminder.id,
+                            title: reminder.title,
+                            dueDate: reminder.dueDate ? new Date(reminder.dueDate) : null,
+                            frequency: reminder.frequency || 'weekly',
+                          })
+                        }
+                        className="text-xl"
+                      >
+                        ✏️
                       </button>
                     </td>
                   </tr>
@@ -407,20 +415,6 @@ export default function DashboardTable() {
             >
               <div className={`font-semibold ${isOverdue ? 'text-red-700' : 'text-black'}`}>
                 {reminder.title}
-                {/* Edit button for mobile */}
-                <button
-                  className="ml-2 px-2 py-1 text-xs bg-blue-200 hover:bg-blue-400 rounded text-black"
-                  onClick={() =>
-                    setSelectedReminder({
-                      id: reminder.id,
-                      title: reminder.title,
-                      dueDate: reminder.dueDate ? new Date(reminder.dueDate) : null,
-                      frequency: reminder.frequency || 'weekly',
-                    })
-                  }
-                >
-                  Edit
-                </button>
               </div>
               <div className="mt-2 mb-2">
                 <StatusBadge status={status.status} daysDiff={status.daysDiff} />
@@ -466,23 +460,30 @@ export default function DashboardTable() {
                     placeholderText="Pick a date"
                     dateFormat="dd/MM/yyyy"
                   />
-                  <button
-                    className="text-sm text-blue-600 underline text-center"
-                    onClick={() => setSelectedDateById((prev) => ({ ...prev, [reminder.id]: null }))}
-                  >
-                    Reset date
-                  </button>
                 </div>
                 {emojiVisibleById[reminder.id] && (
                   <span className="ml-2 animate-spinGrowFade text-xl">📅</span>
                 )}
               </div>
-              <div className="mt-3">
+              <div className="mt-3 flex justify-center space-x-4">
                 <button
                   onClick={() => deleteReminder(reminder.id)}
-                  className="text-2xl text-center"
+                  className="text-2xl"
                 >
                   ✅
+                </button>
+                <button
+                  onClick={() =>
+                    setSelectedReminder({
+                      id: reminder.id,
+                      title: reminder.title,
+                      dueDate: reminder.dueDate ? new Date(reminder.dueDate) : null,
+                      frequency: reminder.frequency || 'weekly',
+                    })
+                  }
+                  className="text-xl"
+                >
+                  ✏️
                 </button>
               </div>
             </div>

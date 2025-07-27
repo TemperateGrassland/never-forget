@@ -36,8 +36,10 @@ export async function DELETE(req: NextRequest, params: { params: Promise<{ id: s
 }
 
 export async function PATCH(req: NextRequest, params: { params: Promise<{ id: string }> }) {
-  const { dueDate } = await req.json();
+  const { title, dueDate, frequency } = await req.json();
   const id = (await params?.params).id;
+
+  console.log(`reminder ${title} - dueDate ${dueDate} - frequency ${frequency} - id ${id}`)
 
   if (!id || typeof id !== "string") {
     return NextResponse.json({ error: "Invalid or missing Reminder ID" }, { status: 400 });
@@ -60,12 +62,26 @@ export async function PATCH(req: NextRequest, params: { params: Promise<{ id: st
     }
   }
 
-  const updated = await prisma.reminder.update({
-    where: { id },
-    data: {
-      dueDate: parsedDueDate,
-    },
-  });
+  try {
+    const updatedReminder = await prisma.reminder.update({
+      where: { id },
+      data: {
+        title,
+        dueDate: parsedDueDate,
+        frequency,
+      },
+    });
 
-  return NextResponse.json({ updated });
+    if (!updatedReminder) {
+      return NextResponse.json({ error: "Failed to update reminder" }, { status: 404 });
+    }
+
+    const channel = ably.channels.get("reminders");
+    await channel.publish('reminderUpdated', updatedReminder);
+
+    return NextResponse.json({ updatedReminder });
+  } catch (error) {
+    console.error("Error updating reminder:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  }
 }
