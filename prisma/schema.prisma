@@ -7,6 +7,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum FriendInviteStatus {
+  PENDING
+  ACCEPTED
+  IGNORED
+}
+
 model User {
   id            String     @id @default(cuid())
   email         String     @unique
@@ -23,6 +29,9 @@ model User {
   accounts      Account[] // One-to-many relationship
   sessions      Session[] // One-to-many relationship
   stripeCustomerId  String?  @unique
+  friends    User[] @relation("UserFriends")
+  friendOf   User[] @relation("UserFriends")
+  sentFriendInvites FriendInvite[] @relation("SentFriendInvites")
 }
 
 model Account {
@@ -85,4 +94,13 @@ model WaitlistEntry {
   id        String   @id @default(cuid())
   email     String   @unique
   createdAt DateTime @default(now())
+}
+
+model FriendInvite {
+  id         String             @id @default(cuid())
+  fromUser   User               @relation("SentFriendInvites", fields: [fromUserId], references: [id])
+  fromUserId String
+  phone      String             // E.164 format WhatsApp number
+  status     FriendInviteStatus @default(PENDING)
+  createdAt  DateTime           @default(now())
 }
