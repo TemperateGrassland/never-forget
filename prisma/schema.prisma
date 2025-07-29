@@ -22,7 +22,7 @@ model User {
   firstName     String?
   isActive      Boolean    @default(true)
   lastName      String?
-  phoneNumber   String?
+  phoneNumber   String?    @unique
   updatedAt     DateTime   @updatedAt
   reminders     Reminder[] // One-to-many relationship
   hasReceivedWelcomeEmail Boolean  @default(false)
