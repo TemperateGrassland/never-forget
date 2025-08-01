@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Script from "next/script";
 import CookieConsent from "./components/ui/CookieConsent";
-import ClientWrapper from "./components/ui/ClientWrapper";
 
 export const metadata: Metadata = {
   title: "NeverForget",
@@ -44,15 +43,13 @@ export default async function RootLayout({
         /> */}
 
       </head>
-      <body>
-        <ClientWrapper>
+        <body className="flex flex-col min-h-screen font-agrandir">
           <CookieConsent />
           <Navbar />
 
           <main className="flex-grow">
             {children}
           </main>
-        </ClientWrapper>
           {/* <Toaster position="bottom-right" /> */}
           {/* <Footer /> */}
         </body>

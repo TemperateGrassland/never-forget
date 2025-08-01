@@ -2,7 +2,7 @@
 
 export default function HomePage() {
   return (
-    <div className="relative h-screen w-screen overflow-hidden">
+    <div className="relative h-screen w-screen overflow-hidden" data-page="homepage">
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-black/40 z-10" />
         <img

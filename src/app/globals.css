@@ -24,8 +24,13 @@
 
 body {
   color: var(--foreground);
-  background: var(--background);
+  background: white;
   font-family: 'Agrandir', sans-serif;
+}
+
+/* Homepage gets no background (transparent for hero image) */
+body:has([data-page="homepage"]) {
+  background: transparent;
 }
 
 /* .text-white-outline {

@@ -83,79 +83,93 @@ function ProfileContent() {
   const from = searchParams.get("from");
 
   return (
-    <div className="max-w-lg mx-auto p-6 bg-white shadow-md rounded-lg mt-28">
-      {message === "phone-required" && from === "reminders" && (
-        <div className="mb-4 p-3 bg-blue-100 border border-blue-400 rounded-md">
-          <p className="text-blue-800 font-medium text-center">
-            📱 Phone number required to access your dashboard
+    <div className="min-h-screen flex flex-col items-start justify-center px-4 md:px-8 lg:px-16 pt-28 pb-8">
+      <div className="w-full max-w-2xl">
+        {message === "phone-required" && from === "reminders" && (
+          <div className="mb-6 p-4 bg-blue-50 border-l-4 border-[#25d366] rounded-r-md">
+            <p className="text-gray-800 font-medium">
+              📱 Phone number required to access your dashboard
+            </p>
+            <p className="text-gray-600 text-sm mt-1">
+              We need your phone number to send WhatsApp reminders
+            </p>
+          </div>
+        )}
+        
+        <div className="mb-8">
+          <h1 className="text-4xl md:text-5xl font-bold text-black mb-4">
+            complete your profile
+          </h1>
+          <p className="text-lg md:text-xl text-gray-600 mb-6 max-w-xl">
+            {(!user.firstName || !user.lastName || !user.phoneNumber) 
+              ? "just a few details to get your daily reminders started"
+              : "manage your profile information"}
           </p>
-          <p className="text-blue-600 text-sm text-center mt-1">
-            We need your phone number to send WhatsApp reminders
-          </p>
         </div>
-      )}
-      {(!user.firstName || !user.lastName || !user.phoneNumber) && (
-        <p className="mb-4 text-center text-red-600 font-agrandir">
-          Please complete your profile before moving on to set reminders.
-        </p>
-      )}
-      <h1 className="text-2xl font-bold text-center text-black">Your Profile</h1>
-      <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-        <div>
-          <label className="block text-gray-700 font-medium">First Name</label>
-          <input
-            type="text"
-            name="firstName"
-            value={user.firstName}
-            onChange={handleChange}
-            className={`w-full p-2 border rounded-md text-black ${!user.firstName ? 'border-green-500 animate-pulse' : 'border-gray-300'}`}
-            required
-          />
-        </div>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-gray-700 font-medium mb-2">First Name</label>
+              <input
+                type="text"
+                name="firstName"
+                value={user.firstName}
+                onChange={handleChange}
+                className={`w-full p-4 border-2 rounded-md text-black bg-white text-lg ${!user.firstName ? 'border-[#25d366] animate-pulse' : 'border-gray-300 focus:border-[#25d366]'} focus:outline-none transition-colors`}
+                placeholder="Enter your first name"
+                required
+              />
+            </div>
 
-        <div>
-          <label className="block text-gray-700 font-medium">Last Name</label>
-          <input
-            type="text"
-            name="lastName"
-            value={user.lastName}
-            onChange={handleChange}
-            className={`w-full p-2 border rounded-md text-black ${!user.lastName ? 'border-green-500 animate-pulse' : 'border-gray-300'}`}
-            required
-          />
-        </div>
+            <div>
+              <label className="block text-gray-700 font-medium mb-2">Last Name</label>
+              <input
+                type="text"
+                name="lastName"
+                value={user.lastName}
+                onChange={handleChange}
+                className={`w-full p-4 border-2 rounded-md text-black bg-white text-lg ${!user.lastName ? 'border-[#25d366] animate-pulse' : 'border-gray-300 focus:border-[#25d366]'} focus:outline-none transition-colors`}
+                placeholder="Enter your last name"
+                required
+              />
+            </div>
+          </div>
 
-        <div>
-          <label className="block text-gray-700 font-medium">Email</label>
-          <input
-            type="email"
-            name="email"
-            value={user.email}
-            className="w-full p-2 border border-gray-300 rounded-md bg-gray-100 text-black"
-            disabled
-          />
-        </div>
+          <div>
+            <label className="block text-gray-700 font-medium mb-2">Email</label>
+            <input
+              type="email"
+              name="email"
+              value={user.email}
+              className="w-full p-4 border-2 border-gray-200 rounded-md bg-gray-50 text-black text-lg"
+              disabled
+            />
+            <p className="text-sm text-gray-500 mt-1">Email cannot be changed</p>
+          </div>
 
-        <div>
-          <label className="block text-gray-700 font-medium">Phone Number</label>
-          <input
-            type="tel"
-            name="phoneNumber"
-            value={user.phoneNumber}
-            onChange={handleChange}
-            className={`w-full p-2 border rounded-md text-black ${!user.phoneNumber ? 'border-green-500 animate-pulse' : 'border-gray-300'}`}
-            required
-          />
-        </div>
+          <div>
+            <label className="block text-gray-700 font-medium mb-2">Phone Number</label>
+            <input
+              type="tel"
+              name="phoneNumber"
+              value={user.phoneNumber}
+              onChange={handleChange}
+              className={`w-full p-4 border-2 rounded-md text-black bg-white text-lg ${!user.phoneNumber ? 'border-[#25d366] animate-pulse' : 'border-gray-300 focus:border-[#25d366]'} focus:outline-none transition-colors`}
+              placeholder="Enter your WhatsApp number"
+              required
+            />
+            <p className="text-sm text-gray-500 mt-1">We'll use this to send your daily reminders</p>
+          </div>
 
-        <button
-          type="submit"
-          className="w-full bg-[#25d366] text-black p-2 rounded-md hover:bg-blue-700"
-          disabled={updating}
-        >
-          {updating ? "Updating..." : "Update Profile"}
-        </button>
-      </form>
+          <button
+            type="submit"
+            className="bg-[#25d366] text-white font-semibold text-lg px-8 py-4 rounded-md shadow hover:bg-[#128C7E] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={updating}
+          >
+            {updating ? "updating profile..." : "save profile"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

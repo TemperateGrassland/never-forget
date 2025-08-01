@@ -22,7 +22,7 @@ export default function Navbar() {
       </Link>
       <div className="flex space-x-6">
       <a href="/daily-reminder" className="hover:underline">
-        dashboard
+        your reminders
       </a>
       <a href="/profile" className="hover:underline">
         profile
