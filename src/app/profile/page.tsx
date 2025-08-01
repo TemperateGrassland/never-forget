@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
-export default function ProfilePage() {
+function ProfileContent() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   // User State
   const [user, setUser] = useState({
@@ -77,8 +78,22 @@ export default function ProfilePage() {
   // Show loading state
   if (loading) return <p className="text-center">Loading profile...</p>;
 
+  // Get redirect message
+  const message = searchParams.get("message");
+  const from = searchParams.get("from");
+
   return (
-    <div className="max-w-lg mx-auto p-6 bg-white shadow-md rounded-lg">
+    <div className="max-w-lg mx-auto p-6 bg-white shadow-md rounded-lg mt-28">
+      {message === "phone-required" && from === "reminders" && (
+        <div className="mb-4 p-3 bg-blue-100 border border-blue-400 rounded-md">
+          <p className="text-blue-800 font-medium text-center">
+            📱 Phone number required to access your dashboard
+          </p>
+          <p className="text-blue-600 text-sm text-center mt-1">
+            We need your phone number to send WhatsApp reminders
+          </p>
+        </div>
+      )}
       {(!user.firstName || !user.lastName || !user.phoneNumber) && (
         <p className="mb-4 text-center text-red-600 font-agrandir">
           Please complete your profile before moving on to set reminders.
@@ -142,5 +157,13 @@ export default function ProfilePage() {
         </button>
       </form>
     </div>
+  );
+}
+
+export default function ProfilePage() {
+  return (
+    <Suspense fallback={<div className="text-center mt-28">Loading profile...</div>}>
+      <ProfileContent />
+    </Suspense>
   );
 }

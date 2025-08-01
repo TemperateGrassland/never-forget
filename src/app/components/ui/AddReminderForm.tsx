@@ -101,11 +101,14 @@ export default function AddReminderForm() {
         {error && <p className="text-red-500">{error}</p>}
       </div>
       <div className="mb-4">
+        <label className="block font-medium text-secondary text-black mb-2">
+          reminder
+        </label>
         <input
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="w-full p-2 border rounded-md text-black"
+          className="w-full p-2 border rounded-md text-black placeholder-gray-500 bg-white"
           placeholder="create new reminder..."
           required
         />
@@ -119,7 +122,7 @@ export default function AddReminderForm() {
           selected={dueDate}
           onChange={(date) => setDueDate(date)}
           minDate={new Date()}
-          className="w-full p-2 border rounded-md text-black"
+          className="w-full p-2 border rounded-md text-black placeholder-gray-500 bg-white"
           placeholderText="Select a due date (optional)"
           dateFormat="dd/MM/yyyy"
           isClearable
@@ -133,7 +136,7 @@ export default function AddReminderForm() {
         <select
           value={frequency}
           onChange={(e) => setFrequency(e.target.value)}
-          className="w-full p-2 border rounded-md text-black"
+          className="w-full p-2 border rounded-md text-black bg-white"
           required
         >
           <option value="" disabled>
@@ -148,7 +151,7 @@ export default function AddReminderForm() {
       </div>
       <button
         type="submit"
-        className="bg-[#25d366] hover:bg-[#128C7E] text-black p-2 rounded-md w-full transition-colors font-semibold"
+        className="bg-[#25d366] hover:bg-[#128C7E] text-white p-2 rounded-md w-full transition-colors font-semibold"
         disabled={loading || frequency === ''}
       >
         {loading

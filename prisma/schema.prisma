@@ -32,6 +32,7 @@ model User {
   friends    User[] @relation("UserFriends")
   friendOf   User[] @relation("UserFriends")
   sentFriendInvites FriendInvite[] @relation("SentFriendInvites")
+  feedback   Feedback[] // One-to-many relationship for feedback
 }
 
 model Account {
@@ -103,4 +104,20 @@ model FriendInvite {
   phone      String             // E.164 format WhatsApp number
   status     FriendInviteStatus @default(PENDING)
   createdAt  DateTime           @default(now())
+}
+
+enum FeedbackType {
+  COMPLEMENT
+  CRITICISM
+}
+
+model Feedback {
+  id        String       @id @default(cuid())
+  type      FeedbackType
+  message   String
+  userId    String?      // Optional - can be anonymous
+  user      User?        @relation(fields: [userId], references: [id])
+  createdAt DateTime     @default(now())
+  userAgent String?      // For tracking browser/device info
+  ipAddress String?      // For analytics (anonymized)
 }

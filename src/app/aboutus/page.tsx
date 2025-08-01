@@ -25,9 +25,9 @@ const AboutUsPage: React.FC = () => {
         />
       </Head>
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-28">
         <header className="mb-10 text-center">
-          <h1 className="text-4xl font-bold text-gray-800 mb-4">
+          <h1 className="text-4xl font-bold text-black mb-4">
             Your Whatsapp powered daily reminder service.
 
           </h1>

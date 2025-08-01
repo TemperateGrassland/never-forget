@@ -1,11 +1,11 @@
 export default function PrivacyPage() {
   return (
-      <div className="privacy-policy-container p-4 md:p-8 text-black dark:text-white">
-      <h1 className="text-3xl font-bold mb-6 text-black dark:text-white">Privacy Policy for NeverForget.com</h1>
+      <div className="privacy-policy-container p-4 md:p-8 text-black pt-28">
+      <h1 className="text-3xl font-bold mb-6 text-black">Privacy Policy for NeverForget.com</h1>
       <p className="mb-4"><strong>Last Updated:</strong> June 3, 2025</p>
 
       <section className="mb-6">
-        <h2 className="text-2xl font-semibold mb-3 text-black dark:text-white">1. Introduction</h2>
+        <h2 className="text-2xl font-semibold mb-3 text-black">1. Introduction</h2>
         <p className="mb-2">
           Welcome to NeverForget.com (the &quot;Service&quot;, &quot;we,&quot; &quot;us&quot;, or &quot;our&quot;). We are committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website <a href="https://www.neverforget.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline dark:text-white">https://www.neverforget.com</a> and use our WhatsApp reminder service. Please read this privacy policy carefully. If you do not agree with the terms of this privacy policy, please do not access the site or use our services.
         </p>
@@ -15,7 +15,7 @@ export default function PrivacyPage() {
       </section>
 
       <section className="mb-6">
-        <h2 className="text-2xl font-semibold mb-3 text-black dark:text-white">2. Information We Collect</h2>
+        <h2 className="text-2xl font-semibold mb-3 text-black">2. Information We Collect</h2>
         <p className="mb-2">
           We may collect information about you in a variety of ways. The information we may collect on the Site and via our Service includes:
         </p>
@@ -49,7 +49,7 @@ export default function PrivacyPage() {
       </section>
 
       <section className="mb-6">
-        <h2 className="text-2xl font-semibold mb-3 text-black dark:text-white">3. How We Use Your Information</h2>
+        <h2 className="text-2xl font-semibold mb-3 text-black">3. How We Use Your Information</h2>
         <p className="mb-2">
           Having accurate information about you permits us to provide you with a smooth, efficient, and customized experience. Specifically, we may use information collected about you via the Site or our Service to:
         </p>
@@ -67,7 +67,7 @@ export default function PrivacyPage() {
       </section>
 
       <section className="mb-6">
-        <h2 className="text-2xl font-semibold mb-3 text-black dark:text-white">4. How We Share Your Information</h2>
+        <h2 className="text-2xl font-semibold mb-3 text-black">4. How We Share Your Information</h2>
         <p className="mb-2">
           We do not sell or rent your personal information to third parties. We may share information we have collected about you in certain situations:
         </p>
@@ -101,7 +101,7 @@ export default function PrivacyPage() {
       </section>
 
       <section className="mb-6">
-        <h2 className="text-2xl font-semibold mb-3 text-black dark:text-white">5. Data Storage and International Transfers</h2>
+        <h2 className="text-2xl font-semibold mb-3 text-black">5. Data Storage and International Transfers</h2>
         <p className="mb-2">
           Your information, including personal data, is stored in a PostgreSQL database hosted on Neon. The servers for Neon and our website hosting provider, Vercel, may be located in various countries around the world. This means that your information may be transferred to — and maintained on — computers located outside of your state, province, country, or other governmental jurisdiction where the data protection laws may differ from those in your jurisdiction. We will take all steps reasonably necessary to ensure that your data is treated securely and in accordance with this Privacy Policy.
         </p>
@@ -130,7 +130,7 @@ export default function PrivacyPage() {
 </section>
 
        <section className="mb-6">
-        <h2 className="text-2xl font-semibold mb-3 text-black dark:text-white">7. Data Retention</h2>
+        <h2 className="text-2xl font-semibold mb-3 text-black">7. Data Retention</h2>
         <p className="mb-2">
           We will retain your personal information (phone number, email address, message content, reminder schedule) only for as long as is necessary for the purposes set out in this Privacy Policy, or as long as your account is active to receive reminders or other communications you have opted into. You can request the deletion of your data as described in &quot;Your Rights&quot; below. We may retain and use your information to the extent necessary to comply with our legal obligations (for example, if we are required to retain your data to comply with applicable laws), resolve disputes, and enforce our legal agreements and policies.
         </p>
@@ -140,14 +140,14 @@ export default function PrivacyPage() {
       </section>
 
       <section className="mb-6">
-        <h2 className="text-2xl font-semibold mb-3 text-black dark:text-white">8. Data Security</h2>
+        <h2 className="text-2xl font-semibold mb-3 text-black">8. Data Security</h2>
         <p className="mb-2">
           We use administrative, technical, and physical security measures to help protect your personal information. This includes utilizing reputable hosting providers like Vercel and database services like Neon, who have their own security protocols. While we and our providers have taken reasonable steps to secure the personal information you provide to us, please be aware that despite our efforts, no security measures are perfect or impenetrable, and no method of data transmission can be guaranteed against any interception or other type of misuse. Any information disclosed online is vulnerable to interception and misuse by unauthorized parties. Therefore, we cannot guarantee complete security if you provide personal information.
         </p>
       </section>
 
       <section className="mb-6">
-        <h2 className="text-2xl font-semibold mb-3 text-black dark:text-white">9. Your Rights</h2>
+        <h2 className="text-2xl font-semibold mb-3 text-black">9. Your Rights</h2>
         <p className="mb-2">
           Depending on your location and applicable data protection laws, you may have the following rights regarding your personal information:
         </p>
@@ -167,7 +167,7 @@ export default function PrivacyPage() {
       </section>
 
       <section className="mb-6">
-        <h2 className="text-2xl font-semibold mb-3 text-black dark:text-white">10. Third-Party Services (WhatsApp, Vercel, Neon)</h2>
+        <h2 className="text-2xl font-semibold mb-3 text-black">10. Third-Party Services (WhatsApp, Vercel, Neon)</h2>
         <p className="mb-2">
           Our Service relies on WhatsApp (a service of Meta Platforms, Inc.) to deliver messages, Vercel for website hosting, and Neon for database hosting. When you use our Service, your data is processed by these third parties to facilitate the functioning of our application. We encourage you to review their respective Privacy Policies and Terms of Service:
         </p>
@@ -183,14 +183,14 @@ export default function PrivacyPage() {
       </section>
 
       <section className="mb-6">
-        <h2 className="text-2xl font-semibold mb-3 text-black dark:text-white">11. Children&apos;s Privacy</h2>
+        <h2 className="text-2xl font-semibold mb-3 text-black">11. Children&apos;s Privacy</h2>
         <p className="mb-2">
           Our Service is not intended for use by children under the age of 13 (or a higher age if stipulated by applicable law in your jurisdiction). We do not knowingly collect personal information from children under 13. If we become aware that we have collected personal information from a child under 13 without verification of parental consent, we will take steps to remove that information from our servers. If you believe that we might have any information from or about a child under 13, please contact us.
         </p>
       </section>
 
       <section className="mb-6">
-        <h2 className="text-2xl font-semibold mb-3 text-black dark:text-white">12. Changes to This Privacy Policy</h2>
+        <h2 className="text-2xl font-semibold mb-3 text-black">12. Changes to This Privacy Policy</h2>
         <p>
           We may update this Privacy Policy from time to time. The updated version will be indicated by an updated &quot;Last Updated&quot; date and the updated version will be effective as soon as it is accessible. We encourage you to review this Privacy Policy frequently to be informed of how we are protecting your information.
         </p>

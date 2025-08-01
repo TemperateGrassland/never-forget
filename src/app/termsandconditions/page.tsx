@@ -1,10 +1,10 @@
 export default function TermsAndConditionsPage() {
     return (
-        <div className="terms-and-conditions-container p-4 md:p-8 text-black dark:text-white dark:bg-black"> 
-      <h1 className="text-3xl font-bold mb-4 text-black dark:text-white">Terms and Conditions for never forget</h1>
-      <p className="mb-6 text-sm text-black dark:text-white"><strong>Effective Date:</strong> May 09, 2025</p>
+        <div className="terms-and-conditions-container p-4 md:p-8 text-black pt-28"> 
+      <h1 className="text-3xl font-bold mb-4 text-black">Terms and Conditions for never forget</h1>
+      <p className="mb-6 text-sm text-gray-600"><strong>Effective Date:</strong> May 09, 2025</p>
 
-      <p className="mb-6 text-black dark:text-white">
+      <p className="mb-6 text-black">
         Welcome to never forget (<a href="https://www.neverforget.one" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline dark:text-blue-400">https://www.neverforget.one</a>). By using our website and services, you agree to comply with the following terms.
       </p>
 

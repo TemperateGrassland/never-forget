@@ -292,19 +292,19 @@ export default function DashboardTable() {
 
   return (
     <div className="overflow-x-auto w-full">
-      <h2 className="text-xl font-bold mb-4 text-black"></h2>
+      <h2 className="text-xl font-bold mb-4 text-white"></h2>
       <div className="hidden md:block">
         {reminders.length === 0 ? (
           <p className='text-black'>No reminders found.</p>
         ) : (
-          <table className="min-w-full table-auto border-collapse border border-gray-300 text-black text-center">
+          <table className="min-w-full table-auto border-collapse border border-[#25d366] text-black text-center">
             <thead>
-              <tr className="bg-gray-100">
-                <th className="border p-2 text-center text-black">Reminder</th>
-                <th className="border p-2 text-center text-black">Status</th>
-                <th className="border p-2 text-center text-black">Frequency</th>
-                <th className="border p-2 text-center text-black">To Do By</th>
-                <th className="border p-2 text-center text-black"></th>
+              <tr className="bg-[#25d366]">
+                <th className="border p-2 text-center text-white">Reminder</th>
+                <th className="border p-2 text-center text-white">Status</th>
+                <th className="border p-2 text-center text-white">Frequency</th>
+                <th className="border p-2 text-center text-white">To Do By</th>
+                <th className="border p-2 text-center text-white">Update</th>
               </tr>
             </thead>
             <tbody>
@@ -317,7 +317,7 @@ export default function DashboardTable() {
                     key={reminder.id}
                     className={`${deletingId === reminder.id ? 'animate-pulse opacity-50' : ''} ${isOverdue ? 'bg-red-50 border-l-4 border-l-red-500' : ''}`}
                   >
-                    <td className="border p-2 text-center align-middle">
+                    <td className="border p-2 text-center align-middle text-black">
                       <TodoItem
                         task={reminder.title}
                         initialCompleted={false}
@@ -326,7 +326,7 @@ export default function DashboardTable() {
                     <td className="border p-2 text-center align-middle">
                       <StatusBadge status={status.status} daysDiff={status.daysDiff} />
                     </td>
-                    <td className="border p-2 text-center align-middle capitalize">
+                    <td className="border p-2 text-center align-middle capitalize text-black">
                       {reminder.frequency?.toLowerCase() || 'none'}
                     </td>
                     <td className="border p-2 text-center align-middle">

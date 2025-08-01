@@ -44,19 +44,24 @@ export default function Subscriptions() {
   };
 
   return (
-    <div>
-      <h1>Manage Your Subscription</h1>
+    <div className="pt-28 p-4">
+      <h1 className="text-3xl font-bold mb-6 text-black">Manage Your Subscription</h1>
       {subscriptions.length > 0 ? (
         subscriptions.map(sub => (
-          <div key={sub.id}>
-            <h2>{sub.plan.nickname}</h2>
-            <p>Status: {sub.status}</p>
-            <p>Renews on: {new Date(sub.current_period_end * 1000).toLocaleDateString()}</p>
-            <button onClick={() => handleCancel(sub.id)}>Cancel Subscription</button>
+          <div key={sub.id} className="bg-white p-6 rounded-lg shadow-md mb-4 border">
+            <h2 className="text-xl font-semibold text-black mb-2">{sub.plan.nickname}</h2>
+            <p className="text-gray-600 mb-1">Status: {sub.status}</p>
+            <p className="text-gray-600 mb-4">Renews on: {new Date(sub.current_period_end * 1000).toLocaleDateString()}</p>
+            <button 
+              onClick={() => handleCancel(sub.id)}
+              className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors"
+            >
+              Cancel Subscription
+            </button>
           </div>
         ))
       ) : (
-        <p>No active subscriptions found.</p>
+        <p className="text-gray-600">No active subscriptions found.</p>
       )}
     </div>
   );

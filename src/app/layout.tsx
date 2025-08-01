@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Script from "next/script";
 import CookieConsent from "./components/ui/CookieConsent";
+import ClientWrapper from "./components/ui/ClientWrapper";
 
 export const metadata: Metadata = {
   title: "NeverForget",
@@ -15,7 +16,6 @@ import { SessionProvider } from "next-auth/react";
 import Navbar from "./components/ui/NavBar";
 import { Toaster } from "react-hot-toast";
 import Footer from "./components/ui/Footer";
-import Logo from "./components/ui/Logo";
 
 export default async function RootLayout({
   children,
@@ -43,23 +43,18 @@ export default async function RootLayout({
           }}
         /> */}
 
-        <link
-          href="https://fonts.googleapis.com/css2?family=Agrandir:wght@400;700&display=swap"
-          rel="stylesheet"
-        />
       </head>
-        <body className="flex flex-col min-h-screen font-agrandir">
+      <body>
+        <ClientWrapper>
           <CookieConsent />
           <Navbar />
-          <div className="flex flex-col justify-center items-center bg-white mb-2 text-black">
-            <Logo />
-          </div>
 
-          <main className="flex-1">
+          <main className="flex-grow">
             {children}
           </main>
-          <Toaster position="bottom-right" />
-          <Footer />
+        </ClientWrapper>
+          {/* <Toaster position="bottom-right" /> */}
+          {/* <Footer /> */}
         </body>
       </html>  
     </SessionProvider>

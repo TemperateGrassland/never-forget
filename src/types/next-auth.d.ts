@@ -6,13 +6,17 @@ declare module "next-auth" {
     user: {
       id: string;
       email: string;
+      name?: string | null;
       stripeCustomerId?: string | null;
       phoneNumber?: string | null;
+      firstName?: string | null;
     };
   }
 
   interface User {
+    name?: string | null;
     stripeCustomerId?: string | null;
     phoneNumber?: string | null;
+    firstName?: string | null;
   }
 }

@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'Agrandir';
+  src: url('/fonts/Agrandir-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -9,14 +17,15 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: 	#ffffff;
+    --background: #0a0a0a;
     --foreground: #ededed;
   }
 }
 
 body {
-  color: #171717;
+  color: var(--foreground);
   background: var(--background);
+  font-family: 'Agrandir', sans-serif;
 }
 
 /* .text-white-outline {

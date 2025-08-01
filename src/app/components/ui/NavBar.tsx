@@ -1,87 +1,48 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
 import { signIn, useSession } from "next-auth/react";
-import { signOut } from "next-auth/react";
+import { usePathname } from "next/navigation";
 
-const Navbar: React.FC = () => {
-  const { data: session, status } = useSession();
-  const [menuOpen, setMenuOpen] = useState(false);
-
-  // if (status === "loading") {
-  //   return <p>Loading...</p>;
-  // }
+export default function Navbar() {
+  const { data: session } = useSession();
+  const pathname = usePathname();
+  const isHomepage = pathname === "/";
+  const textColor = isHomepage ? "text-white" : "text-black";
 
   return (
-<nav className="sticky top-0 z-50 bg-white border-b border-black px-4 py-3 shadow-sm">      <div className="container mx-auto grid grid-cols-2 items-center">
-        {/* Left Column */}
-        <div className="w-full text-center md:text-left">
-          {session?.user ? (
-            <p className="inline-block text-sm md:text-base text-black font-medium bg-gray-100 px-4 py-2 rounded-md shadow-sm">
-              ✅ Signed in: {session.user.email}
-            </p>
-          ) : (
-            <p className="inline-block text-sm md:text-base text-black font-medium bg-gray-100 px-4 py-2 rounded-md shadow-sm">
-              🙈 You are not signed in
-            </p>
-          )}
-        </div>
-
-        {/* Right Column */}
-        <div className="w-full flex justify-end">
-          {session?.user ? (
-            <div className="relative inline-block text-left">
-              <button
-                onClick={() => setMenuOpen(!menuOpen)}
-                className="flex items-center space-x-2 bg-gray-100 p-2 rounded-full hover:bg-gray-200"
-              >
-                <span role="img" aria-label="user">
-                  🌊
-                </span>
-              </button>
-
-              {menuOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded shadow-lg z-50">
-                  <Link
-                    href="/profile"
-                    className="block px-4 py-2 text-black hover:bg-gray-100"
-                  >
-                    👤 Profile
-                  </Link>
-                  <Link
-                    href="/daily-reminder"
-                    className="block px-4 py-2 text-black hover:bg-gray-100"
-                  >
-                    📅 Daily Reminders
-                  </Link>
-                  <Link
-                    href="/subscriptions"
-                    className="block px-4 py-2 text-black hover:bg-gray-100"
-                  >
-                    🤹 Manage Subscription
-                  </Link>
-                  <button
-                    onClick={() => signOut({ callbackUrl: "/" })}
-                    className="w-full text-left px-4 py-2 text-black hover:bg-gray-100"
-                  >
-                    👋 Sign Out
-                  </button>
-                </div>
-              )}
-            </div>
-          ) : (
-            <button
-              onClick={() => signIn()}
-              className="bg-[#25d366] text-black px-4 py-2 rounded"
-            >
-              Sign In
-            </button>
-          )}
-        </div>
+    <nav className={`w-full px-6 py-4 flex justify-between items-center text-sm font-medium z-20 ${textColor} bg-transparent absolute top-0`}>
+      <Link href="/" className="flex items-center">
+        <img 
+          src="/never-forget-logo-black.svg" 
+          alt="Never Forget Logo" 
+          className="h-20 w-auto"
+        />
+      </Link>
+      <div className="flex space-x-6">
+      <a href="/daily-reminder" className="hover:underline">
+        dashboard
+      </a>
+      <a href="/profile" className="hover:underline">
+        profile
+      </a>
+      <a href="/aboutus" className="hover:underline">
+        about
+      </a>
+      <a href="/contact" className="hover:underline">
+        contact
+      </a>
+      {session?.user ? (
+        <span className="hover:underline">
+          {session.user.firstName || 'User'}
+        </span>
+      ) : (
+        <button onClick={() => signIn()} className="hover:underline">
+          login
+        </button>
+      )}
       </div>
     </nav>
   );
-};
-
-export default Navbar;
+}
