@@ -35,7 +35,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         session.user.name = user.name;
         return session;
       },
-      async redirect({ url, baseUrl, token }) {
+      async redirect({ url, baseUrl }) {
         // For sign-in redirects, redirect to daily-reminder instead of profile
         if (url.startsWith("/api/auth/callback") || url === "/profile") {
           return baseUrl + "/daily-reminder";
