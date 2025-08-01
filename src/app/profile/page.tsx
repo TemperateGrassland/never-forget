@@ -76,7 +76,7 @@ function ProfileContent() {
   };
 
   // Show loading state
-  if (loading) return <p className="text-center">Loading profile...</p>;
+  if (loading) return <p className="text-center text-black">Loading profile...</p>;
 
   // Get redirect message
   const message = searchParams.get("message");
@@ -176,7 +176,7 @@ function ProfileContent() {
 
 export default function ProfilePage() {
   return (
-    <Suspense fallback={<div className="text-center mt-28">Loading profile...</div>}>
+    <Suspense fallback={<div className="text-center text-black mt-28">Loading profile...</div>}>
       <ProfileContent />
     </Suspense>
   );
