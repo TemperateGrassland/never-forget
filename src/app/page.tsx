@@ -18,16 +18,16 @@ export default function HomePage() {
         />
       </div>
 
-    <div className="relative z-10 flex flex-col items-start justify-center text-left h-full px-4 md:px-8 lg:px-16">        
-      <h1 className="text-4xl md:text-6xl font-bold mb-4 text-white">
+    <div className="relative z-10 flex flex-col items-start justify-center text-left h-full px-4 sm:px-6 md:px-8 lg:px-16 pt-16 sm:pt-20">        
+      <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold mb-3 sm:mb-4 text-white leading-tight">
           daily reminders to your whatsapp
         </h1>
-        <p className="text-lg md:text-xl text-white mb-8 max-w-xl">
+        <p className="text-base sm:text-lg md:text-xl text-white mb-6 sm:mb-8 max-w-lg sm:max-w-xl leading-relaxed">
           no apps, no fuss - just one simple nudge a day to help you build better habits.
         </p>
         <a
           href="/signup"
-          className="bg-[#25d366] text-white font-semibold text-base sm:text-lg px-6 py-4 rounded-md shadow hover:bg-gray-100 transition"
+          className="bg-[#25d366] text-white font-semibold text-sm sm:text-base md:text-lg px-4 sm:px-6 py-3 sm:py-4 rounded-md shadow hover:bg-[#128C7E] transition-colors"
         >
           get started
         </a>
