@@ -1,5 +1,9 @@
 // src/app/page.tsx
 
+"use client";
+
+import { signIn } from "next-auth/react";
+
 export default function HomePage() {
   return (
     <div className="relative h-screen w-screen overflow-hidden" data-page="homepage">
@@ -25,12 +29,15 @@ export default function HomePage() {
         <p className="text-base sm:text-lg md:text-xl text-white mb-6 sm:mb-8 max-w-lg sm:max-w-xl leading-relaxed">
           no apps, no fuss - just one simple nudge a day to help you build better habits.
         </p>
-        <a
-          href="/signup"
-          className="bg-[#25d366] text-white font-semibold text-sm sm:text-base md:text-lg px-4 sm:px-6 py-3 sm:py-4 rounded-md shadow hover:bg-[#128C7E] transition-colors"
-        >
-          get started
-        </a>
+        <button 
+                    onClick={() => signIn()} 
+                    className="hover:underline focus:outline-none focus:ring-2 focus:ring-[#25d366] focus:ring-offset-1 rounded transition-colors -mx-1 px-1 text-xs sm:text-sm"
+                    style={{ color: '#25d366' }}
+                    aria-label="Sign in to your account"
+                    type="button"
+                  >
+                    get started
+        </button>
       </div>
     </div>
   );

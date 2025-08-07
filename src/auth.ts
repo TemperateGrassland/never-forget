@@ -1,5 +1,5 @@
 import NextAuth from 'next-auth';
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { PrismaAdapter } from "@auth/prisma-adapter";
 import { PrismaClient } from "@prisma/client";
 import Email from "next-auth/providers/email";
 import Mailgun from "next-auth/providers/mailgun"
@@ -22,30 +22,14 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     session: {
     strategy: "database", 
     },
-    pages: {
-      signIn: '/',
-    },
     // debug: true,
     callbacks: {
       async session({ session, user }) {
-        session.user.id = user.id;
-        session.user.stripeCustomerId = user.stripeCustomerId;
-        session.user.phoneNumber = user.phoneNumber;
-        session.user.firstName = user.firstName;
-        session.user.name = user.name;
-        return session;
-      },
-      async redirect({ url, baseUrl }) {
-        // For sign-in redirects, redirect to daily-reminder instead of profile
-        if (url.startsWith("/api/auth/callback") || url === "/profile") {
-          return baseUrl + "/daily-reminder";
-        }
-        
-        // Default behavior for other redirects
-        if (url.startsWith("/")) return `${baseUrl}${url}`;
-        else if (new URL(url).origin === baseUrl) return url;
-        return baseUrl;
-      },
+      session.user.id = user.id;
+      session.user.stripeCustomerId = user.stripeCustomerId;
+      session.user.phoneNumber = user.phoneNumber;
+      return session;
+    },
       async signIn({ user }) {
         if (!user.email) {
           console.error("Sign-in attempt failed: missing user email.");
