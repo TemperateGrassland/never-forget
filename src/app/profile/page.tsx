@@ -83,7 +83,7 @@ function ProfileContent() {
   const from = searchParams.get("from");
 
   return (
-    <div className="min-h-screen flex flex-col items-start justify-center px-4 sm:px-6 md:px-8 lg:px-16 pt-20 sm:pt-24 md:pt-28 pb-8">
+    <div className="min-h-screen flex flex-col items-center mx-auto justify-center px-4 sm:px-6 md:px-8 lg:px-16 pt-20 sm:pt-24 md:pt-28 pb-8">
       <div className="w-full max-w-2xl">
         {message === "phone-required" && from === "reminders" && (
           <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-blue-50 border-l-4 border-[#25d366] rounded-r-md">
