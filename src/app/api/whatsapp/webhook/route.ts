@@ -10,13 +10,23 @@ interface User {
   firstName: string | null;
   phoneNumber: string | null;
 }
+// not used, but may be used later on
+// interface WhatsAppMessage {
+//   from: string;
+//   text?: {
+//     body: string;
+//   };
+//   type: string;
+// }
 
-interface WhatsAppMessage {
-  from: string;
-  text?: {
-    body: string;
-  };
-  type: string;
+interface WhatsAppStatus {
+  id: string;
+  status: string;
+  timestamp: string;
+  recipient_id: string;
+  conversation?: unknown;
+  pricing?: unknown;
+  errors?: Array<Record<string, unknown>>;
 }
 
 // Webhook verification (required by Meta)
@@ -54,7 +64,7 @@ export async function POST(request: NextRequest) {
         const statuses = value?.statuses;
         if (Array.isArray(statuses) && statuses.length > 0) {
           sawSomething = true;
-          statuses.forEach((s: any) => {
+          statuses.forEach((s: WhatsAppStatus) => {
             console.log("WA status:", {
               id: s.id,
               status: s.status,
