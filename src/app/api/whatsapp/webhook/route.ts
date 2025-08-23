@@ -90,6 +90,8 @@ export async function POST(request: NextRequest) {
             const fromPhone = message.from;
             const messageText = message.text?.body;
             const messageType = message.type;
+            
+            console.log(`DEBUG: Phone from WhatsApp: "${fromPhone}", Message: "${messageText}", Type: ${messageType}`);
 
             // Only process text messages
             if (messageType !== "text" || !messageText) {
