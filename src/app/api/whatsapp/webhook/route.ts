@@ -251,7 +251,7 @@ async function createReminderFromAI(user: User, aiResponse: ReminderResponse) {
 async function sendWhatsAppMessage(phoneNumber: string, message: string) {
   try {
     const response = await fetch(
-      `https://graph.facebook.com/v22.0/${process.env.WHATSAPP_PHONE_ID}/messages`,
+      `https://graph.facebook.com/v23.0/${process.env.WHATSAPP_PHONE_ID}/messages`,
       {
         method: "POST",
         headers: {
