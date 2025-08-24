@@ -3,12 +3,25 @@ import { prisma } from "@/lib/prisma";
 import { generateObject } from "ai";
 import { openai } from "@ai-sdk/openai";
 import { z } from "zod";
+import { 
+  searchReminders, 
+  getReminder, 
+  updateReminder, 
+  sendConfirmation,
+  validateReminderPatch 
+} from "@/lib/reminderTools";
 
 // Type definitions
 interface User {
   id: string;
   firstName: string | null;
   phoneNumber: string | null;
+}
+
+interface ReminderPatch {
+  title?: string;
+  dueDate?: Date;
+  frequency?: "NONE" | "WEEKLY" | "MONTHLY" | "YEARLY";
 }
 // not used, but may be used later on
 // interface WhatsAppMessage {
@@ -68,6 +81,8 @@ export async function POST(request: NextRequest) {
     console.log("Received webhook:", JSON.stringify(body, null, 2));
 
     // Extract and handle all entries/changes (Meta may send statuses in a separate change)
+    // ensure entries is always an array by copying the existing body.entry into a new array or creating an empty array
+    // if the body.entry type is anything but an array.
     const entries = Array.isArray(body.entry) ? body.entry : [];
     let sawSomething = false;
 
@@ -124,7 +139,7 @@ export async function POST(request: NextRequest) {
 
             if (!user) {
               console.log(`User not found for phone number: ${fromPhone}`);
-              await sendWhatsAppMessage(fromPhone, "Sorry, I don't recognize this phone number. Please make sure you're registered on our platform.");
+              await sendConfirmation(fromPhone, "Sorry, I don't recognize this phone number. Please make sure you're registered on our platform.");
               continue;
             }
 
@@ -153,45 +168,65 @@ export async function POST(request: NextRequest) {
 
 // Schema for AI agent response
 const ReminderSchema = z.object({
-  action: z.enum(["create_reminder", "no_reminder", "clarify"]),
+  action: z.enum(["create_reminder", "update_reminder", "no_reminder", "clarify"]),
   title: z.string().optional(),
   dueDate: z.string().optional(), // ISO string
   frequency: z.enum(["NONE", "WEEKLY", "MONTHLY", "YEARLY"]).optional(),
   clarificationQuestion: z.string().optional(),
   responseMessage: z.string(),
+  // For updates
+  searchKeywords: z.array(z.string()).optional(),
+  updateFields: z.object({
+    title: z.string().optional(),
+    dueDate: z.string().optional(),
+    frequency: z.enum(["NONE", "WEEKLY", "MONTHLY", "YEARLY"]).optional(),
+  }).optional(),
 });
 
 type ReminderResponse = z.infer<typeof ReminderSchema>;
 
 async function processMessageWithAI(user: User, messageText: string) {
   try {
-    const prompt = `You are an AI assistant that helps users create reminders from WhatsApp messages. 
+    const prompt = `You are an AI assistant that helps users manage reminders from WhatsApp messages. 
 
 User: ${user.firstName || "User"}
 Message: "${messageText}"
 
 Analyze this message and determine if the user wants to:
 1. Create a new reminder - extract title, due date (if mentioned), and frequency
-2. Ask for clarification if the intent is unclear
-3. Respond that no reminder is needed
+2. Update an existing reminder - identify search keywords and what to update
+3. Ask for clarification if the intent is unclear
+4. Respond that no reminder action is needed
 
- Current date: ${new Date().toISOString()}
+Current date: ${new Date().toISOString()}
 
- Guidelines:
- - Extract clear reminder titles (e.g., "doctor appointment", "call mom", "pay bills")
- - Parse relative dates (e.g., "tomorrow", "next week", "in 3 days") into absolute dates
- - Default frequency is "NONE" unless specifically mentioned (weekly, monthly, yearly)
- - Be conversational and friendly in responses
- - Ask for clarification if the message is ambiguous
+Guidelines:
+- For NEW reminders: Extract clear titles, parse dates, set frequency
+- For UPDATES: Look for phrases like "change my...", "update my...", "move my...reminder"
+- Extract search keywords to find the reminder (e.g., "my 8am reminder" → ["8am"])
+- Parse what fields to update (title, time, frequency)
+- Be conversational and friendly in responses
+- Ask for clarification if ambiguous
 
- Respond with a JSON object matching this schema:
- {
-   "action": "create_reminder" | "no_reminder" | "clarify",
+Examples:
+- "remind me to call mom tomorrow" → create_reminder
+- "change my 8am reminder to 8:30" → update_reminder, searchKeywords: ["8am"], updateFields: {dueDate: "..."}
+- "update my doctor appointment to next Friday" → update_reminder, searchKeywords: ["doctor", "appointment"]
+
+Respond with a JSON object matching this schema:
+{
+  "action": "create_reminder" | "update_reminder" | "no_reminder" | "clarify",
    "title": "reminder title (if creating)",
    "dueDate": "ISO date string (if specified)",
    "frequency": "NONE" | "WEEKLY" | "MONTHLY" | "YEARLY",
    "clarificationQuestion": "question to ask user (if clarifying)",
-   "responseMessage": "message to send back to user"
+   "responseMessage": "message to send back to user",
+   "searchKeywords": ["keyword1", "keyword2"] (if updating),
+   "updateFields": {
+     "title": "new title",
+     "dueDate": "new ISO date",
+     "frequency": "new frequency"
+   } (if updating)
 }`;
 
     const result = await generateObject({
@@ -211,21 +246,24 @@ Analyze this message and determine if the user wants to:
       case "create_reminder":
         await createReminderFromAI(user, parsedResponse);
         break;
+      case "update_reminder":
+        await updateReminderFromAI(user, parsedResponse);
+        break;
       case "clarify":
         if (user.phoneNumber) {
-          await sendWhatsAppMessage(user.phoneNumber, parsedResponse.clarificationQuestion || "Could you provide more details?");
+          await sendConfirmation(user.phoneNumber, parsedResponse.clarificationQuestion || "Could you provide more details?");
         }
         break;
       case "no_reminder":
         if (user.phoneNumber) {
-          await sendWhatsAppMessage(user.phoneNumber, parsedResponse.responseMessage);
+          await sendConfirmation(user.phoneNumber, parsedResponse.responseMessage);
         }
         break;
     }
   } catch (error) {
     console.error("AI processing error:", error);
     if (user.phoneNumber) {
-      await sendWhatsAppMessage(user.phoneNumber, "Sorry, I encountered an error processing your message. Please try again.");
+      await sendConfirmation(user.phoneNumber, "Sorry, I encountered an error processing your message. Please try again.");
     }
   }
 }
@@ -234,7 +272,7 @@ async function createReminderFromAI(user: User, aiResponse: ReminderResponse) {
   try {
     if (!aiResponse.title) {
       if (user.phoneNumber) {
-        await sendWhatsAppMessage(user.phoneNumber, "I couldn't extract a clear reminder title. Could you please be more specific?");
+        await sendConfirmation(user.phoneNumber, "I couldn't extract a clear reminder title. Could you please be more specific?");
       }
       return;
     }
@@ -257,53 +295,140 @@ async function createReminderFromAI(user: User, aiResponse: ReminderResponse) {
       `✅ Reminder created: "${reminder.title}"${aiResponse.dueDate ? ` due ${new Date(aiResponse.dueDate).toLocaleDateString()}` : ""}`;
     
     if (user.phoneNumber) {
-      await sendWhatsAppMessage(user.phoneNumber, confirmationMessage);
+      await sendConfirmation(user.phoneNumber, confirmationMessage);
     }
   } catch (error) {
     console.error("Error creating reminder:", error);
     if (user.phoneNumber) {
-      await sendWhatsAppMessage(user.phoneNumber, "Sorry, I couldn't create that reminder. Please try again.");
+      await sendConfirmation(user.phoneNumber, "Sorry, I couldn't create that reminder. Please try again.");
     }
   }
 }
 
-async function sendWhatsAppMessage(phoneNumber: string, message: string) {
+// New orchestrator function for handling updates
+async function updateReminderFromAI(user: User, aiResponse: ReminderResponse) {
+  const requestId = `update_${user.id}_${Date.now()}`;
+  const executionTrace: Array<{tool: string, duration: number, status: string}> = [];
+  
   try {
-    const response = await fetch(
-      `https://graph.facebook.com/v23.0/${process.env.WHATSAPP_PHONE_ID}/messages`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.WHATSAPP_ACCESS_TOKEN}`,
-        },
-        body: JSON.stringify({
-          messaging_product: "whatsapp",
-          to: phoneNumber,
-          type: "text",
-          text: { body: message },
-        }),
+    if (!aiResponse.searchKeywords || !aiResponse.updateFields) {
+      if (user.phoneNumber) {
+        await sendConfirmation(user.phoneNumber, "I need more details about what reminder to update and how.");
       }
-    );
-
-    const result = await response.json();
-    
-    if (!response.ok) {
-        console.error("WA send failed", {
-        to: phoneNumber,
-        status: response.status,
-        error: result?.error || result,
-      });
-    } else {
-      const id = result?.messages?.[0]?.id;
-        console.log("WA send ok", {
-        to: phoneNumber,
-        id,
-        body: message,
-        response: result,
-      });
+      return;
     }
+
+    // Step 1: Search for matching reminders
+    const searchStart = Date.now();
+    const searchResult = await searchReminders(user.id, aiResponse.searchKeywords, requestId);
+    executionTrace.push({
+      tool: 'search_reminders',
+      duration: Date.now() - searchStart,
+      status: searchResult.status
+    });
+
+    if (searchResult.status === 'error' || !searchResult.result?.length) {
+      if (user.phoneNumber) {
+        await sendConfirmation(user.phoneNumber, "I couldn't find any matching reminders. Could you be more specific?");
+      }
+      return;
+    }
+
+    const matches = searchResult.result;
+    
+    // Step 2: Handle disambiguation if multiple matches
+    if (matches.length > 1) {
+      const topMatch = matches[0];
+      if (topMatch.confidence < 0.8) {
+        // Ask for clarification with top 3 options
+        const options = matches.slice(0, 3).map((match, i) => 
+          `${i + 1}. "${match.title}"${match.dueDate ? ` (due ${match.dueDate.toLocaleDateString()})` : ''}`
+        ).join('\n');
+        
+        if (user.phoneNumber) {
+          await sendConfirmation(user.phoneNumber, 
+            `I found multiple reminders. Which one do you want to update?\n\n${options}\n\nPlease reply with the number or be more specific.`
+          );
+        }
+        return;
+      }
+    }
+
+    const targetReminder = matches[0];
+    
+    // Step 3: Validate and apply the patch
+    const patch: ReminderPatch = {};
+    if (aiResponse.updateFields.title) patch.title = aiResponse.updateFields.title;
+    if (aiResponse.updateFields.dueDate) patch.dueDate = new Date(aiResponse.updateFields.dueDate);
+    if (aiResponse.updateFields.frequency) patch.frequency = aiResponse.updateFields.frequency;
+
+    const validation = validateReminderPatch(patch);
+    if (!validation.valid) {
+      if (user.phoneNumber) {
+        await sendConfirmation(user.phoneNumber, `Update failed: ${validation.errors.join(', ')}`);
+      }
+      return;
+    }
+
+    // Step 4: Update the reminder with optimistic locking
+    const updateStart = Date.now();
+    const expectedVersion = Math.floor(targetReminder.updatedAt.getTime() / 1000);
+    const updateResult = await updateReminder(
+      targetReminder.id, 
+      user.id, 
+      patch, 
+      expectedVersion, 
+      requestId
+    );
+    
+    executionTrace.push({
+      tool: 'update_reminder',
+      duration: Date.now() - updateStart,
+      status: updateResult.status
+    });
+
+    if (updateResult.status === 'error') {
+      if (user.phoneNumber) {
+        await sendConfirmation(user.phoneNumber, `Update failed: ${updateResult.error}`);
+      }
+      return;
+    }
+
+    // Step 5: Send confirmation
+    const updated = updateResult.result!;
+    const changes: string[] = [];
+    if (patch.title) changes.push(`title to "${patch.title}"`);
+    if (patch.dueDate) changes.push(`due date to ${patch.dueDate.toLocaleDateString()}`);
+    if (patch.frequency && patch.frequency !== 'NONE') changes.push(`frequency to ${patch.frequency.toLowerCase()}`);
+    
+    const confirmationMessage = aiResponse.responseMessage || 
+      `✅ Updated reminder: "${updated.title}"\nChanged: ${changes.join(', ')}`;
+    
+    if (user.phoneNumber) {
+      await sendConfirmation(user.phoneNumber, confirmationMessage);
+    }
+    
+    // Log execution trace
+    console.log(`Update orchestration completed for ${user.firstName}:`, {
+      requestId,
+      target: targetReminder.title,
+      changes: Object.keys(patch),
+      executionTrace,
+      totalDuration: executionTrace.reduce((sum, trace) => sum + trace.duration, 0)
+    });
+    
   } catch (error) {
-    console.error("Error sending WhatsApp message:", error);
+    console.error("Error updating reminder:", error);
+    if (user.phoneNumber) {
+      await sendConfirmation(user.phoneNumber, "Sorry, I encountered an error updating that reminder. Please try again.");
+    }
+    
+    // Log failed execution
+    console.log(`Update orchestration failed for ${user.firstName}:`, {
+      requestId,
+      error: error instanceof Error ? error.message : 'Unknown error',
+      executionTrace
+    });
   }
 }
+
