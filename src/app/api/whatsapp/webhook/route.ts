@@ -169,16 +169,16 @@ export async function POST(request: NextRequest) {
 // Schema for AI agent response
 const ReminderSchema = z.object({
   action: z.enum(["create_reminder", "update_reminder", "no_reminder", "clarify"]),
-  title: z.string().optional(),
-  dueDate: z.string().optional(), // ISO string
+  title: z.string().nullable().optional(),
+  dueDate: z.string().nullable().optional(), // ISO string
   frequency: z.enum(["NONE", "WEEKLY", "MONTHLY", "YEARLY"]).optional(),
-  clarificationQuestion: z.string().optional(),
+  clarificationQuestion: z.string().nullable().optional(),
   responseMessage: z.string(),
   // For updates
   searchKeywords: z.array(z.string()).optional(),
   updateFields: z.object({
-    title: z.string().optional(),
-    dueDate: z.string().optional(),
+    title: z.string().nullable().optional(),
+    dueDate: z.string().nullable().optional(),
     frequency: z.enum(["NONE", "WEEKLY", "MONTHLY", "YEARLY"]).optional(),
   }).optional(),
 });
@@ -238,7 +238,7 @@ Respond with a JSON object matching this schema:
 
     console.log("AI response:", result.object);
 
-      // The SDK already validates against the Zod schema; result.object is typed
+    // The SDK already validates against the Zod schema; result.object is typed
     const parsedResponse: ReminderResponse = result.object;
 
     // Handle the AI agent's decision
@@ -262,6 +262,8 @@ Respond with a JSON object matching this schema:
     }
   } catch (error) {
     console.error("AI processing error:", error);
+    console.error("Message that caused error:", messageText);
+    console.error("User:", user.firstName, user.id);
     if (user.phoneNumber) {
       await sendConfirmation(user.phoneNumber, "Sorry, I encountered an error processing your message. Please try again.");
     }
