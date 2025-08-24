@@ -35,6 +35,7 @@ export async function GET(req: Request) {
         createdAt: r.createdAt.toISOString(), // ✅ Convert Date to string
         updatedAt: r.updatedAt.toISOString(), // ✅ Convert Date to string
         dueDate: r.dueDate ? r.dueDate.toISOString() : null, // ✅ Convert Date to string if not null
+        frequency: r.frequency, // ✅ Include frequency field
       })),
     });
   } catch (error) {
