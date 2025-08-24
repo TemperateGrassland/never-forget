@@ -29,8 +29,22 @@ interface WhatsAppStatus {
   errors?: Array<Record<string, unknown>>;
 }
 
+
+// The guide for meta cloud API webhooks: https://developers.facebook.com/docs/whatsapp/cloud-api/guides/set-up-webhooks/
+// 1. create endpoint
+// 2. subscribe to webhooks
+// 3. update permissions for webhooks
+
+
+
+
 // Webhook verification (required by Meta)
+// A verification request is sent by meta anytime  a webhooks product in configured in the App Dashboard
+// When sent a verification request, the app must:
+//  - verify the verify_token value matches the string set the verify token field in the webhook verification
+//  - respond with the hub.challenge value
 export async function GET(request: NextRequest) {
+  // This get request is used to 
   const { searchParams } = new URL(request.url);
   const mode = searchParams.get("hub.mode");
   const token = searchParams.get("hub.verify_token");
@@ -45,6 +59,9 @@ export async function GET(request: NextRequest) {
 }
 
 // Handle incoming webhook messages
+// when a webhook product is configured, the app subscribes to specific fields on an object type.
+//  whenever there's a change to one of these fields, meta sends a post request to the app's endpoint with
+// a json payload describing the change: https://developers.facebook.com/docs/graph-api/webhooks/getting-started#create-endpoint
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
