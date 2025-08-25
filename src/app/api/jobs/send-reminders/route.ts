@@ -3,6 +3,13 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
+    // Template rotation based on day of month - easily expandable
+    const templates = ['daily_reminder', 'daily_reminder2', 'daily_reminder3'];
+    const dayIndex = new Date().getDate() % templates.length;
+    const templateName = templates[dayIndex];
+    
+    console.log(`Day ${new Date().getDate()}: Using template ${templateName}`);
+
     const users = await prisma.user.findMany({
       where: {
         phoneNumber: { not: null },
@@ -45,7 +52,7 @@ export async function GET() {
             to: phoneNumber,
             type: "template",
             template: {
-              name: "daily_reminder",
+              name: templateName,
               language: {
                 code: "en",
                 policy: "deterministic",
