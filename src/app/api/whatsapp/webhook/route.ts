@@ -177,13 +177,27 @@ const ReminderSchema = z.object({
   // For updates
   searchKeywords: z.array(z.string()).optional(),
   updateFields: z.object({
-    title: z.string().nullable().optional(),
-    dueDate: z.string().nullable().optional(),
+    title: z.string().min(1).optional(),
+    dueDate: z.string().optional(),
     frequency: z.enum(["NONE", "DAILY", "WEEKLY", "MONTHLY", "YEARLY"]).optional(),
   }).optional(),
 });
 
 type ReminderResponse = z.infer<typeof ReminderSchema>;
+
+// Utility to strip null values from objects (defensive sanitizer)
+function stripNulls<T>(obj: T): T {
+  if (Array.isArray(obj)) return obj.map(stripNulls) as any;
+  if (obj && typeof obj === "object") {
+    return Object.fromEntries(
+      Object.entries(obj).flatMap(([k, v]) => {
+        if (v === null || v === undefined) return [];
+        return [[k, stripNulls(v as any)]];
+      })
+    ) as any;
+  }
+  return obj;
+}
 
 async function processMessageWithAI(user: User, messageText: string) {
   try {
@@ -218,7 +232,7 @@ Respond with a JSON object matching this schema:
   "action": "create_reminder" | "update_reminder" | "no_reminder" | "clarify",
    "title": "reminder title (if creating)",
    "dueDate": "ISO date string (if specified)",
-   "frequency": "NONE" | "WEEKLY" | "MONTHLY" | "YEARLY",
+   "frequency": "NONE" | "DAILY" | "WEEKLY" | "MONTHLY" | "YEARLY",
    "clarificationQuestion": "question to ask user (if clarifying)",
    "responseMessage": "message to send back to user",
    "searchKeywords": ["keyword1", "keyword2"] (if updating),
@@ -227,7 +241,13 @@ Respond with a JSON object matching this schema:
      "dueDate": "new ISO date",
      "frequency": "new frequency"
    } (if updating)
-}`;
+}
+
+IMPORTANT: 
+- If a field is unknown or not being changed, OMIT the key entirely. Do not return null.
+- Only include updateFields for keys you're actually updating.
+- Example: if only changing title, use: "updateFields": {"title": "new title"}
+- If not updating anything, use: "updateFields": {} or omit updateFields entirely`;
 
     const result = await generateObject({
       model: openai("gpt-4o-mini"),
@@ -238,8 +258,12 @@ Respond with a JSON object matching this schema:
 
     console.log("AI response:", result.object);
 
+    // Apply defensive sanitizer to remove null values
+    const cleanedResponse = stripNulls(result.object);
+    console.log("Cleaned response:", cleanedResponse);
+
     // The SDK already validates against the Zod schema; result.object is typed
-    const parsedResponse: ReminderResponse = result.object;
+    const parsedResponse: ReminderResponse = cleanedResponse;
 
     // Handle the AI agent's decision
     switch (parsedResponse.action) {
