@@ -21,7 +21,7 @@ interface User {
 interface ReminderPatch {
   title?: string;
   dueDate?: Date;
-  frequency?: "NONE" | "WEEKLY" | "MONTHLY" | "YEARLY";
+  frequency?: "NONE" | "DAILY" | "WEEKLY" | "MONTHLY" | "YEARLY";
 }
 // not used, but may be used later on
 // interface WhatsAppMessage {
@@ -171,7 +171,7 @@ const ReminderSchema = z.object({
   action: z.enum(["create_reminder", "update_reminder", "no_reminder", "clarify"]),
   title: z.string().nullable().optional(),
   dueDate: z.string().nullable().optional(), // ISO string
-  frequency: z.enum(["NONE", "WEEKLY", "MONTHLY", "YEARLY"]).optional(),
+  frequency: z.enum(["NONE", "DAILY", "WEEKLY", "MONTHLY", "YEARLY"]).optional(),
   clarificationQuestion: z.string().nullable().optional(),
   responseMessage: z.string(),
   // For updates
@@ -179,7 +179,7 @@ const ReminderSchema = z.object({
   updateFields: z.object({
     title: z.string().nullable().optional(),
     dueDate: z.string().nullable().optional(),
-    frequency: z.enum(["NONE", "WEEKLY", "MONTHLY", "YEARLY"]).optional(),
+    frequency: z.enum(["NONE", "DAILY", "WEEKLY", "MONTHLY", "YEARLY"]).optional(),
   }).optional(),
 });
 

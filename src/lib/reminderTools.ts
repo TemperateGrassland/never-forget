@@ -275,7 +275,7 @@ export function validateReminderPatch(patch: ReminderPatch): { valid: boolean; e
     errors.push('Due date cannot be in the past');
   }
   
-  if (patch.frequency && !['NONE', 'WEEKLY', 'MONTHLY', 'YEARLY'].includes(patch.frequency)) {
+  if (patch.frequency && !['NONE', 'DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY'].includes(patch.frequency)) {
     errors.push('Invalid frequency value');
   }
   
