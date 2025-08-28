@@ -186,15 +186,19 @@ const ReminderSchema = z.object({
 type ReminderResponse = z.infer<typeof ReminderSchema>;
 
 // Utility to strip null values from objects (defensive sanitizer)
-function stripNulls<T>(obj: T): T {
-  if (Array.isArray(obj)) return obj.map(stripNulls) as any;
+// Recursively removes null/undefined values from objects and arrays
+// This prevents Zod validation errors when AI generates null instead of omitting fields
+function stripNulls<Data>(obj: Data): Data {
+  if (Array.isArray(obj)) {
+    return obj.map(stripNulls) as Data;
+  }
   if (obj && typeof obj === "object") {
     return Object.fromEntries(
       Object.entries(obj).flatMap(([k, v]) => {
         if (v === null || v === undefined) return [];
-        return [[k, stripNulls(v as any)]];
+        return [[k, stripNulls(v)]];
       })
-    ) as any;
+    ) as Data;
   }
   return obj;
 }
