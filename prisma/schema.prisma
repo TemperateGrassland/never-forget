@@ -29,6 +29,12 @@ model User {
   accounts      Account[] // One-to-many relationship
   sessions      Session[] // One-to-many relationship
   stripeCustomerId  String?  @unique
+  // Subscription tracking fields
+  subscriptionId        String?   @unique // Current Stripe subscription ID
+  subscriptionStatus    String?   // active, canceled, past_due, etc.
+  subscriptionEndsAt    DateTime? // When current period ends
+  subscriptionPlanId    String?   // Stripe price ID of current plan
+  subscriptionStartedAt DateTime? // When subscription began
   friends    User[] @relation("UserFriends")
   friendOf   User[] @relation("UserFriends")
   sentFriendInvites FriendInvite[] @relation("SentFriendInvites")
