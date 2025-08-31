@@ -65,9 +65,6 @@ const AboutUsPage: React.FC = () => {
           </h2>
           <div className="space-y-4 max-w-4xl">
             <p className="text-lg text-gray-600 leading-relaxed">
-              {brandName} is a product of <strong>{legalCompanyName}</strong>, a company registered in the United Kingdom with Companies House.
-            </p>
-            <p className="text-lg text-gray-600 leading-relaxed">
               We deliver daily messages through WhatsApp - helping you capture, organise, and receive your reminders in a place that works for you.
             </p>
           </div>
@@ -94,7 +91,7 @@ const AboutUsPage: React.FC = () => {
         </section>
 
         <section className="mb-12 bg-gray-200 p-8 rounded-lg">
-          <h2 className="text-3xl font-semibold text-gray-700 mb-6 text-left">
+          <h2 className="text-3xl font-semibold text-gray-1000 mb-6 text-left">
             get in touch
           </h2>
           <div className="max-w-4xl">
@@ -119,6 +116,10 @@ const AboutUsPage: React.FC = () => {
               </p>
             </div>
           </div>
+
+          <p className="text-lg text-gray-600 leading-relaxed">
+              {brandName} is a product of <strong>{legalCompanyName}</strong>, a company registered in the United Kingdom with Companies House.
+            </p>
         </section>
       </div>
     </>
