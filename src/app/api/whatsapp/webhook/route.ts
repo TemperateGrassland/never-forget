@@ -10,6 +10,7 @@ import {
   sendConfirmation,
   validateReminderPatch 
 } from "@/lib/reminderTools";
+import { checkSubscriptionByPhone } from "@/lib/subscription";
 
 // Type definitions
 interface User {
@@ -140,6 +141,15 @@ export async function POST(request: NextRequest) {
             if (!user) {
               console.log(`User not found for phone number: ${fromPhone}`);
               await sendConfirmation(fromPhone, "Sorry, I don't recognize this phone number. Please make sure you're registered on our platform.");
+              continue;
+            }
+
+            // Check subscription before using AI features
+            const subscriptionStatus = await checkSubscriptionByPhone(fromPhone);
+            if (!subscriptionStatus.hasActiveSubscription) {
+              console.log(`User ${user.id} attempted to use AI feature without active subscription`);
+              // TODO check the url is correct
+              await sendConfirmation(fromPhone, "🔒 AI-powered reminders require an active subscription. Please subscribe at neverforget.one/subscriptions to continue using this feature.");
               continue;
             }
 

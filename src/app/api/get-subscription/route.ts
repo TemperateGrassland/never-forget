@@ -14,39 +14,36 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  // Replace with how you store/retrieve the Stripe customer ID
-  const customerId = session.user.stripeCustomerId;
+  try {
+    // First, get user's subscription data from database
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: {
+        subscriptionId: true,
+        subscriptionStatus: true,
+        subscriptionEndsAt: true,
+        subscriptionPlanId: true,
+        subscriptionStartedAt: true,
+        stripeCustomerId: true,
+      },
+    });
 
-  if (!customerId) {
-    console.log("No customer id present - unable to find subscriptions")
-    return NextResponse.json([], { status: 200 });
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    // Return the subscription data that our hook expects
+    const subscriptionData = {
+      subscriptionId: user.subscriptionId,
+      subscriptionStatus: user.subscriptionStatus,
+      subscriptionEndsAt: user.subscriptionEndsAt?.toISOString(),
+      subscriptionPlanId: user.subscriptionPlanId,
+      subscriptionStartedAt: user.subscriptionStartedAt?.toISOString(),
+    };
+
+    return NextResponse.json(subscriptionData);
+  } catch (error) {
+    console.error("Error fetching subscription:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
-
-  const subscriptions = await stripe.subscriptions.list({
-    customer: customerId,
-    status: "all",
-    expand: ["data.plan.product"],
-  });
-
-  const result = subscriptions.data.map(sub => {
-    const subscription = sub as Stripe.Subscription & {
-      plan: Stripe.Plan;
-      current_period_end: number;
-    };
-    const plan = subscription.plan;
-    return {
-      id: subscription.id,
-      status: subscription.status,
-      current_period_end: subscription.current_period_end,
-      plan: plan
-        ? {
-            nickname: plan.nickname,
-            amount: plan.amount,
-            interval: plan.interval,
-          }
-        : null,
-    };
-  });
-
-  return NextResponse.json(result);
 }
