@@ -84,7 +84,7 @@ export default function Navbar() {
             </div>
             <div className="flex flex-col space-y-4">
               <a href="/daily-reminder" className="text-black hover:text-[#25d366] text-lg py-2" onClick={() => setIsMobileMenuOpen(false)}>
-                your reminders
+                reminders
               </a>
               <a href="/profile" className="text-black hover:text-[#25d366] text-lg py-2" onClick={() => setIsMobileMenuOpen(false)}>
                 profile
