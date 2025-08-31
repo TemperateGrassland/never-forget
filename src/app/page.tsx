@@ -62,19 +62,19 @@ export default function HomePage() {
     {/* How It Works Section */}
     <div className="bg-white py-16 sm:py-20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
-        <div className="mb-12">
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6 text-left">
+        <div className="mb-6">
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4 text-left">
             how it works
           </h2>
         </div>
         
-        <div className="space-y-8 text-lg sm:text-xl text-gray-700 leading-relaxed">
+        <div className="space-y-6 text-lg sm:text-xl text-gray-700 leading-relaxed">
           <p>
-            never forget sends you a daily WhatsApp message with the things you want to remember — like birthdays, to-do&apos;s, and life admin. And when things change? Just reply. Our built-in AI will update your reminders on the spot — all in the same conversation.
+            never forget sends you a daily WhatsApp message for the things you want to remember — like birthdays, to-do&apos;s, and life admin. And when things change? Just reply. Our built-in AI will update your reminders on the spot — all in the same conversation.
           </p>
           
-          <p className="text-xl sm:text-2xl font-medium text-gray-900 text-left pt-8">
-            Because the things that matter most in life aren&apos;t hard to do — they&apos;re just easy to forget.
+          <p className="space-y-6 text-xl sm:text-2xl font-medium text-gray-900 text-left pt-8">
+            the things that matter most in life aren&apos;t hard to do — they&apos;re just easy to forget.
           </p>
         </div>
       </div>
