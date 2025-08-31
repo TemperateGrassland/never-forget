@@ -22,6 +22,7 @@ export default function HomePage() {
   };
 
   return (
+    <>
     <div className="relative h-screen w-screen overflow-hidden" data-page="homepage">
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-black/40 z-10" />
@@ -32,7 +33,7 @@ export default function HomePage() {
           srcSet="
             /bg-hero-640.jpg 640w,
             /bg-hero-1024.jpg 1024w,
-            /bg-hero-1600.jpg 1600w
+            /bg-hero-charlie-1600.png 1600w
           "
           sizes="100vw"
         />
@@ -57,5 +58,27 @@ export default function HomePage() {
         </button>
       </div>
     </div>
+
+    {/* How It Works Section */}
+    <div className="bg-white py-16 sm:py-20">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
+        <div className="mb-12">
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6 text-left">
+            how it works
+          </h2>
+        </div>
+        
+        <div className="space-y-8 text-lg sm:text-xl text-gray-700 leading-relaxed">
+          <p>
+            never forget sends you a daily WhatsApp message with the things you want to remember — like birthdays, to-do&apos;s, and life admin. And when things change? Just reply. Our built-in AI will update your reminders on the spot — all in the same conversation.
+          </p>
+          
+          <p className="text-xl sm:text-2xl font-medium text-gray-900 text-left pt-8">
+            Because the things that matter most in life aren&apos;t hard to do — they&apos;re just easy to forget.
+          </p>
+        </div>
+      </div>
+    </div>
+    </>
   );
 }

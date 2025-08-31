@@ -46,7 +46,7 @@ const AboutUsPage: React.FC = () => {
             </p>
             
             <p>
-              That moment became never forget - a daily WhatsApp nudge with the things that matter to you: anniversaries, to-do lists, life admin. Because good habits build good lives - deeper relationships, better routines, and more opportunities to show up.
+              That moment became never forget - a daily WhatsApp message with the things that matter to you: anniversaries, to-do lists, life admin. Because good habits build good lives - deeper relationships, better routines, and more opportunities to show up.
             </p>
             
             <p>
@@ -55,17 +55,6 @@ const AboutUsPage: React.FC = () => {
             
             <p className="font-medium text-gray-800">
               Because the most important things in life aren&apos;t hard to do - they are just easy to forget.
-            </p>
-          </div>
-        </section>
-
-        <section className="mb-12">
-          <h2 className="text-3xl font-semibold text-gray-700 mb-6 text-left">
-            who we are
-          </h2>
-          <div className="space-y-4 max-w-4xl">
-            <p className="text-lg text-gray-600 leading-relaxed">
-              We deliver daily messages through WhatsApp - helping you capture, organise, and receive your reminders in a place that works for you.
             </p>
           </div>
         </section>
@@ -91,12 +80,15 @@ const AboutUsPage: React.FC = () => {
         </section>
 
         <section className="mb-12 bg-gray-200 p-8 rounded-lg">
-          <h2 className="text-3xl font-semibold text-gray-1000 mb-6 text-left">
+          <h2 className="text-3xl font-semibold text-black mb-6 text-left">
             get in touch
           </h2>
           <div className="max-w-4xl">
             <p className="text-lg text-gray-600 mb-6 leading-relaxed">
-              Let us know if you have any questions, feedback, ideas, or support. We&apos;re always listening and always happy to help.
+              Let us know if you have any questions, feedback, ideas, or support. We&apos;re always listening and always happy to help.{' '}
+              <Link href="/contact" legacyBehavior>
+                <a className="text-blue-600 hover:text-blue-800 underline">Contact us here</a>
+              </Link>.
             </p>
             
             <div className="space-y-2 text-gray-600">
