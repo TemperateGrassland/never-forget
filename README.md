@@ -1,5 +1,13 @@
 # Never Forget readme
 
+### Core Components                                                                           │ │
+- **Frontend**: Next.js 15 with React 19, Tailwind CSS
+- **Database**: PostgreSQL via Prisma ORM
+- **Authentication**: NextAuth.js with Prisma adapter and email provider (Mailgun)
+- **Payments**: Stripe integration with subscription management
+- **Messaging**: WhatsApp Cloud API for reminder delivery
+- **AI**: Vercel AI SDK with OpenAI for reminder processing
+
 ## Prisma
 
 ### Viewing Prisma tables in dev

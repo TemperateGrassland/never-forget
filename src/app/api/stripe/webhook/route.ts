@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
     event = stripe.webhooks.constructEvent(
       body,
       signature,
-      process.env.STRIPE_SECRET_KEY!
+      process.env.STRIPE_WEBHOOK_SECRET!
     );
   } catch (err) {
     console.error('Webhook signature verification failed:', err);
@@ -89,12 +89,14 @@ async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
   // For now, we can log or update user status
   console.log(`User ${user.email} subscribed with plan: ${subscription.id}`);
   
-  // Update user record with basic subscription info
+  // Update user record with subscription info
   await prisma.user.update({
     where: { id: user.id },
     data: { 
       subscriptionId: subscription.id,
       subscriptionStatus: subscription.status,
+      subscriptionPlanId: subscription.items.data[0]?.price.id,
+      subscriptionStartedAt: new Date(subscription.created * 1000),
     }
   });
 }
