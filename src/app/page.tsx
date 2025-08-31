@@ -2,9 +2,25 @@
 
 "use client";
 
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function HomePage() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+
+  const handleGetStarted = () => {
+    if (status === "loading") return; // Don't do anything while loading
+    
+    if (session) {
+      // User is signed in, take them to daily-reminder page
+      router.push('/daily-reminder');
+    } else {
+      // User is not signed in, take them to sign in
+      signIn();
+    }
+  };
+
   return (
     <div className="relative h-screen w-screen overflow-hidden" data-page="homepage">
       <div className="absolute inset-0">
@@ -27,16 +43,17 @@ export default function HomePage() {
           daily reminders to your whatsapp
         </h1>
         <p className="text-base sm:text-lg md:text-xl text-white mb-6 sm:mb-8 max-w-lg sm:max-w-xl leading-relaxed">
-          no apps, no fuss - just one simple nudge a day to help you build better habits.
+          no apps, no fuss - just one nudge a day to help you build better habits.
         </p>
         <button 
-                    onClick={() => signIn()} 
-                    className="hover:underline focus:outline-none focus:ring-2 focus:ring-[#25d366] focus:ring-offset-1 rounded transition-colors -mx-1 px-1 text-xs sm:text-sm"
+                    onClick={handleGetStarted}
+                    disabled={status === "loading"}
+                    className="hover:underline focus:outline-none focus:ring-2 focus:ring-[#25d366] focus:ring-offset-1 rounded transition-colors -mx-1 px-1 text-xs sm:text-sm disabled:opacity-50"
                     style={{ color: '#25d366' }}
-                    aria-label="Sign in to your account"
+                    aria-label={session ? "Go to daily reminders" : "Sign in to your account"}
                     type="button"
                   >
-                    get started
+                    {status === "loading" ? "loading..." : "get started"}
         </button>
       </div>
     </div>

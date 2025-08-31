@@ -21,89 +21,104 @@ const AboutUsPage: React.FC = () => {
         <title>About Us - {brandName}</title>
         <meta
           name="description"
-          content={`Learn more about ${brandName}, our mission, our team, and our commitment to helping you manage your memories securely and efficiently.`}
+          content={`Learn more about ${brandName}, our story, and our commitment to helping you remember what matters most.`}
         />
       </Head>
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-28">
         <header className="mb-10 text-center">
           <h1 className="text-4xl font-bold text-black mb-4">
-            Your Whatsapp powered daily reminder service.
-
+            our story
           </h1>
-          <p className="text-xl text-gray-600">
-            Reminding you about what matters most.
+          <p className="text-xl text-gray-600 italic">
+            real change doesn&apos;t come from big leaps - it comes from small, consistent steps.
           </p>
         </header>
 
-        <section className="mb-12">
-          <h2 className="text-3xl font-semibold text-gray-700 mb-4">
-            Who We Are
-          </h2>
-          <p className="text-lg text-gray-600 mb-4 leading-relaxed">
-            {brandName} is a product of <strong>{legalCompanyName}</strong>, a company registed in the United Kingdom with Companies House.
-          </p>
-          <p className="text-lg text-gray-600 leading-relaxed">
-            {brandName} delivers daily reminders via Whatsapp. {brandName} is designed to help individuals capture, organise, and recieve daily reminders with unprecedented ease and utility.
-          </p>
-        </section>
-
-        <section className="mb-12">
-          <h2 className="text-3xl font-semibold text-gray-700 mb-4">
-            Our Mission
-          </h2>
-          <p className="text-lg text-gray-600 mb-4 leading-relaxed">
-            {brandName}&apos;s mission is to help people remember the important things in life. {brandName} ensures no reminder is lost or forgotten. {brandName} strives to make daily reminders intuitive, efficient, and accessible to everyone.
-          </p>
-        </section>
-
-        <section className="mb-12">
-          <h2 className="text-3xl font-semibold text-gray-700 mb-4">
-            Our Commitment to You
-          </h2>
-          <div className="space-y-4">
-            <div>
-              <h3 className="text-xl font-medium text-gray-700">Privacy & Security</h3>
-              <p className="text-lg text-gray-600 leading-relaxed">
-                Your trust is paramount. {brandName} is committed to protecting your personal information and the reminders you entrust to {brandName}. We employ robust security measures and adhere to strict data privacy principles. To learn more about how we handle your data, please review our{' '}
-                <Link href="/privacy-policy" legacyBehavior>
-                  <a className="text-blue-600 hover:text-blue-800 underline">Privacy Policy</a>
-                </Link>.
-              </p>
-            </div>
-            <div>
-              <h3 className="text-xl font-medium text-gray-700">Transparency</h3>
-              <p className="text-lg text-gray-600 leading-relaxed">
-                We believe in clear and honest communication - email me directly at {contactEmail} with any questions or concerns. 
-              </p>
-            </div>
+        <section className="mb-12 max-w-4xl">
+          <div className="space-y-6 text-lg text-gray-700 leading-relaxed text-left">
+            <p>
+              One morning on my commute, I saw it happen, again - someone hitting their forehead in frustration. They&apos;d forgotten someone&apos;s birthday. Not because they didn&apos;t care, but because life gets busy. No card, no gift, no fix.
+            </p>
+            
+            <p>
+              It hit me: we don&apos;t need more productivity hacks, we just need better nudges.
+            </p>
+            
+            <p>
+              That moment became never forget - a daily WhatsApp nudge with the things that matter to you: anniversaries, to-do lists, life admin. Because good habits build good lives - deeper relationships, better routines, and more opportunities to show up.
+            </p>
+            
+            <p>
+              We keep things simple. No apps. No fuss. Just one gentle reminder a day. And when things change? Just reply on the chat. Our built-in AI will update your reminders on the spot.
+            </p>
+            
+            <p className="font-medium text-gray-800">
+              Because the most important things in life aren&apos;t hard to do - they are just easy to forget.
+            </p>
           </div>
         </section>
 
-        <section className="mb-12 bg-gray-100 p-6 rounded-lg">
-          <h2 className="text-3xl font-semibold text-gray-700 mb-4">
-            Get in Touch
+        <section className="mb-12">
+          <h2 className="text-3xl font-semibold text-gray-700 mb-6 text-left">
+            who we are
           </h2>
-          <p className="text-lg text-gray-600 mb-4 leading-relaxed">
-            We value your feedback and are here to help. Whether you have a question about {brandName}, a suggestion, or require support, please do not hesitate to reach out.
-          </p>
-          <p className="text-lg text-gray-600 mb-2 leading-relaxed">
-            <strong>{legalCompanyName}</strong>
-          </p>
-          <p className="text-lg text-gray-600 mb-2 leading-relaxed">
-            Address: {registeredAddress}
-          </p>
-           
-          {companyRegistrationNumber && (
-            <p className="text-lg text-gray-600 mb-2 leading-relaxed">
-              Company Registration No: {companyRegistrationNumber}
+          <div className="space-y-4 max-w-4xl">
+            <p className="text-lg text-gray-600 leading-relaxed">
+              {brandName} is a product of <strong>{legalCompanyName}</strong>, a company registered in the United Kingdom with Companies House.
             </p>
-          )}
-          {contactEmail && (
-            <p className="text-lg text-gray-600 mb-4 leading-relaxed">
-              Email: <a href={`mailto:${contactEmail}`} className="text-blue-600 hover:text-blue-800 underline">{contactEmail}</a>
+            <p className="text-lg text-gray-600 leading-relaxed">
+              We deliver daily messages through WhatsApp - helping you capture, organise, and receive your reminders in a place that works for you.
             </p>
-          )}
+          </div>
+        </section>
+
+        <section className="mb-12">
+          <h2 className="text-3xl font-semibold text-gray-700 mb-6 text-left">
+            our commitment
+          </h2>
+          <div className="max-w-4xl space-y-4">
+            <p className="text-lg text-gray-600 leading-relaxed">
+              Your trust means everything. We take your privacy seriously and protect the reminders you share with us using strong security and clear principles. No surprises. Read more in our{' '}
+              <Link href="/privacy" legacyBehavior>
+                <a className="text-blue-600 hover:text-blue-800 underline">Privacy Policy</a>
+              </Link>.
+            </p>
+            <p className="text-lg text-gray-600 leading-relaxed">
+              Got a question or concern? Email me directly — <a href={`mailto:${contactEmail}`} className="text-blue-600 hover:text-blue-800 underline">{contactEmail}</a>.
+            </p>
+            <p className="text-lg text-gray-600 leading-relaxed">
+              We keep things honest, simple, and human. always 💚
+            </p>
+          </div>
+        </section>
+
+        <section className="mb-12 bg-gray-200 p-8 rounded-lg">
+          <h2 className="text-3xl font-semibold text-gray-700 mb-6 text-left">
+            get in touch
+          </h2>
+          <div className="max-w-4xl">
+            <p className="text-lg text-gray-600 mb-6 leading-relaxed">
+              Let us know if you have any questions, feedback, ideas, or support. We&apos;re always listening and always happy to help.
+            </p>
+            
+            <div className="space-y-2 text-gray-600">
+              <p className="text-lg font-medium">
+                <strong>{legalCompanyName}</strong>
+              </p>
+              <p className="text-lg">
+                Address: {registeredAddress}
+              </p>
+              {companyRegistrationNumber && (
+                <p className="text-lg">
+                  Company Registration No: {companyRegistrationNumber}
+                </p>
+              )}
+              <p className="text-lg">
+                Email: <a href={`mailto:${contactEmail}`} className="text-blue-600 hover:text-blue-800 underline">{contactEmail}</a>
+              </p>
+            </div>
+          </div>
         </section>
       </div>
     </>
