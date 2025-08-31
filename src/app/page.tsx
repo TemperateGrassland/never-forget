@@ -68,13 +68,14 @@ export default function HomePage() {
         
         <div className="space-y-6 text-lg sm:text-xl text-gray-700 leading-relaxed">
           <p>
-            never forget sends you a daily WhastApp message with the things you want to remember - like anniversaries, replying to your mum, or prepping for tomorrow&apos;s meeting.
-            and if things change? Just message back. You can update your reminders or get tips to stay on track - all in the same chat.
-                        the things that matter most in life aren&apos;t always hard to do - they&apos;re just easy to forget.
-
+            never forget sends you a daily WhastApp message with the things you want to remember - like anniversaries, appointments or prepping for tomorrow&apos;s meeting.
           </p>
-          {/* <p className="space-y-6 text-xl sm:text-2xl font-medium text-gray-900 text-left pt-8">
-          </p> */}
+          <p>
+          and if things change? Just message back. You can update your reminders - all in the same chat.
+          </p>
+          <p className="space-y-6 text-xl sm:text-2xl font-medium text-gray-900 text-left pt-8">
+            the things that matter most in life aren&apos;t always hard to do - they&apos;re just easy to forget.
+          </p>
         </div>
       </div>
     </div>
