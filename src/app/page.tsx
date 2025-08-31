@@ -49,8 +49,7 @@ export default function HomePage() {
         <button 
                     onClick={handleGetStarted}
                     disabled={status === "loading"}
-                    className="hover:underline focus:outline-none focus:ring-2 focus:ring-[#25d366] focus:ring-offset-1 rounded transition-colors -mx-1 px-1 text-xs sm:text-sm disabled:opacity-50"
-                    style={{ color: '#25d366' }}
+                    className="bg-[#25d366] hover:bg-[#20bd5a] text-white font-medium py-3 px-6 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-[#25d366] focus:ring-offset-2 disabled:opacity-50 text-base sm:text-lg"
                     aria-label={session ? "Go to daily reminders" : "Sign in to your account"}
                     type="button"
                   >
