@@ -1,6 +1,6 @@
 # Never Forget readme
 
-### Core Components                                                                           │ │
+### Core Components
 - **Frontend**: Next.js 15 with React 19, Tailwind CSS
 - **Database**: PostgreSQL via Prisma ORM
 - **Authentication**: NextAuth.js with Prisma adapter and email provider (Mailgun)
