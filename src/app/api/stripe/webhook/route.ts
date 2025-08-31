@@ -89,15 +89,12 @@ async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
   // For now, we can log or update user status
   console.log(`User ${user.email} subscribed with plan: ${subscription.id}`);
   
-  // Update user record with subscription info
+  // Update user record with basic subscription info
   await prisma.user.update({
     where: { id: user.id },
     data: { 
       subscriptionId: subscription.id,
       subscriptionStatus: subscription.status,
-      subscriptionPlanId: subscription.items.data[0]?.price.id,
-      subscriptionStartedAt: new Date(subscription.created * 1000),
-      subscriptionEndsAt: new Date(subscription.current_period_end * 1000),
     }
   });
 }
@@ -140,8 +137,6 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
     where: { id: user.id },
     data: { 
       subscriptionStatus: subscription.status,
-      subscriptionEndsAt: new Date(subscription.current_period_end * 1000),
-      subscriptionPlanId: subscription.items.data[0]?.price.id,
     }
   });
 }
@@ -169,8 +164,6 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
     data: { 
       subscriptionStatus: 'canceled',
       subscriptionId: null,
-      subscriptionPlanId: null,
-      subscriptionEndsAt: new Date(subscription.current_period_end * 1000), // Keep end date for grace period
     }
   });
 }
