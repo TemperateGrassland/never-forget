@@ -35,7 +35,7 @@ export default function Navbar() {
       {/* Desktop navigation */}
       <div className="hidden md:flex space-x-4 lg:space-x-6">
         <a href="/daily-reminder" className="hover:underline text-xs sm:text-sm">
-          your reminders
+          reminders
         </a>
         <a href="/profile" className="hover:underline text-xs sm:text-sm">
           profile
