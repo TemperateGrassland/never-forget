@@ -23,6 +23,7 @@ function ProfileContent() {
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
   const [phoneError, setPhoneError] = useState("");
+  const [profileUpdated, setProfileUpdated] = useState(false);
 
   // Fetch profile data from API
   useEffect(() => {
@@ -122,7 +123,7 @@ function ProfileContent() {
         throw new Error(errorData.error || "Failed to update profile");
       }
 
-      alert("profile updated successfully - now set some reminders");
+      setProfileUpdated(true);
       setPhoneError(""); // Clear any phone errors on success
       
       // Redirect to daily-reminder if coming from there
@@ -139,6 +140,31 @@ function ProfileContent() {
 
   // Show loading state
   if (loading) return <p className="text-center text-black">Loading profile...</p>;
+
+  // Show success state
+  if (profileUpdated) {
+    return (
+      <div className="min-h-screen flex flex-col items-center mx-auto justify-center px-4 sm:px-6 md:px-8 lg:px-16 pt-20 sm:pt-24 md:pt-28 pb-8">
+        <div className="w-full max-w-2xl text-center">
+          <div className="mb-6 sm:mb-8">
+            <div className="text-[#25d366] text-4xl sm:text-5xl mb-4">✓</div>
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-black mb-3 sm:mb-4 leading-tight">
+              profile updated successfully
+            </h1>
+            <p className="text-base sm:text-lg md:text-xl text-gray-600 mb-6 sm:mb-8 max-w-xl mx-auto leading-relaxed">
+              now set some reminders
+            </p>
+          </div>
+          <button
+            onClick={() => router.push("/daily-reminder")}
+            className="bg-[#25d366] text-white font-semibold text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 rounded-md shadow hover:bg-[#128C7E] transition-colors"
+          >
+            set your first reminder
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   // Get redirect message
   const message = searchParams.get("message");
