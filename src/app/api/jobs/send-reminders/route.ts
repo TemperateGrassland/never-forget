@@ -54,7 +54,7 @@ export async function GET() {
             template: {
               name: templateName,
               language: {
-                code: "en",
+                code: "en_GB",
                 policy: "deterministic",
               },
               components: [
