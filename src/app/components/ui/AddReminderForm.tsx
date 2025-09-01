@@ -96,7 +96,7 @@ export default function AddReminderForm() {
   return (
     <form onSubmit={handleSubmit} className="p-4 border-2 border-[#25d366] rounded-lg">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-bold text-black">small gains, big wins</h2>
+        <h2 className="text-lg font-bold text-black">small steps, big wins</h2>
         {/* ✅ Success & Error Message Display */}
         {success && <p className="text-green-500 animate-spinGrowFade text-xl">{success}</p>}
         {error && <p className="text-red-500">{error}</p>}
