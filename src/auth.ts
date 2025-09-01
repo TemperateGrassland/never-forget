@@ -25,24 +25,28 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     // debug: true,
     callbacks: {
       async redirect({ url, baseUrl }) {
+        console.log(`NextAuth redirect: url=${url}, baseUrl=${baseUrl}`);
+        
         // Always redirect to /daily-reminder after sign in
-        if (url === baseUrl || url === '/') {
+        if (url === baseUrl || url === '/' || url === `${baseUrl}/`) {
+          console.log('Redirecting to /daily-reminder (homepage redirect)');
           return `${baseUrl}/daily-reminder`;
         }
+        
         // Allow relative callback URLs
         if (url.startsWith('/')) {
+          console.log(`Redirecting to relative URL: ${url}`);
           return `${baseUrl}${url}`;
         }
-        // Allow callback URLs on the same origin
-        if (new URL(url).origin === baseUrl) {
-          return url;
-        }
+        
+        // Default redirect to /daily-reminder for any other case
+        console.log('Default redirect to /daily-reminder');
         return `${baseUrl}/daily-reminder`;
       },
       async session({ session, user }) {
       session.user.id = user.id;
       session.user.stripeCustomerId = user.stripeCustomerId;
-      session.user.phoneNumber = user.phoneNumber;
+      // phoneNumber removed for security - fetch from DB when needed
       return session;
     },
       async signIn({ user }) {

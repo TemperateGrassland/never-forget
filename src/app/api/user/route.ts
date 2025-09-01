@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    return new Response(JSON.stringify({ message: "User created successfully.", user }), {
+    return new Response(JSON.stringify({ message: "User created successfully - you can now set some reminders", user }), {
       status: 201,
     });
   } catch (err) {
