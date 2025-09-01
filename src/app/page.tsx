@@ -33,7 +33,7 @@ export default function HomePage() {
           srcSet="
             /bg-hero-640.jpg 640w,
             /bg-hero-1024.jpg 1024w,
-            /bg-hero-charlie-1600.png 1600w
+            /bg-hero-charlie-1600.jpg 1600w
           "
           sizes="100vw"
         />
