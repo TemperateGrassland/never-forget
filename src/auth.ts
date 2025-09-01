@@ -22,10 +22,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     session: {
     strategy: "database", 
     },
-    pages: {
-      signIn: '/auth/signin',
-      verifyRequest: '/auth/verify-request', // Optional: custom verify page
-    },
     // debug: true,
     callbacks: {
       async redirect({ url, baseUrl }) {
