@@ -5,11 +5,24 @@ import OnboardingToast from "../components/ui/OnboardingToast";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 export default async function DailyReminder() {
     const session = await auth();
 
-    if (!session?.user?.phoneNumber) {
+    if (!session?.user?.id) {
+        redirect("/profile?message=auth-required");
+    }
+
+    // Fetch user from database to check phone number
+    const user = await prisma.user.findUnique({
+        where: { id: session.user.id },
+        select: { phoneNumber: true }
+    });
+
+    if (!user?.phoneNumber) {
         redirect("/profile?message=phone-required&from=reminders");
     }
 
