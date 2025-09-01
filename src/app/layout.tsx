@@ -4,8 +4,8 @@ import Script from "next/script";
 import CookieConsent from "./components/ui/CookieConsent";
 
 export const metadata: Metadata = {
-  title: "NeverForget",
-  description: "Improve your life, use NeverForget",
+  title: "never forget",
+  description: "building better habits - one nudge at a time",
   icons: {
     icon: '/favicon.ico',
   },
