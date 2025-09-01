@@ -22,8 +22,27 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     session: {
     strategy: "database", 
     },
+    pages: {
+      signIn: '/auth/signin',
+      verifyRequest: '/auth/verify-request', // Optional: custom verify page
+    },
     // debug: true,
     callbacks: {
+      async redirect({ url, baseUrl }) {
+        // Always redirect to /daily-reminder after sign in
+        if (url === baseUrl || url === '/') {
+          return `${baseUrl}/daily-reminder`;
+        }
+        // Allow relative callback URLs
+        if (url.startsWith('/')) {
+          return `${baseUrl}${url}`;
+        }
+        // Allow callback URLs on the same origin
+        if (new URL(url).origin === baseUrl) {
+          return url;
+        }
+        return `${baseUrl}/daily-reminder`;
+      },
       async session({ session, user }) {
       session.user.id = user.id;
       session.user.stripeCustomerId = user.stripeCustomerId;
