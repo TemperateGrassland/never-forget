@@ -2,7 +2,6 @@ import NextAuth from 'next-auth';
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { PrismaClient } from "@prisma/client";
 import Email from "next-auth/providers/email";
-import Mailgun from "next-auth/providers/mailgun"
 import { sendWelcomeEmail } from './lib/email';
 
 import { stripe } from '@/lib/stripe';

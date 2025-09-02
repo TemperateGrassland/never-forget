@@ -5,8 +5,19 @@ export async function sendWelcomeEmail(email: string) {
     const sender = process.env.EMAIL_FROM || `welcome@${domain}`;
     const template = "Welcome email"; // Mailgun template name
   
+    console.log("Environment check:", {
+      hasApiKey: !!apiKey,
+      hasDomain: !!domain,
+      domain,
+      sender
+    });
+  
     if (!apiKey || !domain) {
-      console.error("Missing Mailgun credentials");
+      console.error("Missing Mailgun credentials", {
+        MAILGUN_API_KEY: !!apiKey,
+        MAILGUN_DOMAIN: !!domain,
+        availableEnvVars: Object.keys(process.env).filter(key => key.includes('MAILGUN')).join(', ')
+      });
       return;
     }
   
