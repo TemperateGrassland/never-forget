@@ -91,15 +91,12 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
             }
 
             if (!existingUser.hasReceivedWelcomeEmail) {
-              console.warn(`User ${existingUser.id} doesn't have an associated User entry in postgres, investigate why`)
-
-
-              // console.log(`Sending welcome email to existing user: ${user.id}`);
-              // await sendWelcomeEmail(user.email);
-              // await prisma.user.update({
-              //   where: { email: user.email },
-              //   data: { hasReceivedWelcomeEmail: true },
-              // });
+              console.log(`Sending welcome email to existing user: ${existingUser.id}`);
+              await sendWelcomeEmail(user.email);
+              await prisma.user.update({
+                where: { email: user.email },
+                data: { hasReceivedWelcomeEmail: true },
+              });
             } else {
               console.log(`User ${existingUser.id} has already received the welcome email.`);
             }
