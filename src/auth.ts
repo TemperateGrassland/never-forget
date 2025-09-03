@@ -62,21 +62,52 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
           // Create the stripe customer object, add a new user entry in the db and send welcome email for new users.
           if (!existingUser) {
-            console.log(`Creating new user and sending welcome email to: ${user.id}`);
-            const customer = await stripe.customers.create({
-              email: user.email,
+            console.log(`🆕 AUTH: Creating new user and sending welcome email`, {
+              userId: user.id,
+              userEmail: user.email,
+              userName: user.name
             });
 
-            await prisma.user.create({
-              data: {
+            try {
+              const customer = await stripe.customers.create({
                 email: user.email,
-                firstName: user.name || "",
-                hasReceivedWelcomeEmail: true,
-                stripeCustomerId: customer.id,
-              },
-            });
+              });
+              console.log(`✅ AUTH: Stripe customer created`, {
+                customerId: customer.id,
+                email: user.email
+              });
 
-            await sendWelcomeEmail(user.email);
+              const newUser = await prisma.user.create({
+                data: {
+                  email: user.email,
+                  firstName: user.name || "",
+                  hasReceivedWelcomeEmail: true,
+                  stripeCustomerId: customer.id,
+                },
+              });
+              console.log(`✅ AUTH: User created in database`, {
+                userId: newUser.id,
+                email: newUser.email,
+                hasReceivedWelcomeEmail: newUser.hasReceivedWelcomeEmail
+              });
+
+              console.log(`📧 AUTH: About to send welcome email to new user`, {
+                email: user.email,
+                userId: newUser.id
+              });
+              const emailResult = await sendWelcomeEmail(user.email);
+              console.log(`📧 AUTH: Welcome email result for new user`, {
+                email: user.email,
+                success: emailResult?.success,
+                error: emailResult?.error
+              });
+            } catch (error) {
+              console.error(`💥 AUTH: Error during new user creation/welcome email`, {
+                email: user.email,
+                error: error instanceof Error ? error.message : error,
+                stack: error instanceof Error ? error.stack : undefined
+              });
+            }
           } else {
               // TODO Maybe I can remove this? I already create a stripe customer object above when there is no user? what edges cases are being handled here?
             if (!existingUser.stripeCustomerId) {
@@ -90,14 +121,51 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
             }
 
             if (!existingUser.hasReceivedWelcomeEmail) {
-              console.log(`Sending welcome email to existing user: ${existingUser.id}`);
-              await sendWelcomeEmail(user.email);
-              await prisma.user.update({
-                where: { email: user.email },
-                data: { hasReceivedWelcomeEmail: true },
+              console.log(`📧 AUTH: Sending welcome email to existing user`, {
+                userId: existingUser.id,
+                email: user.email,
+                hasReceivedWelcomeEmail: existingUser.hasReceivedWelcomeEmail
               });
+
+              try {
+                const emailResult = await sendWelcomeEmail(user.email);
+                console.log(`📧 AUTH: Welcome email result for existing user`, {
+                  userId: existingUser.id,
+                  email: user.email,
+                  success: emailResult?.success,
+                  error: emailResult?.error
+                });
+
+                if (emailResult?.success) {
+                  await prisma.user.update({
+                    where: { email: user.email },
+                    data: { hasReceivedWelcomeEmail: true },
+                  });
+                  console.log(`✅ AUTH: Updated hasReceivedWelcomeEmail flag for existing user`, {
+                    userId: existingUser.id,
+                    email: user.email
+                  });
+                } else {
+                  console.error(`❌ AUTH: Not updating hasReceivedWelcomeEmail flag due to email failure`, {
+                    userId: existingUser.id,
+                    email: user.email,
+                    error: emailResult?.error
+                  });
+                }
+              } catch (error) {
+                console.error(`💥 AUTH: Error sending welcome email to existing user`, {
+                  userId: existingUser.id,
+                  email: user.email,
+                  error: error instanceof Error ? error.message : error,
+                  stack: error instanceof Error ? error.stack : undefined
+                });
+              }
             } else {
-              console.log(`User ${existingUser.id} has already received the welcome email.`);
+              console.log(`✅ AUTH: User already received welcome email`, {
+                userId: existingUser.id,
+                email: user.email,
+                hasReceivedWelcomeEmail: existingUser.hasReceivedWelcomeEmail
+              });
             }
           }
           return true;
