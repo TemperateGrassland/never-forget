@@ -28,9 +28,10 @@ export async function checkUserSubscription(userId: string): Promise<Subscriptio
 
     // Check if subscription is active and not expired
     const hasActiveSubscription = 
-      user.subscriptionStatus === 'active' && 
-      !!user.subscriptionPlanId &&
-      (!user.subscriptionEndsAt || user.subscriptionEndsAt > new Date());
+      user.subscriptionStatus === 'active' 
+      // && 
+      // !!user.subscriptionPlanId &&
+      // (!user.subscriptionEndsAt || user.subscriptionEndsAt > new Date());
 
     return {
       hasActiveSubscription,
