@@ -1,0 +1,91 @@
+import prisma from "@/lib/prisma";
+import { NextResponse } from "next/server";
+
+export async function GET() {
+  try {
+    // Get phone number from environment variable
+    const phoneNumber = process.env.TEST_PHONE_NUMBER;
+    
+    if (!phoneNumber) {
+      return NextResponse.json({ success: false, error: "TEST_PHONE_NUMBER environment variable not set" }, { status: 400 });
+    }
+
+    // Use single template (same as send-reminders)
+    const templateName = 'daily_reminder';
+    
+    console.log(`Using template ${templateName}`);
+
+    const user = await prisma.user.findFirst({
+      where: {
+        phoneNumber: phoneNumber,
+      },
+      include: {
+        reminders: {
+          orderBy: { createdAt: "desc" },
+          take: 10,
+        },
+      },
+    });
+
+    if (!user) {
+      return NextResponse.json({ success: false, error: "User not found" }, { status: 404 });
+    }
+
+    const { firstName, reminders } = user;
+
+    if (reminders.length === 0) {
+      // TODO trigger a message to be sent that prompts user to add a reminder
+    }
+
+    const reminderList = reminders
+      .map((reminder) => `* ${reminder.title}`)
+      .join(" \r");
+
+    const res = await fetch(
+      `https://graph.facebook.com/v17.0/${process.env.WHATSAPP_PHONE_ID}/messages`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${process.env.WHATSAPP_ACCESS_TOKEN}`,
+        },
+        body: JSON.stringify({
+          messaging_product: "whatsapp",
+          to: phoneNumber,
+          type: "template",
+          template: {
+            name: templateName,
+            language: {
+              code: "en_GB",
+              policy: "deterministic",
+            },
+            components: [
+              {
+                type: "body",
+                parameters: [
+                  { type: "text", parameter_name: "text", text: firstName },
+                  { type: "text", parameter_name: "reminder_list", text: reminderList },
+                ],
+              },
+            ],
+          },
+        }),
+      }
+    );
+
+    const result = await res.json();
+    if (res.ok) {
+      return NextResponse.json({ success: true, messagesSent: 1 });
+    } else {
+      console.error(`Failed to send to ${phoneNumber}: ${result.error?.message}`);
+      return NextResponse.json({ 
+        success: false, 
+        error: result.error?.message || "Failed to send message"
+      }, { status: res.status });
+    }
+
+  } catch (error) {
+    console.error("WhatsApp single message error:", error);
+    return NextResponse.json({ success: false, error: (error as Error).message }, { status: 500 });
+  }
+}
