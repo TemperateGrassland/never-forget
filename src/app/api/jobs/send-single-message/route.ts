@@ -74,13 +74,17 @@ export async function GET() {
     );
 
     const result = await res.json();
+    console.log('Full WhatsApp API response:', JSON.stringify(result, null, 2));
+    
     if (res.ok) {
       return NextResponse.json({ success: true, messagesSent: 1 });
     } else {
       console.error(`Failed to send to ${phoneNumber}: ${result.error?.message}`);
+      console.error('Full error details:', JSON.stringify(result.error, null, 2));
       return NextResponse.json({ 
         success: false, 
-        error: result.error?.message || "Failed to send message"
+        error: result.error?.message || "Failed to send message",
+        errorDetails: result.error
       }, { status: res.status });
     }
 
