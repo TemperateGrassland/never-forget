@@ -35,9 +35,9 @@ export async function checkUserSubscription(userId: string): Promise<Subscriptio
 
     return {
       hasActiveSubscription,
-      subscriptionStatus: user.subscriptionStatus || undefined,
-      subscriptionEndsAt: user.subscriptionEndsAt,
-      subscriptionPlanId: user.subscriptionPlanId || undefined,
+      // subscriptionStatus: user.subscriptionStatus || undefined,
+      // subscriptionEndsAt: user.subscriptionEndsAt,
+      // subscriptionPlanId: user.subscriptionPlanId || undefined,
     };
   } catch (error) {
     console.error('Error checking user subscription:', error);
