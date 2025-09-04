@@ -17,8 +17,8 @@ export async function checkUserSubscription(userId: string): Promise<Subscriptio
       where: { id: userId },
       select: {
         subscriptionStatus: true,
-        subscriptionEndsAt: true,
-        subscriptionPlanId: true,
+        // subscriptionEndsAt: true,
+        // subscriptionPlanId: true,
       },
     });
 
