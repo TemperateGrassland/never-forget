@@ -2,11 +2,11 @@
     "crons": [
       {
         "path": "/api/jobs/send-reminders",
-        "schedule": "0 8 * * *"
+        "schedule": "0 7 * * *"
       },
       {
         "path": "/api/jobs/send-single-message",
-        "schedule": "0 9 * * *"
+        "schedule": "0 6 * * *"
       }
     ]
   }
