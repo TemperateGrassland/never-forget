@@ -15,13 +15,28 @@ export async function GET() {
     
     console.log(`Using template ${templateName}`);
 
+    // Calculate date range: today to 7 days from now
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Start of today
+    
+    const sevenDaysFromNow = new Date(today);
+    sevenDaysFromNow.setDate(today.getDate() + 7);
+    sevenDaysFromNow.setHours(23, 59, 59, 999); // End of 7th day
+
     const user = await prisma.user.findFirst({
       where: {
         phoneNumber: phoneNumber,
       },
       include: {
         reminders: {
-          orderBy: { createdAt: "desc" },
+          where: {
+            dueDate: {
+              gte: today,
+              lte: sevenDaysFromNow,
+            },
+            isComplete: false,
+          },
+          orderBy: { dueDate: "asc" },
           take: 10,
         },
       },
@@ -38,7 +53,10 @@ export async function GET() {
     }
 
     const reminderList = reminders
-      .map((reminder) => `* ${reminder.title}`)
+      .map((reminder) => {
+        const dueDate = reminder.dueDate ? new Date(reminder.dueDate).toLocaleDateString() : 'No due date';
+        return `* ${reminder.title} (Due: ${dueDate})`;
+      })
       .join(" \r");
 
     const res = await fetch(
