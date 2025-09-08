@@ -68,7 +68,7 @@ export default function HomePage() {
         
         <div className="space-y-6 text-lg sm:text-xl text-gray-700 leading-relaxed">
           <p>
-            never forget sends you a daily WhastApp message with the things you want to remember - like birthdays, booking the dentist, or time to stretch after work. Set a reminder today and get a nudge tomorrow morning - and every day after that.
+            never forget sends you a daily WhatsApp message with the things you want to remember - like birthdays, booking the dentist, or time to stretch after work. Set a reminder today and get a nudge tomorrow morning - and every day after that.
           </p>
           <p>
             and if things change? Just message back - you can update your reminders all in the same chat.
