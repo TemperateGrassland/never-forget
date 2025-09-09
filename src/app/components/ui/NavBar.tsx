@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
+import AdminNav, { AdminNavMobile } from "./AdminNav";
 
 export default function Navbar() {
   const { data: session } = useSession();
@@ -40,6 +41,7 @@ export default function Navbar() {
         <a href="/profile" className="hover:underline text-xs sm:text-sm">
           profile
         </a>
+        <AdminNav />
         <a href="/aboutus" className="hover:underline text-xs sm:text-sm">
           about
         </a>
@@ -89,6 +91,7 @@ export default function Navbar() {
               <a href="/profile" className="text-black hover:text-[#25d366] text-lg py-2" onClick={() => setIsMobileMenuOpen(false)}>
                 profile
               </a>
+              <AdminNavMobile onClose={() => setIsMobileMenuOpen(false)} />
               <a href="/aboutus" className="text-black hover:text-[#25d366] text-lg py-2" onClick={() => setIsMobileMenuOpen(false)}>
                 about
               </a>
