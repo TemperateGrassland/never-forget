@@ -83,7 +83,7 @@ export async function GET() {
                 {
                   type: "body",
                   parameters: [
-                    { type: "text", parameter_name: "text", text: firstName },
+                    { type: "text", parameter_name: "text", text: firstName || "User" },
                     { type: "text", parameter_name: "reminder_list", text: reminderList },
                   ],
                 },

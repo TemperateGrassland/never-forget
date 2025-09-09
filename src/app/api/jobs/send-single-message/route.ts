@@ -49,7 +49,10 @@ export async function GET() {
     const { firstName, reminders } = user;
 
     if (reminders.length === 0) {
-      // TODO trigger a message to be sent that prompts user to add a reminder
+      return NextResponse.json({ 
+        success: false, 
+        error: "No reminders due in the next 7 days" 
+      }, { status: 200 });
     }
 
     const reminderList = reminders
@@ -81,7 +84,7 @@ export async function GET() {
               {
                 type: "body",
                 parameters: [
-                  { type: "text", parameter_name: "text", text: firstName },
+                  { type: "text", parameter_name: "text", text: firstName || "User" },
                   { type: "text", parameter_name: "reminder_list", text: reminderList },
                 ],
               },
