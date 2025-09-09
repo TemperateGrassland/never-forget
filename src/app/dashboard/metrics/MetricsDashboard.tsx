@@ -248,6 +248,19 @@ function SimpleLineChart({
   const maxValue = Math.max(...validData.map(d => d.count));
   const safeMaxValue = maxValue > 0 ? maxValue : 1; // Prevent division by zero
 
+  // Calculate Y-axis labels (5 evenly spaced values)
+  const yAxisLabels = [];
+  for (let i = 0; i <= 4; i++) {
+    yAxisLabels.push(Math.round((safeMaxValue * i) / 4));
+  }
+
+  // Chart dimensions with margins for labels
+  const chartWidth = 340; // Reduced to make room for Y-axis labels
+  const chartHeight = 140; // Reduced to make room for X-axis labels
+  const leftMargin = 50;
+  const bottomMargin = 40;
+  const topMargin = 20;
+
   return (
     <div className="h-48 sm:h-64">
       <svg className="w-full h-full" viewBox="0 0 400 200">
@@ -257,7 +270,28 @@ function SimpleLineChart({
             <path d="M 40 0 L 0 0 0 20" fill="none" stroke="#f3f4f6" strokeWidth="1"/>
           </pattern>
         </defs>
-        <rect width="100%" height="100%" fill="url(#grid)" />
+        <rect x={leftMargin} y={topMargin} width={chartWidth} height={chartHeight} fill="url(#grid)" />
+        
+        {/* Y-axis */}
+        <line x1={leftMargin} y1={topMargin} x2={leftMargin} y2={topMargin + chartHeight} stroke="#e5e7eb" strokeWidth="1"/>
+        
+        {/* X-axis */}
+        <line x1={leftMargin} y1={topMargin + chartHeight} x2={leftMargin + chartWidth} y2={topMargin + chartHeight} stroke="#e5e7eb" strokeWidth="1"/>
+        
+        {/* Y-axis labels */}
+        {yAxisLabels.map((label, i) => {
+          const y = topMargin + chartHeight - (i * chartHeight) / 4;
+          return (
+            <g key={i}>
+              {/* Tick mark */}
+              <line x1={leftMargin - 5} y1={y} x2={leftMargin} y2={y} stroke="#9ca3af" strokeWidth="1"/>
+              {/* Label */}
+              <text x={leftMargin - 8} y={y + 3} textAnchor="end" fontSize="9" fill="#6b7280">
+                {label}
+              </text>
+            </g>
+          );
+        })}
         
         {/* Chart line */}
         {validData.length > 1 && (
@@ -266,36 +300,76 @@ function SimpleLineChart({
             stroke={color === 'blue' ? '#3b82f6' : '#10b981'}
             strokeWidth="2"
             points={validData.map((d, i) => {
-              const x = validData.length > 1 ? (i * 380) / (validData.length - 1) + 10 : 200;
-              const y = 190 - (d.count * 170) / safeMaxValue;
+              const x = validData.length > 1 ? leftMargin + (i * chartWidth) / (validData.length - 1) : leftMargin + chartWidth / 2;
+              const y = topMargin + chartHeight - (d.count * chartHeight) / safeMaxValue;
               return `${x},${y}`;
             }).join(' ')}
           />
         )}
         
-        {/* Data points */}
+        {/* Data points with values */}
         {validData.map((d, i) => {
-          const x = validData.length > 1 ? (i * 380) / (validData.length - 1) + 10 : 200;
-          const y = 190 - (d.count * 170) / safeMaxValue;
+          const x = validData.length > 1 ? leftMargin + (i * chartWidth) / (validData.length - 1) : leftMargin + chartWidth / 2;
+          const y = topMargin + chartHeight - (d.count * chartHeight) / safeMaxValue;
           
           return (
-            <circle
-              key={i}
-              cx={x}
-              cy={y}
-              r="3"
-              fill={color === 'blue' ? '#3b82f6' : '#10b981'}
-            />
+            <g key={i}>
+              {/* Data point circle */}
+              <circle
+                cx={x}
+                cy={y}
+                r="4"
+                fill={color === 'blue' ? '#3b82f6' : '#10b981'}
+                stroke="white"
+                strokeWidth="1"
+              />
+              {/* Value label above point */}
+              <text
+                x={x}
+                y={y - 8}
+                textAnchor="middle"
+                fontSize="8"
+                fill="#374151"
+                fontWeight="500"
+              >
+                {d.count}
+              </text>
+            </g>
+          );
+        })}
+        
+        {/* X-axis date labels */}
+        {validData.map((d, i) => {
+          // Show max 3 labels to prevent overcrowding on mobile
+          const maxLabels = 3;
+          const shouldShow = validData.length <= maxLabels || i % Math.ceil(validData.length / maxLabels) === 0;
+          if (!shouldShow) return null;
+          
+          const x = validData.length > 1 ? leftMargin + (i * chartWidth) / (validData.length - 1) : leftMargin + chartWidth / 2;
+          const y = topMargin + chartHeight + 15;
+          
+          return (
+            <g key={i}>
+              {/* Tick mark */}
+              <line x1={x} y1={topMargin + chartHeight} x2={x} y2={topMargin + chartHeight + 5} stroke="#9ca3af" strokeWidth="1"/>
+              {/* Date label */}
+              <text
+                x={x}
+                y={y}
+                textAnchor="middle"
+                fontSize="8"
+                fill="#6b7280"
+                transform={`rotate(-45, ${x}, ${y})`}
+              >
+                {new Date(d.date).toLocaleDateString('en-US', { 
+                  month: 'short', 
+                  day: 'numeric' 
+                })}
+              </text>
+            </g>
           );
         })}
       </svg>
-      
-      {/* X-axis labels */}
-      <div className="flex justify-between text-xs text-gray-500 mt-1 sm:mt-2 overflow-hidden">
-        {validData.slice(0, 3).map((d, i) => (
-          <span key={i} className="truncate">{new Date(d.date).toLocaleDateString()}</span>
-        ))}
-      </div>
     </div>
   );
 }
