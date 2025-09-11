@@ -1,5 +1,6 @@
 import { auth } from '@/auth';
 import { NextResponse } from 'next/server';
+import { log } from './logger';
 
 function getAdminEmails(): string[] {
   return process.env.ADMIN_EMAILS?.split(',').map(email => email.trim()) || [];
@@ -8,10 +9,11 @@ function getAdminEmails(): string[] {
 export async function checkAdminAuth() {
   try {
     const session = await auth();
-    console.log('Session check:', session?.user?.email || 'No session');
-    
     if (!session?.user?.email) {
-      console.log('No session or email found');
+      log.warn('Admin access attempt without session', { 
+        hasSession: !!session,
+        userAgent: 'server-side'
+      });
       return {
         isAdmin: false,
         user: null,
@@ -20,13 +22,14 @@ export async function checkAdminAuth() {
     }
 
     const adminEmails = getAdminEmails();
-    console.log('Admin emails from env:', adminEmails);
-    console.log('User email:', session.user.email);
     const isAdmin = adminEmails.includes(session.user.email);
 
     if (!isAdmin) {
-      console.log(`Access denied for ${session.user.email} - not in admin list`);
-      console.log('Available admin emails:', adminEmails);
+      log.warn('Admin access denied', {
+        email: session.user.email,
+        adminEmailsCount: adminEmails.length,
+        timestamp: new Date().toISOString()
+      });
       return {
         isAdmin: false,
         user: session.user,
@@ -34,14 +37,17 @@ export async function checkAdminAuth() {
       };
     }
 
-    console.log(`Admin access granted for ${session.user.email}`);
+    log.adminAccess(session.user.email, 'Admin auth check passed');
     return {
       isAdmin: true,
       user: session.user,
       response: null
     };
   } catch (error) {
-    console.error('Admin auth check failed:', error);
+    log.error('Admin auth check failed', {
+      error: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined
+    });
     return {
       isAdmin: false,
       user: null,

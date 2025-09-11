@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { checkAdminAuth } from '@/lib/adminAuth';
+import { log } from '@/lib/logger';
 
 export async function GET(request: NextRequest) {
   // Check admin authentication first
@@ -146,8 +147,12 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Metrics API error:', error);
-    console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace');
+    log.error('Metrics API error', {
+      error: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
+      adminUser: authResult.user?.email
+    });
+    
     return NextResponse.json(
       { 
         error: 'Failed to fetch metrics',

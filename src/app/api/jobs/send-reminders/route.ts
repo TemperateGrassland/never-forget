@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import { log } from "@/lib/logger";
 
 export async function GET() {
   try {
@@ -11,8 +12,10 @@ export async function GET() {
     // Use single template for now
     const templateName = 'daily_reminder';
     
-    // console.log(`Day ${new Date().getDate()}: Using template ${templateName}`);
-    console.log(`Using template ${templateName}`);
+    log.info('Starting reminder job', { 
+      templateName, 
+      date: new Date().toISOString().split('T')[0] 
+    });
 
     // Calculate date range: today to 7 days from now
     const today = new Date();
@@ -42,9 +45,11 @@ export async function GET() {
     });
 
     if (users.length === 0) {
+      log.warn('No users found for reminder job');
       return NextResponse.json({ success: false, error: "No users found" }, { status: 404 });
     }
 
+    log.info('Found users for reminder job', { userCount: users.length });
     let messagesSent = 0;
 
     for (const user of users) {
@@ -96,14 +101,34 @@ export async function GET() {
       const result = await res.json();
       if (res.ok) {
         messagesSent++;
+        log.info('WhatsApp message sent', {
+          phoneNumber: phoneNumber.slice(-4), // Log last 4 digits for privacy
+          reminderCount: reminders.length,
+          messageId: result.messages?.[0]?.id
+        });
       } else {
-        console.error(`Failed to send to ${phoneNumber}: ${result.error?.message}`);
+        log.error('WhatsApp message failed', {
+          phoneNumber: phoneNumber.slice(-4),
+          error: result.error?.message,
+          errorCode: result.error?.code,
+          reminderCount: reminders.length
+        });
       }
     }
 
+    log.info('Reminder job completed', { 
+      totalUsers: users.length,
+      messagesSent,
+      successRate: `${Math.round((messagesSent / users.length) * 100)}%`
+    });
+
     return NextResponse.json({ success: true, messagesSent });
   } catch (error) {
-    console.error("WhatsApp cron error:", error);
+    log.error("WhatsApp reminder job failed", {
+      error: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
+      timestamp: new Date().toISOString()
+    });
     return NextResponse.json({ success: false, error: (error as Error).message }, { status: 500 });
   }
 }
