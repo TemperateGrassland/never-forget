@@ -42,15 +42,18 @@ export const logger = winston.createLogger({
   exitOnError: false
 });
 
+// Define a type for log metadata
+type LogMetadata = Record<string, unknown>;
+
 // Helper functions for common log levels
 export const log = {
-  error: (message: string, meta?: any) => logger.error(message, meta),
-  warn: (message: string, meta?: any) => logger.warn(message, meta),
-  info: (message: string, meta?: any) => logger.info(message, meta),
-  debug: (message: string, meta?: any) => logger.debug(message, meta),
+  error: (message: string, meta?: LogMetadata) => logger.error(message, meta),
+  warn: (message: string, meta?: LogMetadata) => logger.warn(message, meta),
+  info: (message: string, meta?: LogMetadata) => logger.info(message, meta),
+  debug: (message: string, meta?: LogMetadata) => logger.debug(message, meta),
   
   // Specialized helpers for common use cases
-  apiRequest: (method: string, path: string, userId?: string, meta?: any) => {
+  apiRequest: (method: string, path: string, userId?: string, meta?: LogMetadata) => {
     logger.info('API Request', { 
       method, 
       path, 
@@ -60,7 +63,7 @@ export const log = {
     });
   },
   
-  apiResponse: (method: string, path: string, statusCode: number, duration?: number, meta?: any) => {
+  apiResponse: (method: string, path: string, statusCode: number, duration?: number, meta?: LogMetadata) => {
     logger.info('API Response', { 
       method, 
       path, 
@@ -71,7 +74,7 @@ export const log = {
     });
   },
   
-  webhookReceived: (source: string, eventType: string, meta?: any) => {
+  webhookReceived: (source: string, eventType: string, meta?: LogMetadata) => {
     logger.info('Webhook Received', { 
       source, 
       eventType, 
@@ -80,7 +83,7 @@ export const log = {
     });
   },
   
-  userAction: (action: string, userId: string, meta?: any) => {
+  userAction: (action: string, userId: string, meta?: LogMetadata) => {
     logger.info('User Action', { 
       action, 
       userId, 
@@ -89,7 +92,7 @@ export const log = {
     });
   },
   
-  adminAccess: (email: string, action: string, meta?: any) => {
+  adminAccess: (email: string, action: string, meta?: LogMetadata) => {
     logger.warn('Admin Access', { 
       email, 
       action, 
