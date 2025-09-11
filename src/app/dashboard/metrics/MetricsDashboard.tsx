@@ -249,7 +249,7 @@ function SimpleLineChart({
   const safeMaxValue = maxValue > 0 ? maxValue : 1; // Prevent division by zero
 
   // Calculate Y-axis labels (5 evenly spaced values)
-  const yAxisLabels = [];
+  const yAxisLabels: number[] = [];
   for (let i = 0; i <= 4; i++) {
     yAxisLabels.push(Math.round((safeMaxValue * i) / 4));
   }
