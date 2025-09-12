@@ -10,14 +10,6 @@ const logtail = logtailToken ? new Logtail(logtailToken, {
   endpoint: logtailEndpoint || 'https://in.logs.betterstack.com'
 }) : null;
 
-// Debug logging setup in production
-if (process.env.NODE_ENV === 'production') {
-  console.log('Production logger initialized:', {
-    hasLogtailToken: !!logtailToken,
-    tokenPrefix: logtailToken?.slice(0, 10),
-    logLevel: process.env.LOG_LEVEL
-  });
-}
 
 // Custom format for consistent logging
 const customFormat = winston.format.combine(
@@ -43,19 +35,7 @@ const transports: winston.transport[] = [
 
 // Add Logtail transport if token is available
 if (logtail) {
-  const logtailTransport = new LogtailTransport(logtail);
-  
-  // Debug transport issues
-  logtailTransport.on('error', (error) => {
-    console.error('Logtail transport error:', error);
-  });
-  
-  logtailTransport.on('logged', (info) => {
-    console.log('Logtail transport success:', info.level, info.message);
-  });
-  
-  transports.push(logtailTransport);
-  console.log('Logtail transport added to Winston');
+  transports.push(new LogtailTransport(logtail));
 }
 
 // Create the winston logger
@@ -132,13 +112,6 @@ logger.on('error', (error) => {
   console.error('Logger error:', error);
 });
 
-// Debug Winston transport issues
-if (logtail && process.env.NODE_ENV === 'production') {
-  logger.info('Production logger test on startup', {
-    timestamp: new Date().toISOString(),
-    environment: 'production'
-  });
-}
 
 // Flush logs before the process exits
 process.on('SIGINT', () => {
