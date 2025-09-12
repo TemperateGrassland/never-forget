@@ -4,7 +4,11 @@ import winston from 'winston';
 
 // Initialize Logtail only if token is provided (optional for local development)
 const logtailToken = process.env.LOGTAIL_TOKEN;
-const logtail = logtailToken ? new Logtail(logtailToken) : null;
+const logtailEndpoint = process.env.LOGTAIL_ENDPOINT;
+
+const logtail = logtailToken ? new Logtail(logtailToken, {
+  endpoint: logtailEndpoint || 'https://in.logs.betterstack.com'
+}) : null;
 
 // Debug logging setup in production
 if (process.env.NODE_ENV === 'production') {

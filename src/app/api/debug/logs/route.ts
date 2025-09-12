@@ -22,13 +22,18 @@ export async function GET() {
     const { Logtail } = await import('@logtail/node');
     if (process.env.LOGTAIL_TOKEN) {
       console.log('Testing direct Logtail connection...');
-      const directLogtail = new Logtail(process.env.LOGTAIL_TOKEN);
+      console.log('Using endpoint:', process.env.LOGTAIL_ENDPOINT || 'https://in.logs.betterstack.com');
+      
+      const directLogtail = new Logtail(process.env.LOGTAIL_TOKEN, {
+        endpoint: process.env.LOGTAIL_ENDPOINT || 'https://in.logs.betterstack.com'
+      });
       
       try {
-        await directLogtail.info('Direct Logtail test', {
+        await directLogtail.info('Direct Logtail test with endpoint', {
           timestamp: new Date().toISOString(),
-          source: 'direct-test',
-          environment: 'production'
+          source: 'direct-test-with-endpoint',
+          environment: 'production',
+          endpoint: process.env.LOGTAIL_ENDPOINT || 'default'
         });
         console.log('Direct Logtail test sent successfully');
       } catch (directError) {
