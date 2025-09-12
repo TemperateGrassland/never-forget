@@ -39,7 +39,19 @@ const transports: winston.transport[] = [
 
 // Add Logtail transport if token is available
 if (logtail) {
-  transports.push(new LogtailTransport(logtail));
+  const logtailTransport = new LogtailTransport(logtail);
+  
+  // Debug transport issues
+  logtailTransport.on('error', (error) => {
+    console.error('Logtail transport error:', error);
+  });
+  
+  logtailTransport.on('logged', (info) => {
+    console.log('Logtail transport success:', info.level, info.message);
+  });
+  
+  transports.push(logtailTransport);
+  console.log('Logtail transport added to Winston');
 }
 
 // Create the winston logger

@@ -10,27 +10,47 @@ export async function GET() {
   }
 
   try {
-    // Test different log levels
-    log.info('Production log test', {
+    console.log('=== BETTER STACK DEBUG START ===');
+    console.log('Environment check:', {
+      hasLogtailToken: !!process.env.LOGTAIL_TOKEN,
+      tokenLength: process.env.LOGTAIL_TOKEN?.length,
+      nodeEnv: process.env.NODE_ENV,
+      logLevel: process.env.LOG_LEVEL
+    });
+
+    // Test direct Logtail without Winston
+    const { Logtail } = await import('@logtail/node');
+    if (process.env.LOGTAIL_TOKEN) {
+      console.log('Testing direct Logtail connection...');
+      const directLogtail = new Logtail(process.env.LOGTAIL_TOKEN);
+      
+      try {
+        await directLogtail.info('Direct Logtail test', {
+          timestamp: new Date().toISOString(),
+          source: 'direct-test',
+          environment: 'production'
+        });
+        console.log('Direct Logtail test sent successfully');
+      } catch (directError) {
+        console.error('Direct Logtail failed:', directError);
+      }
+    }
+
+    // Test Winston logger
+    console.log('Testing Winston logger...');
+    log.info('Winston logger test', {
       environment: process.env.NODE_ENV,
       timestamp: new Date().toISOString(),
-      testType: 'manual'
+      testType: 'winston-test'
     });
 
-    log.warn('Production warning test', {
-      level: 'warning',
-      source: 'debug endpoint'
-    });
-
-    log.error('Production error test', {
+    log.error('Winston error test', {
       level: 'error', 
-      source: 'debug endpoint',
-      stack: 'Test stack trace'
+      source: 'winston-test',
+      timestamp: new Date().toISOString()
     });
 
-    // Also test console logs to compare
-    console.log('Console log test - should appear in Vercel logs');
-    console.error('Console error test - should appear in Vercel logs');
+    console.log('=== BETTER STACK DEBUG END ===');
 
     return NextResponse.json({
       success: true,
