@@ -6,6 +6,15 @@ import winston from 'winston';
 const logtailToken = process.env.LOGTAIL_TOKEN;
 const logtail = logtailToken ? new Logtail(logtailToken) : null;
 
+// Debug logging setup in production
+if (process.env.NODE_ENV === 'production') {
+  console.log('Production logger initialized:', {
+    hasLogtailToken: !!logtailToken,
+    tokenPrefix: logtailToken?.slice(0, 10),
+    logLevel: process.env.LOG_LEVEL
+  });
+}
+
 // Custom format for consistent logging
 const customFormat = winston.format.combine(
   winston.format.timestamp(),
@@ -106,6 +115,14 @@ export const log = {
 logger.on('error', (error) => {
   console.error('Logger error:', error);
 });
+
+// Debug Winston transport issues
+if (logtail && process.env.NODE_ENV === 'production') {
+  logger.info('Production logger test on startup', {
+    timestamp: new Date().toISOString(),
+    environment: 'production'
+  });
+}
 
 // Flush logs before the process exits
 process.on('SIGINT', () => {
