@@ -87,15 +87,16 @@ enum ReminderFrequency {
 }
 
 model Reminder {
-  id          String   @id @default(uuid())
-  title       String
-  userId      String
-  isComplete  Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  User        User     @relation(fields: [userId], references: [id])
-  dueDate     DateTime?
-  frequency   ReminderFrequency @default(NONE)
+  id               String   @id @default(uuid())
+  title            String
+  userId           String
+  isComplete       Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  User             User     @relation(fields: [userId], references: [id])
+  dueDate          DateTime?
+  frequency        ReminderFrequency @default(NONE)
+  advanceNoticeDays Int      @default(1) // Days before due date to start sending reminders (1-7)
 }
 
 model WaitlistEntry {

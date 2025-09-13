@@ -15,13 +15,9 @@ export async function GET() {
     
     console.log(`Using template ${templateName}`);
 
-    // Calculate date range: today to 7 days from now
+    // Get today's date for comparison
     const today = new Date();
     today.setHours(0, 0, 0, 0); // Start of today
-    
-    const sevenDaysFromNow = new Date(today);
-    sevenDaysFromNow.setDate(today.getDate() + 7);
-    sevenDaysFromNow.setHours(23, 59, 59, 999); // End of 7th day
 
     const user = await prisma.user.findFirst({
       where: {
@@ -30,10 +26,7 @@ export async function GET() {
       include: {
         reminders: {
           where: {
-            dueDate: {
-              gte: today,
-              lte: sevenDaysFromNow,
-            },
+            dueDate: { not: null },
             isComplete: false,
           },
           orderBy: { dueDate: "asc" },
@@ -46,16 +39,29 @@ export async function GET() {
       return NextResponse.json({ success: false, error: "User not found" }, { status: 404 });
     }
 
-    const { firstName, reminders } = user;
+    // Filter reminders that should be sent today based on their advance notice settings
+    const filteredReminders = user.reminders.filter(reminder => {
+      if (!reminder.dueDate) return false;
+      
+      const dueDate = new Date(reminder.dueDate);
+      dueDate.setHours(0, 0, 0, 0);
+      
+      const daysDiff = Math.ceil((dueDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+      
+      // Send reminder if today is within the advance notice period
+      return daysDiff >= 0 && daysDiff <= (reminder.advanceNoticeDays || 1);
+    });
 
-    if (reminders.length === 0) {
+    const { firstName } = user;
+
+    if (filteredReminders.length === 0) {
       return NextResponse.json({ 
         success: false, 
-        error: "No reminders due in the next 7 days" 
+        error: "No reminders ready to be sent based on advance notice settings" 
       }, { status: 200 });
     }
 
-    const reminderList = reminders
+    const reminderList = filteredReminders
       .map((reminder) => {
         return `* ${reminder.title}`;
       })

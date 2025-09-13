@@ -36,10 +36,10 @@ export async function DELETE(req: NextRequest, params: { params: Promise<{ id: s
 }
 
 export async function PATCH(req: NextRequest, params: { params: Promise<{ id: string }> }) {
-  const { title, dueDate, frequency } = await req.json();
+  const { title, dueDate, frequency, advanceNoticeDays } = await req.json();
   const id = (await params?.params).id;
 
-  console.log(`reminder ${title} - dueDate ${dueDate} - frequency ${frequency} - id ${id}`)
+  console.log(`reminder ${title} - dueDate ${dueDate} - frequency ${frequency} - advanceNoticeDays ${advanceNoticeDays} - id ${id}`)
 
   if (!id || typeof id !== "string") {
     return NextResponse.json({ error: "Invalid or missing Reminder ID" }, { status: 400 });
@@ -62,13 +62,19 @@ export async function PATCH(req: NextRequest, params: { params: Promise<{ id: st
     }
   }
 
+  // Validate advanceNoticeDays if provided
+  if (advanceNoticeDays !== undefined && (advanceNoticeDays < 1 || advanceNoticeDays > 7)) {
+    return NextResponse.json({ error: "Advance notice days must be between 1 and 7" }, { status: 400 });
+  }
+
   try {
     const updatedReminder = await prisma.reminder.update({
       where: { id },
       data: {
         title,
         dueDate: parsedDueDate,
-        frequency
+        frequency,
+        ...(advanceNoticeDays !== undefined && { advanceNoticeDays })
       },
     });
 

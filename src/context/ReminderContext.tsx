@@ -7,6 +7,7 @@ export interface EditableReminder {
   title: string;
   dueDate: Date | null;
   frequency: string;
+  advanceNoticeDays?: number;
 }
 
 const ReminderContext = createContext<{

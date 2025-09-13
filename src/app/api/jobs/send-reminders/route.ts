@@ -17,13 +17,9 @@ export async function GET() {
       date: new Date().toISOString().split('T')[0] 
     });
 
-    // Calculate date range: today to 7 days from now
+    // Get today's date for comparison
     const today = new Date();
     today.setHours(0, 0, 0, 0); // Start of today
-    
-    const sevenDaysFromNow = new Date(today);
-    sevenDaysFromNow.setDate(today.getDate() + 7);
-    sevenDaysFromNow.setHours(23, 59, 59, 999); // End of 7th day
 
     const users = await prisma.user.findMany({
       where: {
@@ -32,10 +28,7 @@ export async function GET() {
       include: {
         reminders: {
           where: {
-            dueDate: {
-              gte: today,
-              lte: sevenDaysFromNow,
-            },
+            dueDate: { not: null },
             isComplete: false,
           },
           orderBy: { dueDate: "asc" },
@@ -44,15 +37,33 @@ export async function GET() {
       },
     });
 
-    if (users.length === 0) {
+    // Filter reminders that should be sent today based on their advance notice settings
+    const usersWithFilteredReminders = users.map(user => ({
+      ...user,
+      reminders: user.reminders.filter(reminder => {
+        if (!reminder.dueDate) return false;
+        
+        const dueDate = new Date(reminder.dueDate);
+        dueDate.setHours(0, 0, 0, 0);
+        
+        const daysDiff = Math.ceil((dueDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+        
+        // Send reminder if today is within the advance notice period
+        // For example: if due in 3 days and advanceNoticeDays is 5, send it
+        // Or if due today and advanceNoticeDays is 1, send it
+        return daysDiff >= 0 && daysDiff <= (reminder.advanceNoticeDays || 1);
+      })
+    })).filter(user => user.reminders.length > 0); // Only include users with reminders to send
+
+    if (usersWithFilteredReminders.length === 0) {
       log.warn('No users found for reminder job');
       return NextResponse.json({ success: false, error: "No users found" }, { status: 404 });
     }
 
-    log.info('Found users for reminder job', { userCount: users.length });
+    log.info('Found users for reminder job', { userCount: usersWithFilteredReminders.length });
     let messagesSent = 0;
 
-    for (const user of users) {
+    for (const user of usersWithFilteredReminders) {
       const { firstName, phoneNumber, reminders } = user;
 
       if (!phoneNumber || reminders.length === 0) continue;
@@ -116,9 +127,9 @@ export async function GET() {
     }
 
     log.info('Reminder job completed', { 
-      totalUsers: users.length,
+      totalUsers: usersWithFilteredReminders.length,
       messagesSent,
-      successRate: `${Math.round((messagesSent / users.length) * 100)}%`
+      successRate: `${Math.round((messagesSent / usersWithFilteredReminders.length) * 100)}%`
     });
 
     return NextResponse.json({ success: true, messagesSent });

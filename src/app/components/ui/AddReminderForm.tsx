@@ -13,11 +13,22 @@ const REMINDER_FREQUENCY = [
   { label: 'Yearly - birthdays and anniversaries', value: 'YEARLY' }
 ];
 
+const ADVANCE_NOTICE_OPTIONS = [
+  { label: '1 day before', value: 1 },
+  { label: '2 days before', value: 2 },
+  { label: '3 days before', value: 3 },
+  { label: '4 days before', value: 4 },
+  { label: '5 days before', value: 5 },
+  { label: '6 days before', value: 6 },
+  { label: '7 days before', value: 7 }
+];
+
 export default function AddReminderForm() {
   const { selectedReminder, setSelectedReminder, refetchReminders } = useReminderContext();  
   const [title, setTitle] = useState('');
   const [dueDate, setDueDate] = useState<Date | null>(null);
   const [frequency, setFrequency] = useState('');
+  const [advanceNoticeDays, setAdvanceNoticeDays] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -28,10 +39,12 @@ export default function AddReminderForm() {
       setTitle(selectedReminder.title || '');
       setDueDate(selectedReminder.dueDate ? new Date(selectedReminder.dueDate) : null);
       setFrequency((selectedReminder.frequency || '').toUpperCase());
+      setAdvanceNoticeDays(selectedReminder.advanceNoticeDays || 1);
     } else {
       setTitle('');
       setDueDate(null);
       setFrequency('');
+      setAdvanceNoticeDays(1);
     }
   }, [selectedReminder]);
 
@@ -46,6 +59,7 @@ export default function AddReminderForm() {
         title,
         dueDate: dueDate ? dueDate.toISOString() : null,
         frequency,
+        advanceNoticeDays,
       };
 
       let res;
@@ -74,6 +88,7 @@ export default function AddReminderForm() {
       setTitle('');
       setDueDate(null);
       setFrequency('');
+      setAdvanceNoticeDays(1);
       setSuccess('🎉');
 
       // Reset selectedReminder after submit
@@ -128,6 +143,26 @@ export default function AddReminderForm() {
           dateFormat="dd/MM/yyyy"
           isClearable
         />
+      </div>
+
+      <div className="mb-4">
+        <label className="block font-medium text-secondary text-black mb-2">
+          start reminding me
+        </label>
+        <select
+          value={advanceNoticeDays}
+          onChange={(e) => setAdvanceNoticeDays(Number(e.target.value))}
+          className="w-full p-2 border rounded-md text-black bg-white"
+        >
+          {ADVANCE_NOTICE_OPTIONS.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+        <p className="text-xs text-gray-500 mt-1">
+          You&apos;ll receive daily reminders starting {advanceNoticeDays} day{advanceNoticeDays > 1 ? 's' : ''} before the due date
+        </p>
       </div>
 
       <div className="mb-6">

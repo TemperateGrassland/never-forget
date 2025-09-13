@@ -36,6 +36,7 @@ export async function GET(req: Request) {
         updatedAt: r.updatedAt.toISOString(), // ✅ Convert Date to string
         dueDate: r.dueDate ? r.dueDate.toISOString() : null, // ✅ Convert Date to string if not null
         frequency: r.frequency, // ✅ Include frequency field
+        advanceNoticeDays: r.advanceNoticeDays, // ✅ Include advance notice days
       })),
     });
   } catch (error) {
@@ -55,6 +56,7 @@ export async function POST(req: Request) {
     const title = typeof body === 'string' ? body : body.title;
     const dueDate = typeof body === 'object' ? body.dueDate : null;
     const frequency = typeof body === 'object' ? body.frequency : undefined;
+    const advanceNoticeDays = typeof body === 'object' ? body.advanceNoticeDays : 1;
 
     if (!title) {
       return NextResponse.json({ error: "Title is required" }, { status: 400 });
@@ -83,6 +85,11 @@ export async function POST(req: Request) {
       }
     }
 
+    // Validate advanceNoticeDays
+    if (advanceNoticeDays && (advanceNoticeDays < 1 || advanceNoticeDays > 7)) {
+      return NextResponse.json({ error: "Advance notice days must be between 1 and 7" }, { status: 400 });
+    }
+
     // Save reminder in Prisma
     const reminder = await prisma.reminder.create({
       data: {
@@ -90,6 +97,7 @@ export async function POST(req: Request) {
         userId: user.id,
         dueDate: parsedDueDate,
         frequency,
+        advanceNoticeDays: advanceNoticeDays || 1,
       },
     });
 
@@ -104,6 +112,7 @@ export async function POST(req: Request) {
       updatedAt: reminder.updatedAt.toISOString(),
       dueDate: reminder.dueDate ? reminder.dueDate.toISOString() : null,
       frequency: reminder.frequency,
+      advanceNoticeDays: reminder.advanceNoticeDays,
     });
 
     return NextResponse.json({
@@ -117,6 +126,7 @@ export async function POST(req: Request) {
         updatedAt: reminder.updatedAt.toISOString(),
         dueDate: reminder.dueDate ? reminder.dueDate.toISOString() : null,
         frequency: reminder.frequency,
+        advanceNoticeDays: reminder.advanceNoticeDays,
       },
     });
   } catch (error) {

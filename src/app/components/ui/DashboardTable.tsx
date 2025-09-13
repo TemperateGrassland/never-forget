@@ -18,6 +18,7 @@ interface ApiReminder {
   updatedAt: string;
   dueDate: string | null;
   frequency: string | null;
+  advanceNoticeDays: number;
 }
 
 
@@ -392,6 +393,7 @@ export default function DashboardTable() {
                             title: reminder.title,
                             dueDate: reminder.dueDate ? new Date(reminder.dueDate) : null,
                             frequency: reminder.frequency || 'weekly',
+                            advanceNoticeDays: reminder.advanceNoticeDays || 1,
                           })
                         }
                         className="text-xl"
@@ -511,6 +513,7 @@ export default function DashboardTable() {
                         title: reminder.title,
                         dueDate: reminder.dueDate ? new Date(reminder.dueDate) : null,
                         frequency: reminder.frequency || 'weekly',
+                        advanceNoticeDays: reminder.advanceNoticeDays || 1,
                       })
                     }
                     className="text-xl"
