@@ -43,8 +43,21 @@ export async function PUT(req: Request) {
 
   const { firstName, lastName, phoneNumber } = requestBody;
 
-  // Check if phoneNumber is being updated and if it already exists
+  // Validate and check if phoneNumber is being updated
   if (phoneNumber) {
+    // Validate phone number format: must start with 44 and have 10 additional digits
+    const cleanedPhone = phoneNumber.replace(/\D/g, '');
+    
+    // Must be exactly 12 digits starting with 44
+    if (cleanedPhone.length !== 12) {
+      return NextResponse.json({ error: "Phone number must be exactly 12 digits (44 + 10 digits)" }, { status: 400 });
+    }
+    
+    if (!cleanedPhone.startsWith('44')) {
+      return NextResponse.json({ error: "Phone number must start with 44" }, { status: 400 });
+    }
+
+    // Check if phone number already exists
     const existingUserWithPhone = await prisma.user.findFirst({
       where: {
         phoneNumber,

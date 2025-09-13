@@ -66,8 +66,10 @@ function ProfileContent() {
     // Check if it matches the required format: 10 digits for UK local number
     if (cleaned.length === 0) return "";
     if (cleaned.length !== 10) return "Phone number must be exactly 10 digits";
-    if (!cleaned.startsWith('7') && !cleaned.startsWith('1') && !cleaned.startsWith('2')) {
-      return "UK phone numbers typically start with 1, 2, or 7";
+    
+    // Prevent numbers starting with 0 (common mistake when users include the UK prefix)
+    if (cleaned.startsWith('0')) {
+      return "Do not include the leading 0. Enter 10 digits after +44";
     }
     
     return ""; // No error
@@ -262,7 +264,8 @@ function ProfileContent() {
               </p>
             ) : (
               <div className="text-xs sm:text-sm text-gray-500 mt-1 space-y-1">
-                <p>enter your 10-digit UK phone number</p>
+                <p>enter your 10-digit UK phone number (without the leading 0)</p>
+                <p>example: 7412345678 (not 07412345678)</p>
                 <p>we will use this to send your daily reminders</p>
               </div>
             )}
