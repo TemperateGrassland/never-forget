@@ -304,7 +304,9 @@ export default function DashboardTable() {
                 <th className="border p-2 text-center text-white">Status</th>
                 <th className="border p-2 text-center text-white">Frequency</th>
                 <th className="border p-2 text-center text-white">To Do By</th>
-                <th className="border p-2 text-center text-white">Update</th>
+                <th className="border p-2 text-center text-white">Done</th>
+                <th className="border p-2 text-center text-white">Edit</th>
+                <th className="border p-2 text-center text-white">Delete</th>
               </tr>
             </thead>
             <tbody>
@@ -374,13 +376,15 @@ export default function DashboardTable() {
                         <span className="ml-2 animate-spinGrowFade text-xl">📅</span>
                       )}
                     </td>
-                    <td className="border p-2 text-center align-middle space-x-2">
+                    <td className="border p-2 text-center align-middle">
                       <button
                         onClick={() => deleteReminder(reminder.id)}
                         className="text-2xl"
                       >
                         ✅
                       </button>
+                    </td>
+                    <td className="border p-2 text-center align-middle">
                       <button
                         onClick={() =>
                           setSelectedReminder({
@@ -393,6 +397,25 @@ export default function DashboardTable() {
                         className="text-xl"
                       >
                         ✏️
+                      </button>
+                    </td>
+                    <td className="border p-2 text-center align-middle">
+                      <button
+                        onClick={() => {
+                          if (window.confirm('Are you sure you want to delete this reminder?')) {
+                            // Actually delete the reminder (not mark as done)
+                            setReminders((prev) => prev.filter((r) => r.id !== reminder.id));
+                            fetch(`/api/reminders/${reminder.id}`, { method: 'DELETE' })
+                              .catch((err) => {
+                                console.error('Error deleting reminder:', err);
+                                // Restore reminder on error
+                                setReminders((prev) => [reminder, ...prev]);
+                              });
+                          }
+                        }}
+                        className="text-2xl"
+                      >
+                        🗑️
                       </button>
                     </td>
                   </tr>
@@ -469,26 +492,52 @@ export default function DashboardTable() {
                   <span className="ml-2 animate-spinGrowFade text-xl">📅</span>
                 )}
               </div>
-              <div className="mt-3 flex justify-center space-x-4">
-                <button
-                  onClick={() => deleteReminder(reminder.id)}
-                  className="text-2xl"
-                >
-                  ✅
-                </button>
-                <button
-                  onClick={() =>
-                    setSelectedReminder({
-                      id: reminder.id,
-                      title: reminder.title,
-                      dueDate: reminder.dueDate ? new Date(reminder.dueDate) : null,
-                      frequency: reminder.frequency || 'weekly',
-                    })
-                  }
-                  className="text-xl"
-                >
-                  ✏️
-                </button>
+              <div className="mt-3 flex justify-center space-x-6">
+                <div className="flex flex-col items-center">
+                  <div className="text-sm font-medium mb-1">Done</div>
+                  <button
+                    onClick={() => deleteReminder(reminder.id)}
+                    className="text-2xl"
+                  >
+                    ✅
+                  </button>
+                </div>
+                <div className="flex flex-col items-center">
+                  <div className="text-sm font-medium mb-1">Edit</div>
+                  <button
+                    onClick={() =>
+                      setSelectedReminder({
+                        id: reminder.id,
+                        title: reminder.title,
+                        dueDate: reminder.dueDate ? new Date(reminder.dueDate) : null,
+                        frequency: reminder.frequency || 'weekly',
+                      })
+                    }
+                    className="text-xl"
+                  >
+                    ❓
+                  </button>
+                </div>
+                <div className="flex flex-col items-center">
+                  <div className="text-sm font-medium mb-1">Delete</div>
+                  <button
+                    onClick={() => {
+                      if (window.confirm('Are you sure you want to delete this reminder?')) {
+                        // Actually delete the reminder (not mark as done)
+                        setReminders((prev) => prev.filter((r) => r.id !== reminder.id));
+                        fetch(`/api/reminders/${reminder.id}`, { method: 'DELETE' })
+                          .catch((err) => {
+                            console.error('Error deleting reminder:', err);
+                            // Restore reminder on error
+                            setReminders((prev) => [reminder, ...prev]);
+                          });
+                      }
+                    }}
+                    className="text-2xl"
+                  >
+                    ❌
+                  </button>
+                </div>
               </div>
             </div>
           );
