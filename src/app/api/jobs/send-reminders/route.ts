@@ -61,8 +61,7 @@ export async function GET() {
 
       const reminderList = reminders
         .map((reminder) => {
-          const dueDate = reminder.dueDate ? new Date(reminder.dueDate).toLocaleDateString() : 'No due date';
-          return `* ${reminder.title} (Due: ${dueDate})`;
+          return `* ${reminder.title}`;
         })
         .join(" \r");
 
