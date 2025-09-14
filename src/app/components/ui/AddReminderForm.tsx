@@ -131,14 +131,14 @@ export default function AddReminderForm() {
 
       <div className="mb-4">
         <label className="block font-medium text-secondary text-black mb-2">
-          due date (optional)
+          due date
         </label>
         <DatePicker
           selected={dueDate}
           onChange={(date) => setDueDate(date)}
           minDate={new Date()}
           className="w-full p-2 border rounded-md text-black placeholder-gray-500 bg-white"
-          placeholderText="Select a due date (optional)"
+          placeholderText="Select a due date"
           dateFormat="dd/MM/yyyy"
           isClearable
         />
