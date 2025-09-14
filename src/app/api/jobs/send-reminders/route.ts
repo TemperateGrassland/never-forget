@@ -84,8 +84,11 @@ async function handleRecurringReminders(today: Date) {
 }
 
 export async function GET() {
+  const jobStartTime = new Date();
+  const jobId = `reminder-job-${jobStartTime.toISOString()}`;
+  
   try {
-    // Template rotation based on day of month - easily expandable
+    // Template rotation based of day of month - easily expandable
     // const templates = ['daily_reminder', 'daily_reminder2', 'daily_reminder3'];
     // const dayIndex = new Date().getDate() % templates.length;
     // const templateName = templates[dayIndex];
@@ -93,9 +96,11 @@ export async function GET() {
     // Use single template for now
     const templateName = 'daily_reminder';
     
-    log.info('Starting reminder job', { 
+    log.info('🚀 CRON JOB STARTED: Daily reminder sending', { 
+      jobId,
       templateName, 
-      date: new Date().toISOString().split('T')[0] 
+      startTime: jobStartTime.toISOString(),
+      date: jobStartTime.toISOString().split('T')[0] 
     });
 
     // Get today's date for comparison
@@ -140,12 +145,27 @@ export async function GET() {
     })).filter(user => user.reminders.length > 0); // Only include users with reminders to send
 
     if (usersWithFilteredReminders.length === 0) {
-      log.warn('No users found for reminder job');
+      const jobEndTime = new Date();
+      const duration = jobEndTime.getTime() - jobStartTime.getTime();
+      
+      log.warn('⚠️ CRON JOB COMPLETED: No users to send reminders to', {
+        jobId,
+        duration: `${duration}ms`,
+        startTime: jobStartTime.toISOString(),
+        endTime: jobEndTime.toISOString(),
+        result: 'NO_USERS_FOUND'
+      });
       return NextResponse.json({ success: false, error: "No users found" }, { status: 404 });
     }
 
-    log.info('Found users for reminder job', { userCount: usersWithFilteredReminders.length });
+    log.info('📋 Users with reminders to send', { 
+      jobId,
+      userCount: usersWithFilteredReminders.length,
+      totalReminderCount: usersWithFilteredReminders.reduce((sum, user) => sum + user.reminders.length, 0)
+    });
+    
     let messagesSent = 0;
+    let messagesFailed = 0;
 
     for (const user of usersWithFilteredReminders) {
       const { firstName, phoneNumber, reminders } = user;
@@ -195,38 +215,75 @@ export async function GET() {
       const result = await res.json();
       if (res.ok) {
         messagesSent++;
-        log.info('WhatsApp message sent', {
+        log.info('✅ WhatsApp message sent successfully', {
+          jobId,
           phoneNumber: phoneNumber.slice(-4), // Log last 4 digits for privacy
           reminderCount: reminders.length,
-          messageId: result.messages?.[0]?.id
+          messageId: result.messages?.[0]?.id,
+          timestamp: new Date().toISOString()
         });
       } else {
-        log.error('WhatsApp message failed', {
+        messagesFailed++;
+        log.error('❌ WhatsApp message failed', {
+          jobId,
           phoneNumber: phoneNumber.slice(-4),
           error: result.error?.message,
           errorCode: result.error?.code,
-          reminderCount: reminders.length
+          errorType: result.error?.type,
+          reminderCount: reminders.length,
+          timestamp: new Date().toISOString()
         });
       }
     }
 
     // Handle recurring reminders - check for reminders that have passed their due date
     // and need to be recreated for the next cycle
+    log.info('🔄 Processing recurring reminders', { jobId });
     await handleRecurringReminders(today);
 
-    log.info('Reminder job completed', { 
+    const jobEndTime = new Date();
+    const duration = jobEndTime.getTime() - jobStartTime.getTime();
+    const successRate = Math.round((messagesSent / (messagesSent + messagesFailed)) * 100);
+
+    log.info('🎯 CRON JOB COMPLETED SUCCESSFULLY', { 
+      jobId,
+      duration: `${duration}ms`,
+      startTime: jobStartTime.toISOString(),
+      endTime: jobEndTime.toISOString(),
       totalUsers: usersWithFilteredReminders.length,
       messagesSent,
-      successRate: `${Math.round((messagesSent / usersWithFilteredReminders.length) * 100)}%`
+      messagesFailed,
+      successRate: `${successRate}%`,
+      result: 'SUCCESS'
     });
 
-    return NextResponse.json({ success: true, messagesSent });
+    return NextResponse.json({ 
+      success: true, 
+      jobId,
+      messagesSent, 
+      messagesFailed,
+      duration,
+      successRate: `${successRate}%`
+    });
   } catch (error) {
-    log.error("WhatsApp reminder job failed", {
+    const jobEndTime = new Date();
+    const duration = jobEndTime.getTime() - jobStartTime.getTime();
+    
+    log.error("💥 CRON JOB FAILED", {
+      jobId,
+      duration: `${duration}ms`,
+      startTime: jobStartTime.toISOString(),
+      endTime: jobEndTime.toISOString(),
       error: error instanceof Error ? error.message : 'Unknown error',
       stack: error instanceof Error ? error.stack : undefined,
-      timestamp: new Date().toISOString()
+      result: 'FAILURE'
     });
-    return NextResponse.json({ success: false, error: (error as Error).message }, { status: 500 });
+    return NextResponse.json({ 
+      success: false, 
+      jobId,
+      error: (error as Error).message,
+      duration,
+      result: 'FAILURE'
+    }, { status: 500 });
   }
 }

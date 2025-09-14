@@ -2,18 +2,27 @@ import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
 export async function GET() {
+  const jobStartTime = new Date();
+  const jobId = `single-message-job-${jobStartTime.toISOString()}`;
+  
   try {
     // Get phone number from environment variable
     const phoneNumber = process.env.TEST_PHONE_NUMBER;
     
     if (!phoneNumber) {
+      console.log(`❌ SINGLE MESSAGE JOB FAILED: Missing TEST_PHONE_NUMBER`, { jobId });
       return NextResponse.json({ success: false, error: "TEST_PHONE_NUMBER environment variable not set" }, { status: 400 });
     }
 
     // Use single template (same as send-reminders)
     const templateName = 'daily_reminder';
     
-    console.log(`Using template ${templateName}`);
+    console.log(`🚀 SINGLE MESSAGE JOB STARTED`, {
+      jobId,
+      templateName,
+      phoneNumber: phoneNumber.slice(-4),
+      startTime: jobStartTime.toISOString()
+    });
 
     // Get today's date for comparison
     const today = new Date();
@@ -58,9 +67,21 @@ export async function GET() {
     const { firstName } = user;
 
     if (filteredReminders.length === 0) {
+      const jobEndTime = new Date();
+      const duration = jobEndTime.getTime() - jobStartTime.getTime();
+      
+      console.log(`⚠️ SINGLE MESSAGE JOB COMPLETED: No reminders to send`, {
+        jobId,
+        duration: `${duration}ms`,
+        result: 'NO_REMINDERS'
+      });
+      
       return NextResponse.json({ 
         success: false, 
-        error: "No reminders ready to be sent based on advance notice settings" 
+        jobId,
+        error: "No reminders ready to be sent based on advance notice settings",
+        duration,
+        result: 'NO_REMINDERS'
       }, { status: 200 });
     }
 
@@ -106,19 +127,68 @@ export async function GET() {
     console.log('Full WhatsApp API response:', JSON.stringify(result, null, 2));
     
     if (res.ok) {
-      return NextResponse.json({ success: true, messagesSent: 1 });
+      const jobEndTime = new Date();
+      const duration = jobEndTime.getTime() - jobStartTime.getTime();
+      
+      console.log(`✅ SINGLE MESSAGE JOB COMPLETED SUCCESSFULLY`, {
+        jobId,
+        duration: `${duration}ms`,
+        phoneNumber: phoneNumber.slice(-4),
+        reminderCount: filteredReminders.length,
+        messageId: result.messages?.[0]?.id,
+        result: 'SUCCESS'
+      });
+      
+      return NextResponse.json({ 
+        success: true, 
+        jobId,
+        messagesSent: 1,
+        reminderCount: filteredReminders.length,
+        duration,
+        result: 'SUCCESS'
+      });
     } else {
-      console.error(`Failed to send to ${phoneNumber}: ${result.error?.message}`);
-      console.error('Full error details:', JSON.stringify(result.error, null, 2));
+      const jobEndTime = new Date();
+      const duration = jobEndTime.getTime() - jobStartTime.getTime();
+      
+      console.log(`❌ SINGLE MESSAGE JOB FAILED: WhatsApp API error`, {
+        jobId,
+        duration: `${duration}ms`,
+        phoneNumber: phoneNumber.slice(-4),
+        error: result.error?.message,
+        errorCode: result.error?.code,
+        fullResponse: JSON.stringify(result, null, 2),
+        result: 'WHATSAPP_ERROR'
+      });
+      
       return NextResponse.json({ 
         success: false, 
+        jobId,
         error: result.error?.message || "Failed to send message",
-        errorDetails: result.error
+        errorDetails: result.error,
+        duration,
+        result: 'WHATSAPP_ERROR'
       }, { status: res.status });
     }
 
   } catch (error) {
-    console.error("WhatsApp single message error:", error);
-    return NextResponse.json({ success: false, error: (error as Error).message }, { status: 500 });
+    const jobEndTime = new Date();
+    const duration = jobEndTime.getTime() - jobStartTime.getTime();
+    
+    console.error(`💥 SINGLE MESSAGE JOB FAILED: Unexpected error`, {
+      jobId,
+      duration: `${duration}ms`,
+      error: (error as Error).message,
+      stack: (error as Error).stack,
+      result: 'ERROR'
+    });
+    
+    return NextResponse.json({ 
+      success: false, 
+      jobId,
+      error: (error as Error).message,
+      duration,
+      result: 'ERROR'
+    }, { status: 500 });
   }
 }
