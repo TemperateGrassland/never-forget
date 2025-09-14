@@ -166,7 +166,7 @@ export default function AddReminderForm() {
 
       <div className="mb-6">
         <label className="block font-medium text-secondary text-black mb-2">
-          reminder frequency
+          reminder frequency (optional)
         </label>
         <select
           value={frequency}
