@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import { log } from "@/lib/logger";
 
 export async function GET() {
   const jobStartTime = new Date();
@@ -10,14 +11,14 @@ export async function GET() {
     const phoneNumber = process.env.TEST_PHONE_NUMBER;
     
     if (!phoneNumber) {
-      console.log(`❌ SINGLE MESSAGE JOB FAILED: Missing TEST_PHONE_NUMBER`, { jobId });
+      log.error('❌ SINGLE MESSAGE JOB FAILED: Missing TEST_PHONE_NUMBER', { jobId });
       return NextResponse.json({ success: false, error: "TEST_PHONE_NUMBER environment variable not set" }, { status: 400 });
     }
 
     // Use single template (same as send-reminders)
     const templateName = 'daily_reminder';
     
-    console.log(`🚀 SINGLE MESSAGE JOB STARTED`, {
+    log.info('🚀 SINGLE MESSAGE JOB STARTED', {
       jobId,
       templateName,
       phoneNumber: phoneNumber.slice(-4),
@@ -70,7 +71,7 @@ export async function GET() {
       const jobEndTime = new Date();
       const duration = jobEndTime.getTime() - jobStartTime.getTime();
       
-      console.log(`⚠️ SINGLE MESSAGE JOB COMPLETED: No reminders to send`, {
+      log.warn('⚠️ SINGLE MESSAGE JOB COMPLETED: No reminders to send', {
         jobId,
         duration: `${duration}ms`,
         result: 'NO_REMINDERS'
@@ -124,13 +125,16 @@ export async function GET() {
     );
 
     const result = await res.json();
-    console.log('Full WhatsApp API response:', JSON.stringify(result, null, 2));
+    log.info('Full WhatsApp API response', { 
+      jobId,
+      response: JSON.stringify(result, null, 2) 
+    });
     
     if (res.ok) {
       const jobEndTime = new Date();
       const duration = jobEndTime.getTime() - jobStartTime.getTime();
       
-      console.log(`✅ SINGLE MESSAGE JOB COMPLETED SUCCESSFULLY`, {
+      log.info('✅ SINGLE MESSAGE JOB COMPLETED SUCCESSFULLY', {
         jobId,
         duration: `${duration}ms`,
         phoneNumber: phoneNumber.slice(-4),
@@ -151,7 +155,7 @@ export async function GET() {
       const jobEndTime = new Date();
       const duration = jobEndTime.getTime() - jobStartTime.getTime();
       
-      console.log(`❌ SINGLE MESSAGE JOB FAILED: WhatsApp API error`, {
+      log.error('❌ SINGLE MESSAGE JOB FAILED: WhatsApp API error', {
         jobId,
         duration: `${duration}ms`,
         phoneNumber: phoneNumber.slice(-4),
@@ -175,7 +179,7 @@ export async function GET() {
     const jobEndTime = new Date();
     const duration = jobEndTime.getTime() - jobStartTime.getTime();
     
-    console.error(`💥 SINGLE MESSAGE JOB FAILED: Unexpected error`, {
+    log.error('💥 SINGLE MESSAGE JOB FAILED: Unexpected error', {
       jobId,
       duration: `${duration}ms`,
       error: (error as Error).message,
