@@ -22,7 +22,7 @@ interface User {
 interface ReminderPatch {
   title?: string;
   dueDate?: Date;
-  frequency?: "NONE" | "DAILY" | "WEEKLY" | "MONTHLY" | "YEARLY";
+  frequency?: "NONE" | "WEEKLY" | "MONTHLY" | "YEARLY";
 }
 // not used, but may be used later on
 // interface WhatsAppMessage {
@@ -181,7 +181,7 @@ const ReminderSchema = z.object({
   action: z.enum(["create_reminder", "update_reminder", "no_reminder", "clarify"]),
   title: z.string().nullable().optional(),
   dueDate: z.string().nullable().optional(), // ISO string
-  frequency: z.enum(["NONE", "DAILY", "WEEKLY", "MONTHLY", "YEARLY"]).optional(),
+  frequency: z.enum(["NONE", "WEEKLY", "MONTHLY", "YEARLY"]).optional(),
   clarificationQuestion: z.string().nullable().optional(),
   responseMessage: z.string(),
   // For updates
@@ -189,7 +189,7 @@ const ReminderSchema = z.object({
   updateFields: z.object({
     title: z.string().min(1).optional(),
     dueDate: z.string().optional(),
-    frequency: z.enum(["NONE", "DAILY", "WEEKLY", "MONTHLY", "YEARLY"]).optional(),
+    frequency: z.enum(["NONE", "WEEKLY", "MONTHLY", "YEARLY"]).optional(),
   }).optional(),
 });
 
@@ -246,7 +246,7 @@ Respond with a JSON object matching this schema:
   "action": "create_reminder" | "update_reminder" | "no_reminder" | "clarify",
    "title": "reminder title (if creating)",
    "dueDate": "ISO date string (if specified)",
-   "frequency": "NONE" | "DAILY" | "WEEKLY" | "MONTHLY" | "YEARLY",
+   "frequency": "NONE" | "WEEKLY" | "MONTHLY" | "YEARLY",
    "clarificationQuestion": "question to ask user (if clarifying)",
    "responseMessage": "message to send back to user",
    "searchKeywords": ["keyword1", "keyword2"] (if updating),

@@ -43,6 +43,9 @@ export async function GET() {
     const filteredReminders = user.reminders.filter(reminder => {
       if (!reminder.dueDate) return false;
       
+      // Ignore DAILY reminders (legacy) - use string comparison to handle existing data
+      if ((reminder.frequency as string) === 'DAILY') return false;
+      
       const dueDate = new Date(reminder.dueDate);
       dueDate.setHours(0, 0, 0, 0);
       

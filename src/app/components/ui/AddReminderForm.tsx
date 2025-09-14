@@ -7,9 +7,8 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 const REMINDER_FREQUENCY = [
   { label: 'None (one-time reminder)', value: 'NONE' },
-  { label: 'Daily - remind me every day', value: 'DAILY' },
-  { label: 'Weekly - you want to be reminded about this every week', value: 'WEEKLY' },
-  { label: 'Monthly - for events that repeat once a month', value: 'MONTHLY' },
+  { label: 'Weekly - repeat every week', value: 'WEEKLY' },
+  { label: 'Monthly - repeat every month', value: 'MONTHLY' },
   { label: 'Yearly - birthdays and anniversaries', value: 'YEARLY' }
 ];
 

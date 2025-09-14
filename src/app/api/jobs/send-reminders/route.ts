@@ -2,6 +2,87 @@ import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import { log } from "@/lib/logger";
 
+// Helper function to calculate next due date based on frequency
+function getNextDueDate(currentDueDate: Date, frequency: string): Date {
+  const nextDate = new Date(currentDueDate);
+  
+  switch (frequency) {
+    case 'WEEKLY':
+      nextDate.setDate(nextDate.getDate() + 7);
+      break;
+    case 'MONTHLY':
+      nextDate.setMonth(nextDate.getMonth() + 1);
+      break;
+    case 'YEARLY':
+      nextDate.setFullYear(nextDate.getFullYear() + 1);
+      break;
+    default:
+      // For NONE or unknown frequencies, don't recurse
+      return currentDueDate;
+  }
+  
+  return nextDate;
+}
+
+// Handle recurring reminders that have passed their due date
+async function handleRecurringReminders(today: Date) {
+  try {
+    // Find reminders that are past their due date and have recurring frequencies
+    const pastDueReminders = await prisma.reminder.findMany({
+      where: {
+        dueDate: {
+          lt: today, // Past due date
+        },
+        frequency: {
+          in: ['WEEKLY', 'MONTHLY', 'YEARLY']
+        },
+        isComplete: false,
+      },
+    });
+
+    log.info('Found recurring reminders to process', { count: pastDueReminders.length });
+
+    for (const reminder of pastDueReminders) {
+      if (!reminder.dueDate) continue;
+
+      const nextDueDate = getNextDueDate(reminder.dueDate, reminder.frequency);
+      
+      // Only create new reminder if the next due date is different (safety check)
+      if (nextDueDate.getTime() !== reminder.dueDate.getTime()) {
+        // Create new reminder with the next due date
+        await prisma.reminder.create({
+          data: {
+            title: reminder.title,
+            userId: reminder.userId,
+            dueDate: nextDueDate,
+            frequency: reminder.frequency,
+            advanceNoticeDays: reminder.advanceNoticeDays,
+            isComplete: false,
+          },
+        });
+
+        // Mark the current reminder as complete (so it doesn't keep recurring)
+        await prisma.reminder.update({
+          where: { id: reminder.id },
+          data: { isComplete: true },
+        });
+
+        log.info('Recurring reminder created', {
+          reminderId: reminder.id,
+          title: reminder.title,
+          frequency: reminder.frequency,
+          oldDueDate: reminder.dueDate.toISOString().split('T')[0],
+          newDueDate: nextDueDate.toISOString().split('T')[0],
+        });
+      }
+    }
+  } catch (error) {
+    log.error('Error handling recurring reminders', {
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+}
+
 export async function GET() {
   try {
     // Template rotation based on day of month - easily expandable
@@ -42,6 +123,9 @@ export async function GET() {
       ...user,
       reminders: user.reminders.filter(reminder => {
         if (!reminder.dueDate) return false;
+        
+        // Ignore DAILY reminders (legacy) - use string comparison to handle existing data
+        if ((reminder.frequency as string) === 'DAILY') return false;
         
         const dueDate = new Date(reminder.dueDate);
         dueDate.setHours(0, 0, 0, 0);
@@ -125,6 +209,10 @@ export async function GET() {
         });
       }
     }
+
+    // Handle recurring reminders - check for reminders that have passed their due date
+    // and need to be recreated for the next cycle
+    await handleRecurringReminders(today);
 
     log.info('Reminder job completed', { 
       totalUsers: usersWithFilteredReminders.length,
