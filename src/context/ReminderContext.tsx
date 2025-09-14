@@ -34,7 +34,7 @@ export const ReminderProvider = ({ children }: { children: React.ReactNode }) =>
       if (!res.ok) throw new Error('Failed to fetch reminders');
       const data = await res.json();
       console.log('📥 Fetched reminders from API:', data);
-      setReminders(data);
+      setReminders(data.reminders || data);
     } catch (error) {
       console.error('Error fetching reminders:', error);
     }

@@ -26,7 +26,7 @@ export default function AddReminderForm() {
   const { selectedReminder, setSelectedReminder, refetchReminders } = useReminderContext();  
   const [title, setTitle] = useState('');
   const [dueDate, setDueDate] = useState<Date | null>(null);
-  const [frequency, setFrequency] = useState('');
+  const [frequency, setFrequency] = useState('NONE');
   const [advanceNoticeDays, setAdvanceNoticeDays] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -42,7 +42,7 @@ export default function AddReminderForm() {
     } else {
       setTitle('');
       setDueDate(null);
-      setFrequency('');
+      setFrequency('NONE');
       setAdvanceNoticeDays(1);
     }
   }, [selectedReminder]);
@@ -86,7 +86,7 @@ export default function AddReminderForm() {
 
       setTitle('');
       setDueDate(null);
-      setFrequency('');
+      setFrequency('NONE');
       setAdvanceNoticeDays(1);
       setSuccess('🎉');
 
@@ -172,11 +172,7 @@ export default function AddReminderForm() {
           value={frequency}
           onChange={(e) => setFrequency(e.target.value)}
           className="w-full p-2 border rounded-md text-black bg-white"
-          required
         >
-          <option value="" disabled>
-            Select frequency
-          </option>
           {REMINDER_FREQUENCY.map((option) => (
             <option key={option.value} value={option.value}>
               {option.label}
@@ -187,7 +183,7 @@ export default function AddReminderForm() {
       <button
         type="submit"
         className="bg-[#25d366] hover:bg-[#128C7E] text-white p-2 rounded-md w-full transition-colors font-semibold"
-        disabled={loading || frequency === ''}
+        disabled={loading}
       >
         {loading
           ? (selectedReminder ? 'updating...' : 'adding...')
