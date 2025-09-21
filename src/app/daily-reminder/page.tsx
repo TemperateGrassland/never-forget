@@ -13,7 +13,7 @@ export default async function DailyReminder() {
     const session = await auth();
 
     if (!session?.user?.id) {
-        redirect("/profile?message=auth-required");
+        redirect("/");
     }
 
     // Fetch user from database to check phone number

@@ -5,18 +5,18 @@ import { useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 function ProfileContent() {
+
   const { data: session, status } = useSession();
   const router = useRouter();
-  const searchParams = useSearchParams();
-
-  // User State
+  const searchParams = useSearchParams();           
+                                                    
   const [user, setUser] = useState({
     firstName: "",
     lastName: "",
     email: "",
     phoneNumber: "",
   });
-  
+
   // Local phone number without country code for display
   const [localPhoneNumber, setLocalPhoneNumber] = useState("");
 
@@ -25,7 +25,17 @@ function ProfileContent() {
   const [phoneError, setPhoneError] = useState("");
   const [profileUpdated, setProfileUpdated] = useState(false);
 
-  // Fetch profile data from API
+  // First useEffect hook - re-direct any unauthenticated users
+
+  useEffect(() => {
+    if (status === 'loading') return; // Still loading
+
+    if (!session?.user?.id) {
+      router.push("/");
+    }
+  }, [session, status, router]);
+
+  // Second useEffect hook - fetch profile data from API
   useEffect(() => {
     async function fetchProfile() {
       if (!session?.user) return;
@@ -57,6 +67,14 @@ function ProfileContent() {
 
     fetchProfile();
   }, [session]);
+
+  if (status === 'loading') {
+    return <div>Loading...</div>;
+  }
+
+  if (!session?.user?.id) {
+    return <div>Redirecting...</div>;
+  }
 
   // Phone number validation function (for local 10-digit number)
   const validatePhoneNumber = (localPhone: string): string => {
