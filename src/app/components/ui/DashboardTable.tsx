@@ -518,7 +518,7 @@ export default function DashboardTable() {
                     }
                     className="text-xl"
                   >
-                    ❓
+                    ✏️
                   </button>
                 </div>
                 <div className="flex flex-col items-center">
