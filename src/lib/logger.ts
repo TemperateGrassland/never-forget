@@ -113,13 +113,6 @@ logger.on('error', (error) => {
 });
 
 
-// Flush logs before the process exits
-process.on('SIGINT', () => {
-  logger.end();
-});
-
-process.on('SIGTERM', () => {
-  logger.end();
-});
+// Note: Process exit handlers removed for Edge Runtime compatibility
 
 export default logger;
