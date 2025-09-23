@@ -42,6 +42,10 @@ export async function POST(request: NextRequest) {
     setImmediate(async () => {
       try {
         switch (event.type) {
+          case 'checkout.session.completed':
+            await handleCheckoutCompleted(event.data.object as Stripe.Checkout.Session);
+            break;
+
           case 'customer.subscription.created':
             await handleSubscriptionCreated(event.data.object as Stripe.Subscription);
             break;
@@ -54,8 +58,24 @@ export async function POST(request: NextRequest) {
             await handleSubscriptionDeleted(event.data.object as Stripe.Subscription);
             break;
 
+          case 'customer.subscription.paused':
+            await handleSubscriptionPaused(event.data.object as Stripe.Subscription);
+            break;
+
+          case 'customer.subscription.resumed':
+            await handleSubscriptionResumed(event.data.object as Stripe.Subscription);
+            break;
+
+          case 'customer.subscription.trial_will_end':
+            await handleTrialWillEnd(event.data.object as Stripe.Subscription);
+            break;
+
           case 'customer.created':
             await handleCustomerCreated(event.data.object as Stripe.Customer);
+            break;
+
+          case 'customer.deleted':
+            await handleCustomerDeleted(event.data.object as Stripe.Customer);
             break;
 
           case 'invoice.payment_succeeded':
@@ -64,6 +84,10 @@ export async function POST(request: NextRequest) {
 
           case 'invoice.payment_failed':
             await handlePaymentFailed(event.data.object as Stripe.Invoice);
+            break;
+
+          case 'invoice.payment_action_required':
+            await handlePaymentActionRequired(event.data.object as Stripe.Invoice);
             break;
 
           default:
@@ -238,4 +262,148 @@ async function handlePaymentFailed(invoice: Stripe.Invoice) {
     console.log(`Payment failed for user: ${user.email}`);
     // Optional: Send notification, pause service, etc.
   }
+}
+
+// Handle checkout session completion
+async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
+  console.log('Checkout completed:', session.id);
+  
+  const customerId = session.customer as string;
+  
+  if (!customerId) {
+    console.error('No customer ID in checkout session');
+    return;
+  }
+
+  const user = await prisma.user.findFirst({
+    where: { stripeCustomerId: customerId }
+  });
+
+  if (!user) {
+    console.error(`User not found for Stripe customer: ${customerId}`);
+    return;
+  }
+
+  console.log(`Checkout completed for user: ${user.email}`);
+  
+  // If this was a subscription checkout, the subscription will be handled 
+  // by the customer.subscription.created event
+  // For one-time payments, handle here if needed
+}
+
+// Handle subscription paused
+async function handleSubscriptionPaused(subscription: Stripe.Subscription) {
+  console.log('Subscription paused:', subscription.id);
+  
+  const customerId = subscription.customer as string;
+  
+  const user = await prisma.user.findFirst({
+    where: { stripeCustomerId: customerId }
+  });
+
+  if (!user) {
+    console.error(`User not found for Stripe customer: ${customerId}`);
+    return;
+  }
+
+  console.log(`User ${user.email} subscription paused`);
+  
+  await prisma.user.update({
+    where: { id: user.id },
+    data: { 
+      subscriptionStatus: 'paused',
+    }
+  });
+}
+
+// Handle subscription resumed
+async function handleSubscriptionResumed(subscription: Stripe.Subscription) {
+  console.log('Subscription resumed:', subscription.id);
+  
+  const customerId = subscription.customer as string;
+  
+  const user = await prisma.user.findFirst({
+    where: { stripeCustomerId: customerId }
+  });
+
+  if (!user) {
+    console.error(`User not found for Stripe customer: ${customerId}`);
+    return;
+  }
+
+  console.log(`User ${user.email} subscription resumed`);
+  
+  await prisma.user.update({
+    where: { id: user.id },
+    data: { 
+      subscriptionStatus: subscription.status,
+    }
+  });
+}
+
+// Handle trial ending soon
+async function handleTrialWillEnd(subscription: Stripe.Subscription) {
+  console.log('Trial will end for subscription:', subscription.id);
+  
+  const customerId = subscription.customer as string;
+  
+  const user = await prisma.user.findFirst({
+    where: { stripeCustomerId: customerId }
+  });
+
+  if (!user) {
+    console.error(`User not found for Stripe customer: ${customerId}`);
+    return;
+  }
+
+  console.log(`Trial ending soon for user: ${user.email}`);
+  // Optional: Send notification to user about trial ending
+}
+
+// Handle customer deletion
+async function handleCustomerDeleted(customer: Stripe.Customer) {
+  console.log('Customer deleted:', customer.id);
+  
+  const user = await prisma.user.findFirst({
+    where: { stripeCustomerId: customer.id }
+  });
+
+  if (!user) {
+    console.log(`No user found for deleted customer: ${customer.id}`);
+    return;
+  }
+
+  console.log(`Cleaning up data for deleted customer: ${user.email}`);
+  
+  // Clear Stripe-related data but keep user account
+  await prisma.user.update({
+    where: { id: user.id },
+    data: {
+      stripeCustomerId: null,
+      subscriptionId: null,
+      subscriptionStatus: null,
+      subscriptionPlanId: null,
+      subscriptionStartedAt: null,
+      subscriptionEndsAt: null,
+    }
+  });
+}
+
+// Handle payment action required
+async function handlePaymentActionRequired(invoice: Stripe.Invoice) {
+  console.log('Payment action required for invoice:', invoice.id);
+  
+  const customerId = invoice.customer as string;
+  
+  const user = await prisma.user.findFirst({
+    where: { stripeCustomerId: customerId }
+  });
+
+  if (!user) {
+    console.error(`User not found for Stripe customer: ${customerId}`);
+    return;
+  }
+
+  console.log(`Payment action required for user: ${user.email}`);
+  // Optional: Send notification to user about payment action needed
 }

@@ -59,7 +59,7 @@ export const log = {
   
   // Specialized helpers for common use cases
   apiRequest: (method: string, path: string, userId?: string, meta?: LogMetadata) => {
-    logger.info(`API Request - ${path}`, { 
+    logger.info('API Request', { 
       method, 
       path, 
       userId, 
