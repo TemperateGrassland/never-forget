@@ -2,14 +2,20 @@ import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { auth } from "@/auth";
 import * as Ably from "ably";
+import { log } from "@/lib/logger";
 
 const prisma = new PrismaClient();
 const ably = new Ably.Rest(process.env.ABLY_API_KEY!);
 
 export async function GET(req: Request) {
+  const startTime = Date.now();
   try {
     const session = await auth();
+    
+    log.apiRequest('GET', '/api/reminders', session?.user?.id);
+    
     if (!session || !session.user?.email) {
+      log.apiResponse('GET', '/api/reminders', 401, Date.now() - startTime);
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -26,7 +32,7 @@ export async function GET(req: Request) {
       orderBy: { createdAt: "desc" },
     });
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       reminders: reminders.map((r) => ({
         id: r.id,
         title: r.title,
@@ -39,12 +45,15 @@ export async function GET(req: Request) {
         advanceNoticeDays: r.advanceNoticeDays, // ✅ Include advance notice days
       })),
     });
+    
+    log.apiResponse('GET', '/api/reminders', 200, Date.now() - startTime, { reminderCount: reminders.length });
+    return response;
   } catch (error) {
-    console.error("Error fetching reminders:", error);
-    console.error("Error details:", {
-      message: error instanceof Error ? error.message : error,
+    log.error("Error fetching reminders", {
+      error: error instanceof Error ? error.message : error,
       stack: error instanceof Error ? error.stack : undefined,
     });
+    log.apiResponse('GET', '/api/reminders', 500, Date.now() - startTime);
     return NextResponse.json({ 
       error: "Internal server error", 
       details: error instanceof Error ? error.message : String(error) 
@@ -53,9 +62,14 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
+  const startTime = Date.now();
   try {
     const session = await auth();
+    
+    log.apiRequest('POST', '/api/reminders', session?.user?.id);
+    
     if (!session || !session.user?.email) {
+      log.apiResponse('POST', '/api/reminders', 401, Date.now() - startTime);
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -122,7 +136,7 @@ export async function POST(req: Request) {
       advanceNoticeDays: reminder.advanceNoticeDays,
     });
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       message: "Reminder saved",
       reminder: {
         id: reminder.id,
@@ -136,8 +150,16 @@ export async function POST(req: Request) {
         advanceNoticeDays: reminder.advanceNoticeDays,
       },
     });
+    
+    log.userAction('reminder_created', user.id, { reminderTitle: title, frequency });
+    log.apiResponse('POST', '/api/reminders', 201, Date.now() - startTime);
+    return response;
   } catch (error) {
-    console.error("Error saving reminder:", error);
+    log.error("Error saving reminder", {
+      error: error instanceof Error ? error.message : error,
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    log.apiResponse('POST', '/api/reminders', 500, Date.now() - startTime);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

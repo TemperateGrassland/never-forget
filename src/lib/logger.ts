@@ -59,7 +59,7 @@ export const log = {
   
   // Specialized helpers for common use cases
   apiRequest: (method: string, path: string, userId?: string, meta?: LogMetadata) => {
-    logger.info('API Request', { 
+    logger.info(`API Request - ${path}`, { 
       method, 
       path, 
       userId, 
@@ -110,9 +110,22 @@ export const log = {
 // Gracefully handle Winston errors
 logger.on('error', (error) => {
   console.error('Logger error:', error);
+
 });
 
+// Flush logs before the process exits (only in Node.js runtime)
+try {
+  if (typeof process !== 'undefined' && process.on) {
+    process.on('SIGINT', () => {
+      logger.end();
+    });
 
-// Note: Process exit handlers removed for Edge Runtime compatibility
+    process.on('SIGTERM', () => {
+      logger.end();
+    });
+  }
+} catch (error) {
+  // Ignore errors in Edge Runtime
+}
 
 export default logger;

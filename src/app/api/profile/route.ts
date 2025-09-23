@@ -1,11 +1,16 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma"; // Ensure Prisma is set up
+import { log } from "@/lib/logger";
 
 export async function GET(req: Request) {
+  const startTime = Date.now();
   const session = await auth();
+  
+  log.apiRequest('GET', '/api/profile', session?.user?.id);
 
   if (!session?.user) {
+    log.apiResponse('GET', '/api/profile', 401, Date.now() - startTime);
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
