@@ -78,40 +78,32 @@ export async function GET(request: NextRequest) {
       })
     ]);
 
-    // Daily breakdown for charts - using Prisma groupBy instead of raw SQL
-    const dailySignupsRaw = await prisma.user.groupBy({
-      by: ['createdAt'],
-      where: {
-        createdAt: {
-          gte: startDate
-        }
-      },
-      _count: {
-        id: true
-      }
-    });
+    // Daily breakdown for charts - using raw SQL to properly group by date
+    const dailySignupsRaw = await prisma.$queryRaw`
+      SELECT DATE("createdAt") as date, COUNT(*) as count
+      FROM "User" 
+      WHERE "createdAt" >= ${startDate}
+      GROUP BY DATE("createdAt")
+      ORDER BY DATE("createdAt")
+    ` as Array<{ date: Date; count: bigint }>;
 
-    const dailyRemindersRaw = await prisma.reminder.groupBy({
-      by: ['createdAt'],
-      where: {
-        createdAt: {
-          gte: startDate
-        }
-      },
-      _count: {
-        id: true
-      }
-    });
+    const dailyRemindersRaw = await prisma.$queryRaw`
+      SELECT DATE("createdAt") as date, COUNT(*) as count
+      FROM "Reminder" 
+      WHERE "createdAt" >= ${startDate}
+      GROUP BY DATE("createdAt")
+      ORDER BY DATE("createdAt")
+    ` as Array<{ date: Date; count: bigint }>;
 
     // Process the data for charts
     const dailySignups = dailySignupsRaw.map(item => ({
-      date: item.createdAt.toISOString().split('T')[0],
-      count: item._count.id
+      date: item.date.toISOString().split('T')[0],
+      count: Number(item.count)
     }));
 
     const dailyReminders = dailyRemindersRaw.map(item => ({
-      date: item.createdAt.toISOString().split('T')[0],
-      count: item._count.id
+      date: item.date.toISOString().split('T')[0],
+      count: Number(item.count)
     }));
 
     // Reminder frequency distribution
