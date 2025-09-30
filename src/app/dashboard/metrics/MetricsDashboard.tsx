@@ -255,15 +255,15 @@ function SimpleLineChart({
   }
 
   // Chart dimensions with margins for labels
-  const chartWidth = 340; // Reduced to make room for Y-axis labels
-  const chartHeight = 140; // Reduced to make room for X-axis labels
+  const chartWidth = 320; // Slightly reduced to make room for more labels
+  const chartHeight = 140; // Keep same height for consistency
   const leftMargin = 50;
-  const bottomMargin = 40;
-  const topMargin = 20;
+  const bottomMargin = 50; // Increased for better label spacing
+  const topMargin = 30; // Increased for value labels above points
 
   return (
-    <div className="h-48 sm:h-64">
-      <svg className="w-full h-full" viewBox="0 0 400 200">
+    <div className="h-56 sm:h-72">
+      <svg className="w-full h-full" viewBox="0 0 400 220">
         {/* Grid lines */}
         <defs>
           <pattern id="grid" width="40" height="20" patternUnits="userSpaceOnUse">
@@ -323,14 +323,25 @@ function SimpleLineChart({
                 stroke="white"
                 strokeWidth="1"
               />
-              {/* Value label above point */}
+              {/* Value label above point with background */}
+              <rect
+                x={x - 12}
+                y={y - 20}
+                width="24"
+                height="14"
+                rx="3"
+                fill="white"
+                stroke="#e5e7eb"
+                strokeWidth="1"
+                opacity="0.9"
+              />
               <text
                 x={x}
-                y={y - 8}
+                y={y - 10}
                 textAnchor="middle"
-                fontSize="8"
+                fontSize="9"
                 fill="#374151"
-                fontWeight="500"
+                fontWeight="600"
               >
                 {d.count}
               </text>
@@ -340,9 +351,29 @@ function SimpleLineChart({
         
         {/* X-axis date labels */}
         {validData.map((d, i) => {
-          // Show max 3 labels to prevent overcrowding on mobile
-          const maxLabels = 3;
-          const shouldShow = validData.length <= maxLabels || i % Math.ceil(validData.length / maxLabels) === 0;
+          // Show more labels based on data length and screen space
+          let maxLabels: number;
+          let skipInterval: number;
+          
+          if (validData.length <= 7) {
+            // Show all labels for 7 days or less
+            maxLabels = validData.length;
+            skipInterval = 1;
+          } else if (validData.length <= 14) {
+            // Show every other day for 8-14 days
+            maxLabels = Math.ceil(validData.length / 2);
+            skipInterval = 2;
+          } else if (validData.length <= 30) {
+            // Show every 3rd day for 15-30 days
+            maxLabels = Math.ceil(validData.length / 3);
+            skipInterval = 3;
+          } else {
+            // Show every 7th day for longer periods
+            maxLabels = Math.ceil(validData.length / 7);
+            skipInterval = 7;
+          }
+          
+          const shouldShow = i % skipInterval === 0 || i === validData.length - 1;
           if (!shouldShow) return null;
           
           const x = validData.length > 1 ? leftMargin + (i * chartWidth) / (validData.length - 1) : leftMargin + chartWidth / 2;
