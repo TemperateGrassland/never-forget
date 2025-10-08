@@ -133,6 +133,26 @@ export async function POST(request: NextRequest) {
 
             console.log(`Received message from ${fromPhone}: ${messageText}`);
 
+            // Check if this looks like feedback response first (before user lookup)
+            if (isFeedbackResponse(messageText)) {
+              console.log(`Processing anonymous feedback: "${messageText}"`);
+              
+              await prisma.anonymousFeedback.create({
+                data: {
+                  template: 'feedback_request', // Could be enhanced to detect which template
+                  response: messageText,
+                  metadata: {
+                    timestamp: new Date().toISOString(),
+                    messageType: 'whatsapp'
+                  }
+                }
+              });
+              
+              // Send thank you message without revealing identity
+              await sendConfirmation(fromPhone, "Thank you for your feedback! 🙏 Your input helps us improve Never Forget.");
+              continue; // Skip normal processing for feedback
+            }
+
             // Find user by phone number
             const user = await prisma.user.findUnique({
               where: { phoneNumber: fromPhone },
@@ -470,5 +490,41 @@ async function updateReminderFromAI(user: User, aiResponse: ReminderResponse) {
       executionTrace
     });
   }
+}
+
+// Simple feedback detection function
+function isFeedbackResponse(messageText: string): boolean {
+  const feedbackKeywords = [
+    'feedback', 'improve', 'suggestion', 'better', 'worse', 'good', 'bad',
+    'love', 'hate', 'like', 'dislike', 'feature', 'bug', 'issue', 'problem',
+    'great', 'terrible', 'amazing', 'awful', 'helpful', 'confusing',
+    'easy', 'difficult', 'fast', 'slow', 'useful', 'useless'
+  ];
+  
+  const lowerText = messageText.toLowerCase();
+  
+  // Check if message contains feedback keywords
+  const containsFeedbackWords = feedbackKeywords.some(keyword => 
+    lowerText.includes(keyword)
+  );
+  
+  // Check if message is longer than typical reminder responses (likely feedback)
+  const isLongMessage = messageText.length > 20;
+  
+  // Check for common feedback patterns
+  const feedbackPatterns = [
+    /could you/i,
+    /would be nice/i,
+    /i think/i,
+    /in my opinion/i,
+    /suggestion/i,
+    /recommend/i,
+    /please add/i,
+    /please fix/i
+  ];
+  
+  const matchesPattern = feedbackPatterns.some(pattern => pattern.test(messageText));
+  
+  return containsFeedbackWords || (isLongMessage && matchesPattern);
 }
 

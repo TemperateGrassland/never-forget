@@ -1,8 +1,123 @@
 import { prisma } from '@/lib/prisma';
+import { Reminder, User } from '@/types';
 
-export async function buildMetaApiRequests() {
-  // Get all users with their associated reminders
+// Additional interfaces for WhatsApp API
+interface TemplateParameter {
+  type: 'text';
+  parameter_name: string;
+  text: string;
+}
+
+interface WhatsAppTemplateRequest {
+  messaging_product: 'whatsapp';
+  to: string;
+  type: 'template';
+  template: {
+    name: string;
+    language: {
+      code: string;
+      policy: string;
+    };
+    components: Array<{
+      type: 'body';
+      parameters: TemplateParameter[];
+    }>;
+  };
+}
+
+interface UserWithReminders extends User {
+  reminders: Reminder[];
+}
+
+interface CustomTemplateData {
+  context?: string;
+  message?: string;
+  [key: string]: string | undefined;
+}
+
+type AudienceType = 'all' | 'subscribers';
+type TemplateType = 'reminder' | 'daily_reminder' | 'feedback_request' | 'announcement';
+
+// Template parameter builder function
+function buildTemplateParameters(
+  templateName: TemplateType, 
+  user: UserWithReminders, 
+  customData?: CustomTemplateData
+): TemplateParameter[] {
+  switch (templateName) {
+    case 'reminder':
+    case 'daily_reminder':
+      return [
+        {
+          type: 'text',
+          parameter_name: 'text',
+          text: user.firstName || 'User'
+        },
+        ...user.reminders.flatMap((reminder, index) => [
+          {
+            type: 'text',
+            parameter_name: `reminder_${index + 1}`,
+            text: reminder.title
+          },
+          {
+            type: 'text',
+            parameter_name: `when_${index + 1}`,
+            text: reminder.createdAt.toISOString().split('T')[0]
+          }
+        ])
+      ];
+    
+    case 'feedback_request':
+      return [
+        { 
+          type: 'text', 
+          parameter_name: 'text', 
+          text: user.firstName || 'User' 
+        },
+        { 
+          type: 'text', 
+          parameter_name: 'context', 
+          text: customData?.context || 'your recent experience' 
+        }
+      ];
+      
+    case 'announcement':
+      return [
+        { 
+          type: 'text', 
+          parameter_name: 'text', 
+          text: user.firstName || 'User' 
+        },
+        { 
+          type: 'text', 
+          parameter_name: 'message', 
+          text: customData?.message || 'We have updates to share!' 
+        }
+      ];
+      
+    default:
+      return [{ 
+        type: 'text', 
+        parameter_name: 'text', 
+        text: user.firstName || 'User' 
+      }];
+  }
+}
+
+export async function buildMetaApiRequests(
+  templateName: TemplateType = 'reminder',
+  audience: AudienceType = 'all',
+  customData?: CustomTemplateData
+): Promise<WhatsAppTemplateRequest[]> {
+  // Build user query based on audience
+  const whereClause: Parameters<typeof prisma.user.findMany>[0]['where'] = {
+    phoneNumber: { not: null }, // Always require phone number
+    ...(audience === 'subscribers' && { subscriptionStatus: 'active' }),
+  };
+
+  // Get users with their associated reminders
   const usersWithReminders = await prisma.user.findMany({
+    where: whereClause,
     include: {
       reminders: {
         where: { isComplete: false }, // Only fetch pending reminders
@@ -11,16 +126,17 @@ export async function buildMetaApiRequests() {
     },
   });
 
-  console.log("usersWithReminders:", usersWithReminders)
+  console.log("usersWithReminders:", usersWithReminders.length, "template:", templateName);
 
   // Format the data into JSON payloads for Meta API
-  return usersWithReminders.map((user) => (
-    {
+  return usersWithReminders
+    .filter((user): user is UserWithReminders => user.phoneNumber !== null)
+    .map((user): WhatsAppTemplateRequest => ({
         messaging_product: 'whatsapp',
-        to: user.phoneNumber,
+        to: user.phoneNumber!,
         type: 'template',
         template: {
-            name: 'reminder',
+            name: templateName,
             language: {
                 code: 'en_GB',
                 policy: 'deterministic'
@@ -28,50 +144,22 @@ export async function buildMetaApiRequests() {
             components: [
                 {
                     type: 'body',
-                    parameters: [
-                        {
-                            'type': 'text',
-                            'parameter_name': 'text',
-                            'text': user.firstName
-                        },
-                        ...user.reminders.map((reminder, index) => [
-                            {
-                                type: 'text',
-                                parameter_name: `reminder_${index + 1}`,
-                                text: reminder.title
-                            },
-                            {
-                                type: 'text',
-                                parameter_name: `when_${index + 1}`,
-                                text: reminder.createdAt.toISOString().split('T')[0] // Example: Format date as YYYY-MM-DD
-                            }
-                        ]).flat()
-                    ]
+                    parameters: buildTemplateParameters(templateName, user, customData)
                 }
             ]
         }
-    }
-    
-    
-    
-    
-//     {
-//     messaging_product: 'whatsapp',
-//     to: user.phoneNumber, 
-//     type: 'template',
-//     template: {
-//       name: 'reminder',
-//       language: { code: 'en_GB' },
-//       components: [
-//         {
-//           type: 'text',
-//           parameters: user.reminders.map((reminder) => ({
-//             type: 'text',
-//             text: `${reminder.title}: ${reminder.description || 'No description'}`,
-//           })),
-//         },
-//       ],
-//     },
-//   }
-));
+    }));
+}
+
+// Convenience functions for different template types
+export async function buildReminderRequests(): Promise<WhatsAppTemplateRequest[]> {
+  return buildMetaApiRequests('daily_reminder', 'all');
+}
+
+export async function buildFeedbackRequests(context?: string): Promise<WhatsAppTemplateRequest[]> {
+  return buildMetaApiRequests('feedback_request', 'subscribers', { context });
+}
+
+export async function buildAnnouncementRequests(message?: string): Promise<WhatsAppTemplateRequest[]> {
+  return buildMetaApiRequests('announcement', 'all', { message });
 }

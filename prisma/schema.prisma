@@ -128,3 +128,13 @@ model Feedback {
   userAgent String?      // For tracking browser/device info
   ipAddress String?      // For analytics (anonymized)
 }
+
+model AnonymousFeedback {
+  id        String   @id @default(cuid())
+  template  String   // Which template was used to request feedback
+  response  String   // User's feedback text
+  metadata  Json?    // Additional context (source, cycle number, etc.)
+  createdAt DateTime @default(now())
+  
+  // No userId field - keeps it completely anonymous
+}
