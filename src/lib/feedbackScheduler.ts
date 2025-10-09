@@ -147,7 +147,12 @@ export class FeedbackScheduler {
     const templates = this.getTemplateList();
     const intervalDays = parseInt(process.env.FEEDBACK_INTERVAL_DAYS || '3');
     const today = new Date();
-    const schedule = [];
+    const schedule: Array<{
+      date: string;
+      template: string;
+      index: number;
+      cycleNumber: number;
+    }> = [];
     
     for (let i = 0; i < daysAhead; i++) {
       const futureDate = new Date(today);

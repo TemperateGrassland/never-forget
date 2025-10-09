@@ -49,18 +49,18 @@ function buildTemplateParameters(
     case 'daily_reminder':
       return [
         {
-          type: 'text',
+          type: 'text' as const,
           parameter_name: 'text',
           text: user.firstName || 'User'
         },
         ...user.reminders.flatMap((reminder, index) => [
           {
-            type: 'text',
+            type: 'text' as const,
             parameter_name: `reminder_${index + 1}`,
             text: reminder.title
           },
           {
-            type: 'text',
+            type: 'text' as const,
             parameter_name: `when_${index + 1}`,
             text: reminder.createdAt.toISOString().split('T')[0]
           }
@@ -70,12 +70,12 @@ function buildTemplateParameters(
     case 'feedback_request':
       return [
         { 
-          type: 'text', 
+          type: 'text' as const, 
           parameter_name: 'text', 
           text: user.firstName || 'User' 
         },
         { 
-          type: 'text', 
+          type: 'text' as const, 
           parameter_name: 'context', 
           text: customData?.context || 'your recent experience' 
         }
@@ -84,12 +84,12 @@ function buildTemplateParameters(
     case 'announcement':
       return [
         { 
-          type: 'text', 
+          type: 'text' as const, 
           parameter_name: 'text', 
           text: user.firstName || 'User' 
         },
         { 
-          type: 'text', 
+          type: 'text' as const, 
           parameter_name: 'message', 
           text: customData?.message || 'We have updates to share!' 
         }
@@ -97,7 +97,7 @@ function buildTemplateParameters(
       
     default:
       return [{ 
-        type: 'text', 
+        type: 'text' as const, 
         parameter_name: 'text', 
         text: user.firstName || 'User' 
       }];
@@ -110,7 +110,7 @@ export async function buildMetaApiRequests(
   customData?: CustomTemplateData
 ): Promise<WhatsAppTemplateRequest[]> {
   // Build user query based on audience
-  const whereClause: Parameters<typeof prisma.user.findMany>[0]['where'] = {
+  const whereClause = {
     phoneNumber: { not: null }, // Always require phone number
     ...(audience === 'subscribers' && { subscriptionStatus: 'active' }),
   };
