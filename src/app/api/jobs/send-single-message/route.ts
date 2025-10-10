@@ -73,8 +73,8 @@ export async function GET() {
                 {
                   type: "body",
                   parameters: [
-                    { type: "text", parameter_name: "text", text: "User" },
-                    { type: "text", parameter_name: "context", text: feedbackConfig.customData.context },
+                    // { type: "text", parameter_name: "text", text: "User" },
+                    // { type: "text", parameter_name: "context", text: feedbackConfig.customData.context },
                   ],
                 },
               ],
