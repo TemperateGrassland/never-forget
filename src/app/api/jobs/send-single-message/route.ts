@@ -71,12 +71,10 @@ export async function GET() {
               },
               components: [
                 {
-                  type: "body",
-                  parameters: [
-                    // { type: "text", parameter_name: "text", text: "User" },
-                    // { type: "text", parameter_name: "context", text: feedbackConfig.customData.context },
-                  ],
-                },
+              "type": "button",
+              "sub_type": "flow",
+              "index": "0"
+              }
               ],
             },
           }),
