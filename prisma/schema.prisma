@@ -141,16 +141,18 @@ model AnonymousFeedback {
 }
 
 model FlowResponse {
-  id          String   @id @default(cuid())
-  flowToken   String   @unique // Flow token from WhatsApp
-  flowName    String   // Name/type of the flow (questionnaire, feedback, etc.)
-  userId      String?  // Optional - can be anonymous
-  user        User?    @relation(fields: [userId], references: [id])
-  phoneNumber String   // WhatsApp phone number
-  responses   Json     // Structured questionnaire responses
-  metadata    Json?    // Additional context (timestamp, flow version, etc.)
-  createdAt   DateTime @default(now())
+  id           String   @id @default(cuid())
+  flowToken    String   @unique // Flow token from WhatsApp
+  flowName     String   // Name/type of the flow (questionnaire, feedback, etc.)
+  templateName String   // WhatsApp template name that triggered this flow (ease_feedback, satisfaction_survey, etc.)
+  userId       String?  // Optional - can be anonymous
+  user         User?    @relation(fields: [userId], references: [id])
+  phoneNumber  String   // WhatsApp phone number
+  responses    Json     // Structured questionnaire responses
+  metadata     Json?    // Additional context (timestamp, flow version, etc.)
+  createdAt    DateTime @default(now())
   
   @@index([flowName, createdAt]) // For analytics queries
+  @@index([templateName, createdAt]) // For template performance analytics
   @@index([phoneNumber]) // For user lookup
 }

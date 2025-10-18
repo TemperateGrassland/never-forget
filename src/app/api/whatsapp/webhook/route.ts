@@ -169,7 +169,7 @@ export async function POST(request: NextRequest) {
               });
               
               // Send thank you message without revealing identity
-              await sendConfirmation(fromPhone, "Thank you for your feedback! 🙏 Your input helps us improve Never Forget.");
+              await sendConfirmation(fromPhone, "Thank you for your feedback! 🙏 Your input helps us improve never forget.");
               continue; // Skip normal processing for feedback
             }
 
@@ -537,14 +537,16 @@ async function processFlowResponse(message: WhatsAppMessage, fromPhone: string) 
       where: { phoneNumber: fromPhone },
     });
 
-    // Extract flow name from token or use a default mapping
+    // Extract flow name and template name from token or use default mapping
     const flowName = extractFlowNameFromToken(flowToken) || 'unknown_flow';
+    const templateName = extractTemplateNameFromToken(flowToken) || flowName;
 
     // Store the flow response
     await prisma.flowResponse.create({
       data: {
         flowToken,
         flowName,
+        templateName,
         userId: user?.id || null,
         phoneNumber: fromPhone,
         responses: responseData,
@@ -559,7 +561,7 @@ async function processFlowResponse(message: WhatsAppMessage, fromPhone: string) 
     console.log(`Stored flow response for ${flowName} from ${fromPhone}`);
 
     // Send confirmation message
-    await sendConfirmation(fromPhone, "Thank you for your feedback! 🙏 Your input helps us improve Never Forget.");
+    await sendConfirmation(fromPhone, "Thank you for your feedback! 🙏 Your input helps us improve never forget.");
 
   } catch (error) {
     console.error("Error processing flow response:", error);
@@ -571,6 +573,15 @@ async function processFlowResponse(message: WhatsAppMessage, fromPhone: string) 
 function extractFlowNameFromToken(flowToken: string): string | null {
   // Example: if your tokens are like "ease_feedback_12345", extract "ease_feedback"
   const match = flowToken.match(/^([a-z_]+)_\d+$/);
+  return match ? match[1] : null;
+}
+
+// Extract template name from token (customize based on your token format)
+function extractTemplateNameFromToken(flowToken: string): string | null {
+  // For now, assume template name is the same as flow name
+  // You can customize this if your tokens include template info differently
+  // Example: "ease_feedback_template_v1_12345" -> "ease_feedback"
+  const match = flowToken.match(/^([a-z_]+)(?:_template)?(?:_v\d+)?_\d+$/);
   return match ? match[1] : null;
 }
 
