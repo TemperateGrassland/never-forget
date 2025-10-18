@@ -25,6 +25,24 @@ interface WhatsAppTemplateRequest {
   };
 }
 
+interface WhatsAppFlowTemplateRequest {
+  messaging_product: 'whatsapp';
+  to: string;
+  type: 'template';
+  template: {
+    name: string;
+    language: {
+      code: string;
+      policy: string;
+    };
+    components: Array<{
+      type: 'button';
+      sub_type: 'flow';
+      index: string;
+    }>;
+  };
+}
+
 interface UserWithReminders extends User {
   reminders: Reminder[];
 }
@@ -37,6 +55,7 @@ interface CustomTemplateData {
 
 type AudienceType = 'all' | 'subscribers';
 type TemplateType = 'reminder' | 'daily_reminder' | 'feedback_request' | 'announcement';
+type FlowTemplateType = 'ease_feedback' | 'satisfaction_survey' | 'feature_feedback';
 
 // Template parameter builder function
 function buildTemplateParameters(
@@ -158,6 +177,50 @@ export async function buildReminderRequests(): Promise<WhatsAppTemplateRequest[]
 
 export async function buildFeedbackRequests(context?: string): Promise<WhatsAppTemplateRequest[]> {
   return buildMetaApiRequests('feedback_request', 'subscribers', { context });
+}
+
+export async function buildFlowFeedbackRequests(
+  flowTemplateName: FlowTemplateType = 'ease_feedback',
+  audience: AudienceType = 'subscribers'
+): Promise<WhatsAppFlowTemplateRequest[]> {
+  // Build user query based on audience
+  const whereClause = {
+    phoneNumber: { not: null }, // Always require phone number
+    ...(audience === 'subscribers' && { subscriptionStatus: 'active' }),
+  };
+
+  // Get users for flow feedback
+  const users = await prisma.user.findMany({
+    where: whereClause,
+    select: {
+      phoneNumber: true,
+    },
+  });
+
+  console.log("Flow feedback users:", users.length, "template:", flowTemplateName);
+
+  // Format the data into JSON payloads for Meta API with Flow button
+  return users
+    .filter((user): user is { phoneNumber: string } => user.phoneNumber !== null)
+    .map((user): WhatsAppFlowTemplateRequest => ({
+      messaging_product: 'whatsapp',
+      to: user.phoneNumber,
+      type: 'template',
+      template: {
+        name: flowTemplateName,
+        language: {
+          code: 'en_GB',
+          policy: 'deterministic'
+        },
+        components: [
+          {
+            type: 'button',
+            sub_type: 'flow',
+            index: '0'
+          }
+        ]
+      }
+    }));
 }
 
 export async function buildAnnouncementRequests(message?: string): Promise<WhatsAppTemplateRequest[]> {

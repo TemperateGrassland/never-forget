@@ -2,7 +2,6 @@ import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import { log } from "@/lib/logger";
 import { FeedbackScheduler } from "@/lib/feedbackScheduler";
-import { buildMetaApiRequests } from "@/lib/metaApiService";
 
 export async function GET() {
   const jobStartTime = new Date();
@@ -49,7 +48,7 @@ export async function GET() {
 
     if (isFeedbackMode) {
       // Feedback mode: Send feedback request to the test user
-      const feedbackConfig = FeedbackScheduler.getFeedbackConfig();
+      // const feedbackConfig = FeedbackScheduler.getFeedbackConfig();
       
       const res = await fetch(
         `https://graph.facebook.com/v17.0/${process.env.WHATSAPP_PHONE_ID}/messages`,

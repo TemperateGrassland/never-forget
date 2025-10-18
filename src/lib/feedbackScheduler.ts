@@ -1,12 +1,22 @@
 import { log } from "@/lib/logger";
 
+// 1. interfaces defined
+// 2. class defined
+  // static method:
+    // shouldSendFeedbackToday(), 
+    // getCurrentFeedbackTemplate(), 
+    // getFeedbackConfig(), 
+    // checkFeedbackSchedule(),
+    // getUpcomingSchedule(),
+    // getRotationInfo()
+
 export interface FeedbackConfig {
   template: string;
   audience: 'all' | 'subscribers';
-  customData: {
-    context: string;
-    anonymous: string;
-  };
+  // customData: {
+  //   context: string;
+  //   anonymous: string;
+  // };
 }
 
 export interface FeedbackStatus {
@@ -14,7 +24,7 @@ export interface FeedbackStatus {
   template: string | null;
   templateCount: number;
   templateIndex: number | null;
-  daysUntilRepeat: number;
+  // daysUntilRepeat: number;
   cycleNumber: number;
 }
 
@@ -25,9 +35,10 @@ export class FeedbackScheduler {
    */
   static shouldSendFeedbackToday(): boolean {
     const today = new Date();
+    // turn miliseconds into days
     const daysSinceEpoch = Math.floor(today.getTime() / (1000 * 60 * 60 * 24));
+    // set the frequency of the feedback messages in days
     const intervalDays = parseInt(process.env.FEEDBACK_INTERVAL_DAYS || '3');
-    
     return daysSinceEpoch % intervalDays === 0;
   }
   
@@ -37,7 +48,6 @@ export class FeedbackScheduler {
   static getCurrentFeedbackTemplate(): string {
     const templates = this.getTemplateList();
     const templateIndex = this.calculateTemplateIndex();
-    
     return templates[templateIndex % templates.length];
   }
   
@@ -48,10 +58,10 @@ export class FeedbackScheduler {
     return {
       template: this.getCurrentFeedbackTemplate(),
       audience: 'all',
-      customData: {
-        context: 'your experience with Never Forget',
-        anonymous: 'true'
-      }
+      // customData: {
+      //   context: 'your experience with Never Forget',
+      //   anonymous: 'true'
+      // }
     };
   }
   
@@ -59,6 +69,7 @@ export class FeedbackScheduler {
    * Main method for cron jobs - logs details and returns status
    */
   static checkFeedbackSchedule(jobId: string, jobName: string): FeedbackStatus {
+    // 
     const today = new Date();
     const daysSinceEpoch = Math.floor(today.getTime() / (1000 * 60 * 60 * 24));
     const intervalDays = parseInt(process.env.FEEDBACK_INTERVAL_DAYS || '3');
@@ -66,7 +77,7 @@ export class FeedbackScheduler {
     const templates = this.getTemplateList();
     const templateIndex = cycleNumber % templates.length;
     const shouldSend = daysSinceEpoch % intervalDays === 0;
-    const daysUntilRepeat = templates.length * intervalDays;
+    // const daysUntilRepeat = templates.length * intervalDays;
     
     // Detailed logging
     log.info('📊 Feedback scheduler check', {
@@ -85,7 +96,7 @@ export class FeedbackScheduler {
         availableList: templates,
         selectedIndex: shouldSend ? templateIndex : null,
         selectedTemplate: shouldSend ? templates[templateIndex] : null,
-        daysUntilRepeat
+        // daysUntilRepeat
       },
       scheduling: {
         lastFeedbackCycle: cycleNumber - 1,
@@ -99,7 +110,7 @@ export class FeedbackScheduler {
       template: shouldSend ? templates[templateIndex] : null,
       templateCount: templates.length,
       templateIndex: shouldSend ? templateIndex : null,
-      daysUntilRepeat,
+      // daysUntilRepeat,
       cycleNumber
     };
   }

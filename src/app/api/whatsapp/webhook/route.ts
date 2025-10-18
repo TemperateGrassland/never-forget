@@ -43,6 +43,27 @@ interface WhatsAppStatus {
   errors?: Array<Record<string, unknown>>;
 }
 
+interface WhatsAppFlowResponse {
+  name: string;
+  body: string;
+  response_json: string;
+}
+
+interface WhatsAppInteractive {
+  type: string;
+  nfm_reply?: WhatsAppFlowResponse;
+}
+
+interface WhatsAppMessage {
+  id: string;
+  from: string;
+  type: string;
+  text?: {
+    body: string;
+  };
+  interactive?: WhatsAppInteractive;
+}
+
 
 // The guide for meta cloud API webhooks: https://developers.facebook.com/docs/whatsapp/cloud-api/guides/set-up-webhooks/
 // 1. create endpoint
@@ -120,11 +141,18 @@ export async function POST(request: NextRequest) {
 
           // Process each message
           for (const message of messages) {
-            const fromPhone = message.from;
-            const messageText = message.text?.body;
-            const messageType = message.type;
+            const typedMessage = message as WhatsAppMessage;
+            const fromPhone = typedMessage.from;
+            const messageText = typedMessage.text?.body;
+            const messageType = typedMessage.type;
             
             console.log(`DEBUG: Phone from WhatsApp: "${fromPhone}", Message: "${messageText}", Type: ${messageType}`);
+
+            // Handle Flow responses (interactive messages)
+            if (messageType === "interactive" && typedMessage.interactive?.type === "nfm_reply") {
+              await processFlowResponse(typedMessage, fromPhone);
+              continue;
+            }
 
             // Only process text messages
             if (messageType !== "text" || !messageText) {
@@ -490,6 +518,68 @@ async function updateReminderFromAI(user: User, aiResponse: ReminderResponse) {
       executionTrace
     });
   }
+}
+
+// Handle WhatsApp Flow responses
+async function processFlowResponse(message: WhatsAppMessage, fromPhone: string) {
+  try {
+    const interactive = message.interactive;
+    const nfmReply = interactive?.nfm_reply;
+    
+    if (!nfmReply || nfmReply.name !== "flow") {
+      console.log("Not a flow response, skipping");
+      return;
+    }
+
+    // Parse the response JSON
+    const responseData = JSON.parse(nfmReply.response_json);
+    const flowToken = responseData.flow_token;
+    
+    console.log(`Flow response received from ${fromPhone}:`, {
+      flowToken,
+      responses: responseData
+    });
+
+    // Find user (optional for anonymous flows)
+    const user = await prisma.user.findUnique({
+      where: { phoneNumber: fromPhone },
+    });
+
+    // Extract flow name from token or use a default mapping
+    const flowName = extractFlowNameFromToken(flowToken) || 'unknown_flow';
+
+    // Store the flow response
+    await prisma.flowResponse.create({
+      data: {
+        flowToken,
+        flowName,
+        userId: user?.id || null,
+        phoneNumber: fromPhone,
+        responses: responseData,
+        metadata: {
+          timestamp: new Date().toISOString(),
+          messageId: message.id,
+          messageType: 'whatsapp_flow'
+        }
+      }
+    });
+
+    console.log(`Stored flow response for ${flowName} from ${fromPhone}`);
+
+    // Send confirmation message
+    await sendConfirmation(fromPhone, "Thank you for your feedback! 🙏 Your input helps us improve Never Forget.");
+
+  } catch (error) {
+    console.error("Error processing flow response:", error);
+    console.error("Message data:", JSON.stringify(message, null, 2));
+  }
+}
+
+// Extract flow name from token (customize based on your token format)
+function extractFlowNameFromToken(flowToken: string): string | null {
+  // Example: if your tokens are like "ease_feedback_12345", extract "ease_feedback"
+  const match = flowToken.match(/^([a-z_]+)_\d+$/);
+  return match ? match[1] : null;
 }
 
 // Simple feedback detection function

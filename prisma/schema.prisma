@@ -39,6 +39,7 @@ model User {
   friendOf   User[] @relation("UserFriends")
   sentFriendInvites FriendInvite[] @relation("SentFriendInvites")
   feedback   Feedback[] // One-to-many relationship for feedback
+  flowResponses FlowResponse[] // One-to-many relationship for flow responses
 }
 
 model Account {
@@ -137,4 +138,19 @@ model AnonymousFeedback {
   createdAt DateTime @default(now())
   
   // No userId field - keeps it completely anonymous
+}
+
+model FlowResponse {
+  id          String   @id @default(cuid())
+  flowToken   String   @unique // Flow token from WhatsApp
+  flowName    String   // Name/type of the flow (questionnaire, feedback, etc.)
+  userId      String?  // Optional - can be anonymous
+  user        User?    @relation(fields: [userId], references: [id])
+  phoneNumber String   // WhatsApp phone number
+  responses   Json     // Structured questionnaire responses
+  metadata    Json?    // Additional context (timestamp, flow version, etc.)
+  createdAt   DateTime @default(now())
+  
+  @@index([flowName, createdAt]) // For analytics queries
+  @@index([phoneNumber]) // For user lookup
 }
