@@ -24,14 +24,6 @@ interface ReminderPatch {
   dueDate?: Date;
   frequency?: "NONE" | "WEEKLY" | "MONTHLY" | "YEARLY";
 }
-// not used, but may be used later on
-// interface WhatsAppMessage {
-//   from: string;
-//   text?: {
-//     body: string;
-//   };
-//   type: string;
-// }
 
 interface WhatsAppStatus {
   id: string;
