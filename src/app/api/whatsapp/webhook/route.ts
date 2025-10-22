@@ -549,14 +549,14 @@ async function processFlowResponse(message: WhatsAppMessage, fromPhone: string) 
       data: {
         flowToken,
         flowName,
-        templateName,
         userId: user?.id || null,
         phoneNumber: fromPhone,
         responses: responseData,
         metadata: {
           timestamp: new Date().toISOString(),
           messageId: message.id,
-          messageType: 'whatsapp_flow'
+          messageType: 'whatsapp_flow',
+          templateName // Store template name in metadata until column exists
         }
       }
     });
