@@ -518,8 +518,27 @@ async function updateReminderFromAI(user: User, aiResponse: ReminderResponse) {
 async function processFlowResponse(message: WhatsAppMessage, fromPhone: string) {
   try {
     log.info("processing flow response.")
+    
+    // Log the complete message structure for analysis
+    console.log("=== COMPLETE WHATSAPP FLOW MESSAGE ===");
+    console.log("Full message object:", JSON.stringify(message, null, 2));
+    console.log("Message ID:", message.id);
+    console.log("From phone:", fromPhone);
+    console.log("Message type:", message.type);
+    
+    // Log context information (might contain template info)
+    if (message.context) {
+      console.log("=== MESSAGE CONTEXT ===");
+      console.log("Context:", JSON.stringify(message.context, null, 2));
+    }
+    
     const interactive = message.interactive;
+    console.log("=== INTERACTIVE SECTION ===");
+    console.log("Interactive object:", JSON.stringify(interactive, null, 2));
+    
     const nfmReply = interactive?.nfm_reply;
+    console.log("=== NFM REPLY SECTION ===");
+    console.log("NFM Reply object:", JSON.stringify(nfmReply, null, 2));
     
     if (!nfmReply || nfmReply.name !== "flow") {
       console.log("Not a flow response, skipping");
@@ -528,7 +547,14 @@ async function processFlowResponse(message: WhatsAppMessage, fromPhone: string) 
 
     // Parse the response JSON
     const responseData = JSON.parse(nfmReply.response_json);
+    console.log("=== PARSED RESPONSE DATA ===");
+    console.log("Response JSON parsed:", JSON.stringify(responseData, null, 2));
+    
     const flowToken = responseData.flow_token;
+    console.log("Flow token extracted:", flowToken);
+    
+    // Log all available keys in the response for analysis
+    console.log("Available response keys:", Object.keys(responseData));
     
     console.log(`Flow response received from ${fromPhone}:`, {
       flowToken,

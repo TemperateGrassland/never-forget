@@ -142,7 +142,7 @@ model AnonymousFeedback {
 
 model FlowResponse {
   id          String   @id @default(cuid())
-  flowToken   String   @unique // Flow token from WhatsApp
+  flowToken   String   // Flow token from WhatsApp (not unique since WhatsApp reuses "unused")
   flowName    String   // Name/type of the flow (questionnaire, feedback, etc.)
   userId      String?  // Optional - can be anonymous
   user        User?    @relation(fields: [userId], references: [id])
@@ -153,4 +153,5 @@ model FlowResponse {
   
   @@index([flowName, createdAt]) // For analytics queries
   @@index([phoneNumber]) // For user lookup
+  @@index([flowToken]) // For flow token lookup (non-unique)
 }
