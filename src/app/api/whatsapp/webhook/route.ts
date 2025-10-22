@@ -11,6 +11,8 @@ import {
   validateReminderPatch 
 } from "@/lib/reminderTools";
 import { checkSubscriptionByPhone } from "@/lib/subscription";
+import { log } from "@/lib/logger";
+
 
 // Type definitions
 interface User {
@@ -515,6 +517,7 @@ async function updateReminderFromAI(user: User, aiResponse: ReminderResponse) {
 // Handle WhatsApp Flow responses
 async function processFlowResponse(message: WhatsAppMessage, fromPhone: string) {
   try {
+    log.info("processing flow response.")
     const interactive = message.interactive;
     const nfmReply = interactive?.nfm_reply;
     
