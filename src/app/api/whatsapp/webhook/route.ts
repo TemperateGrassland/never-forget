@@ -56,6 +56,11 @@ interface WhatsAppMessage {
     body: string;
   };
   interactive?: WhatsAppInteractive;
+  context?: {
+    from: string;
+    id: string;
+    [key: string]: unknown;
+  };
 }
 
 
