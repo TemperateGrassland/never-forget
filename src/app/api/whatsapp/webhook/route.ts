@@ -571,9 +571,9 @@ async function processFlowResponse(message: WhatsAppMessage, fromPhone: string) 
       where: { phoneNumber: fromPhone },
     });
 
-    // Extract flow name and template name from token or use default mapping
-    const flowName = extractFlowNameFromToken(flowToken) || 'unknown_flow';
-    const templateName = extractTemplateNameFromToken(flowToken) || flowName;
+    // Use flow_token directly as template name since we now send template name as flow_token
+    const templateName = flowToken || 'unknown_template';
+    const flowName = templateName;
 
     // Store the flow response
     await prisma.flowResponse.create({

@@ -39,6 +39,12 @@ interface WhatsAppFlowTemplateRequest {
       type: 'button';
       sub_type: 'flow';
       index: string;
+      parameters: Array<{
+        type: 'action';
+        action: {
+          flow_token: string;
+        };
+      }>;
     }>;
   };
 }
@@ -216,7 +222,15 @@ export async function buildFlowFeedbackRequests(
           {
             type: 'button',
             sub_type: 'flow',
-            index: '0'
+            index: '0',
+            parameters: [
+              {
+                type: 'action',
+                action: {
+                  flow_token: flowTemplateName
+                }
+              }
+            ]
           }
         ]
       }
