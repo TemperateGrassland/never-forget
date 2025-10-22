@@ -32,6 +32,9 @@ Build commands are configured to run a new schema migration with each new build.
 
 `npx prisma migrate status`
 
+#### Marking a migration as resolved (useful when migrations fail in prod)
+
+npx prisma migrate resolve --applied <full migration name>
 
 # mermaid
 
