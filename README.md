@@ -28,6 +28,10 @@ After making changes to the prisma schema, they can be applied into the local db
 
 Build commands are configured to run a new schema migration with each new build.
 
+#### Check migration status
+
+`npx prisma migrate status`
+
 
 # mermaid
 
