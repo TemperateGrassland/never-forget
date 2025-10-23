@@ -48,7 +48,7 @@ export async function GET() {
 
     if (isFeedbackMode) {
       // Feedback mode: Send feedback request to the test user
-      // const feedbackConfig = FeedbackScheduler.getFeedbackConfig();
+      const feedbackConfig = FeedbackScheduler.getFeedbackConfig();
       
       const res = await fetch(
         `https://graph.facebook.com/v17.0/${process.env.WHATSAPP_PHONE_ID}/messages`,
@@ -72,7 +72,15 @@ export async function GET() {
                 {
               "type": "button",
               "sub_type": "flow",
-              "index": "0"
+              "index": "0",
+              "parameters": [
+                {
+                  "type": "action",
+                  "action": {
+                    "flow_token": feedbackConfig.template
+                  }
+                }
+              ]
               }
               ],
             },
