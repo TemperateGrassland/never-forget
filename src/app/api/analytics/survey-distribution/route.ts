@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { SURVEY_SCHEMAS, getSurveySchema, processSurveyResponses } from "@/lib/surveySchemas";
 
@@ -10,6 +12,21 @@ function getDateFromTimeframe(timeframe: string): Date {
 
 export async function GET(request: NextRequest) {
   try {
+    // Check authentication and admin status
+    const session = await getServerSession(authOptions);
+    
+    if (!session?.user?.email) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    
+    // Check if user is admin
+    const adminEmails = process.env.ADMIN_EMAILS?.split(',') || [];
+    const isAdmin = adminEmails.includes(session.user.email);
+    
+    if (!isAdmin) {
+      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
+    }
+
     const { searchParams } = new URL(request.url);
     const templateName = searchParams.get('template');
     const timeframe = searchParams.get('timeframe') || '30d';

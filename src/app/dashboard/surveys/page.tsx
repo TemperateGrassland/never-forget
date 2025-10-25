@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
 import { SurveyDistributionChart } from '@/components/SurveyDistributionChart';
 
 interface Distribution {
@@ -10,9 +11,49 @@ interface Distribution {
 }
 
 export default function SurveyAnalytics() {
+  const { data: session, status } = useSession();
   const [distributions, setDistributions] = useState<Record<string, Distribution> | null>(null);
   const [loading, setLoading] = useState(true);
   const [timeframe, setTimeframe] = useState('30d');
+
+  // Check if user is admin (using your existing ADMIN_EMAILS env var)
+  const isAdmin = session?.user?.email && 
+    process.env.NEXT_PUBLIC_ADMIN_EMAILS?.split(',').includes(session.user.email);
+
+  // Show loading while checking auth
+  if (status === 'loading') {
+    return (
+      <div className="space-y-6 p-6">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-gray-500">Loading...</div>
+        </div>
+      </div>
+    );
+  }
+
+  // Redirect if not authenticated
+  if (status === 'unauthenticated') {
+    return (
+      <div className="space-y-6 p-6">
+        <div className="text-center py-12">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Access Denied</h1>
+          <p className="text-gray-600">Please sign in to access this page.</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Check admin access
+  if (!isAdmin) {
+    return (
+      <div className="space-y-6 p-6">
+        <div className="text-center py-12">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Admin Access Required</h1>
+          <p className="text-gray-600">You don't have permission to access this page.</p>
+        </div>
+      </div>
+    );
+  }
 
   useEffect(() => {
     const fetchData = async () => {
