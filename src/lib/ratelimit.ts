@@ -24,14 +24,14 @@ export const rateLimits = {
 
   feedback: new Ratelimit({
     redis,
-    limiter: Ratelimit.slidingWindow(10, "1 h"), // 10 submissions per hour per user
+    limiter: Ratelimit.slidingWindow(1, "1 h"), // 10 submissions per hour per user
     analytics: true,
   }),
 
   // Moderate limits for API endpoints
   whatsappWebhook: new Ratelimit({
     redis,
-    limiter: Ratelimit.slidingWindow(1000, "1 m"), // 1000 requests per minute
+    limiter: Ratelimit.slidingWindow(5, "1 m"), // 1000 requests per minute
     analytics: true,
   }),
 
