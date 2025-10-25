@@ -2,7 +2,7 @@ import prisma from "@/lib/prisma";
 import bcrypt from "bcrypt";
 import { NextRequest } from "next/server";
 import { verifyTurnstileToken } from '@/lib/turnstile';
-import { rateLimits, getClientIP, createIdentifier, checkRateLimit, createRateLimitHeaders } from '@/lib/ratelimit';
+import { rateLimits, getClientIP, createIdentifier, checkRateLimit, createRateLimitHeaders, createRateLimitErrorMessage } from '@/lib/ratelimit';
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,8 +12,15 @@ export async function POST(request: NextRequest) {
     const rateLimitResult = await checkRateLimit(rateLimits.userRegistration, identifier);
 
     if (!rateLimitResult.success) {
+      const errorMessage = createRateLimitErrorMessage(
+        "account creation attempts",
+        rateLimitResult.reset,
+        rateLimitResult.limit,
+        "hour"
+      );
+      
       return new Response(
-        JSON.stringify({ message: "Too many user creation attempts. Please try again later." }),
+        JSON.stringify({ message: errorMessage }),
         { 
           status: 429,
           headers: createRateLimitHeaders(rateLimitResult)

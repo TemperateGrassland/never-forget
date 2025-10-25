@@ -38,7 +38,14 @@ export default function ContactPage() {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to submit feedback');
+        // Handle rate limiting and other errors
+        try {
+          const errorData = await response.json();
+          setError(errorData.error || 'Failed to submit feedback. Please try again.');
+        } catch (e) {
+          setError('Failed to submit feedback. Please try again.');
+        }
+        return;
       }
 
       setIsSubmitted(true);

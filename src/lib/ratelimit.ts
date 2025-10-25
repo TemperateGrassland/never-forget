@@ -114,3 +114,35 @@ export function createRateLimitHeaders(result: {
     "X-RateLimit-Reset": result.reset.toString(),
   };
 }
+
+// Helper to create user-friendly rate limit error messages
+export function createRateLimitErrorMessage(
+  action: string,
+  resetTime: number,
+  limit: number,
+  window: string
+): string {
+  const resetDate = new Date(resetTime * 1000);
+  const now = new Date();
+  const timeDiff = resetDate.getTime() - now.getTime();
+  
+  let timeUntilReset: string;
+  
+  if (timeDiff <= 0) {
+    timeUntilReset = "shortly";
+  } else if (timeDiff < 60 * 1000) {
+    // Less than 1 minute
+    const seconds = Math.ceil(timeDiff / 1000);
+    timeUntilReset = `${seconds} second${seconds === 1 ? '' : 's'}`;
+  } else if (timeDiff < 60 * 60 * 1000) {
+    // Less than 1 hour
+    const minutes = Math.ceil(timeDiff / (60 * 1000));
+    timeUntilReset = `${minutes} minute${minutes === 1 ? '' : 's'}`;
+  } else {
+    // 1 hour or more
+    const hours = Math.ceil(timeDiff / (60 * 60 * 1000));
+    timeUntilReset = `${hours} hour${hours === 1 ? '' : 's'}`;
+  }
+
+  return `You've reached the rate limit for ${action}. You can try again in ${timeUntilReset}. (Limit: ${limit} requests per ${window})`;
+}

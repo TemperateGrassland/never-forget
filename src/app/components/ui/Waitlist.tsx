@@ -7,10 +7,12 @@ export function WaitlistButton() {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [turnstileToken, setTurnstileToken] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus('loading');
+    setErrorMessage('');
 
     const res = await fetch('/api/waitlist', {
       method: 'POST',
@@ -18,7 +20,18 @@ export function WaitlistButton() {
       body: JSON.stringify({ email, turnstileToken }),
     });
 
-    setStatus(res.ok ? 'success' : 'error');
+    if (res.ok) {
+      setStatus('success');
+    } else {
+      // Handle rate limiting and other errors
+      try {
+        const errorData = await res.json();
+        setErrorMessage(errorData.error || 'Something went wrong. Please try again.');
+      } catch (e) {
+        setErrorMessage('Something went wrong. Please try again.');
+      }
+      setStatus('error');
+    }
   };
 
   const handleTurnstileVerify = (token: string) => {
@@ -64,7 +77,9 @@ export function WaitlistButton() {
       )}
       {status === 'success' && <p className="text-black">Thanks! You are on the list.</p>}
       {status === 'error' && (
-        <p className="text-red-600 mt-2">Something went wrong. Please try again.</p>
+        <div className="text-red-600 mt-2 text-sm max-w-lg mx-auto text-center">
+          <p>{errorMessage}</p>
+        </div>
       )}
       <div className="w-full max-w-3xl mb-6 text-xl sm:text-2xl lg:text-3xl text-center">
           <h1>

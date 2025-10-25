@@ -28,7 +28,8 @@ export default function RegisterPage() {
       router.push("/login"); // Redirect to login page after successful signup
     } else {
       const data = await res.json();
-      setError(data.error);
+      // The API now returns user-friendly error messages including rate limiting
+      setError(data.error || 'Registration failed. Please try again.');
     }
   };
 

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { verifyTurnstileToken } from '@/lib/turnstile';
-import { rateLimits, getClientIP, createIdentifier, checkRateLimit, createRateLimitHeaders } from '@/lib/ratelimit';
+import { rateLimits, getClientIP, createIdentifier, checkRateLimit, createRateLimitHeaders, createRateLimitErrorMessage } from '@/lib/ratelimit';
 
 export async function POST(req: Request) {
   try {
@@ -11,8 +11,15 @@ export async function POST(req: Request) {
     const rateLimitResult = await checkRateLimit(rateLimits.userRegistration, identifier);
 
     if (!rateLimitResult.success) {
+      const errorMessage = createRateLimitErrorMessage(
+        "registration attempts",
+        rateLimitResult.reset,
+        rateLimitResult.limit,
+        "hour"
+      );
+      
       return NextResponse.json(
-        { error: 'Too many registration attempts. Please try again later.' },
+        { error: errorMessage },
         { 
           status: 429,
           headers: createRateLimitHeaders(rateLimitResult)

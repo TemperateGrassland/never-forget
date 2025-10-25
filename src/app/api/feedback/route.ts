@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import prisma from '@/lib/prisma';
 import { verifyTurnstileToken } from '@/lib/turnstile';
-import { rateLimits, getClientIP, createIdentifier, checkRateLimit, createRateLimitHeaders } from '@/lib/ratelimit';
+import { rateLimits, getClientIP, createIdentifier, checkRateLimit, createRateLimitHeaders, createRateLimitErrorMessage } from '@/lib/ratelimit';
 
 export async function POST(request: NextRequest) {
   try {
@@ -19,8 +19,15 @@ export async function POST(request: NextRequest) {
     const rateLimitResult = await checkRateLimit(rateLimits.feedback, identifier);
 
     if (!rateLimitResult.success) {
+      const errorMessage = createRateLimitErrorMessage(
+        "feedback submissions",
+        rateLimitResult.reset,
+        rateLimitResult.limit,
+        "hour"
+      );
+      
       return NextResponse.json(
-        { error: 'Too many feedback submissions. Please try again later.' },
+        { error: errorMessage },
         { 
           status: 429,
           headers: createRateLimitHeaders(rateLimitResult)

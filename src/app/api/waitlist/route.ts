@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { NextResponse } from 'next/server';
 import { verifyTurnstileToken } from '@/lib/turnstile';
-import { rateLimits, getClientIP, createIdentifier, checkRateLimit, createRateLimitHeaders } from '@/lib/ratelimit';
+import { rateLimits, getClientIP, createIdentifier, checkRateLimit, createRateLimitHeaders, createRateLimitErrorMessage } from '@/lib/ratelimit';
 
 const prisma = new PrismaClient();
 
@@ -12,8 +12,15 @@ export async function POST(request: Request) {
   const rateLimitResult = await checkRateLimit(rateLimits.waitlist, identifier);
 
   if (!rateLimitResult.success) {
+    const errorMessage = createRateLimitErrorMessage(
+      "waitlist submissions",
+      rateLimitResult.reset,
+      rateLimitResult.limit,
+      "hour"
+    );
+    
     return NextResponse.json(
-      { error: 'Too many requests. Please try again later.' },
+      { error: errorMessage },
       { 
         status: 429,
         headers: createRateLimitHeaders(rateLimitResult)

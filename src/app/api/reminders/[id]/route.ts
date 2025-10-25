@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import Ably from "ably";
 import { auth } from "@/auth";
-import { rateLimits, getClientIP, createIdentifier, checkRateLimit, createRateLimitHeaders } from '@/lib/ratelimit';
+import { rateLimits, getClientIP, createIdentifier, checkRateLimit, createRateLimitHeaders, createRateLimitErrorMessage } from '@/lib/ratelimit';
 
 const prisma = new PrismaClient();
 const ably = new Ably.Rest(process.env.ABLY_API_KEY!);
@@ -17,8 +17,15 @@ export async function DELETE(req: NextRequest, params: { params: Promise<{ id: s
       const rateLimitResult = await checkRateLimit(rateLimits.reminderCrud, identifier);
 
       if (!rateLimitResult.success) {
+        const errorMessage = createRateLimitErrorMessage(
+          "reminder deletion requests",
+          rateLimitResult.reset,
+          rateLimitResult.limit,
+          "minute"
+        );
+        
         return NextResponse.json(
-          { error: 'Too many deletion requests. Please slow down.' },
+          { error: errorMessage },
           { 
             status: 429,
             headers: createRateLimitHeaders(rateLimitResult)
@@ -70,8 +77,15 @@ export async function PATCH(req: NextRequest, params: { params: Promise<{ id: st
       const rateLimitResult = await checkRateLimit(rateLimits.reminderCrud, identifier);
 
       if (!rateLimitResult.success) {
+        const errorMessage = createRateLimitErrorMessage(
+          "reminder update requests",
+          rateLimitResult.reset,
+          rateLimitResult.limit,
+          "minute"
+        );
+        
         return NextResponse.json(
-          { error: 'Too many update requests. Please slow down.' },
+          { error: errorMessage },
           { 
             status: 429,
             headers: createRateLimitHeaders(rateLimitResult)

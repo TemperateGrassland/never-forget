@@ -74,7 +74,8 @@ export default function CreateUser({ prefillEmail = '' }: { prefillEmail?: strin
 
       return;
     } else {
-      setMessage(`Error: ${data.error || 'Unable to create user.'}`);
+      // The API now returns user-friendly error messages including rate limiting
+      setMessage(data.error || data.message || 'Unable to create user.');
     }
   };
 

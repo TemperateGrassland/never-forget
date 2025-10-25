@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import { auth } from "@/auth";
 import * as Ably from "ably";
 import { log } from "@/lib/logger";
-import { rateLimits, getClientIP, createIdentifier, checkRateLimit, createRateLimitHeaders } from '@/lib/ratelimit';
+import { rateLimits, getClientIP, createIdentifier, checkRateLimit, createRateLimitHeaders, createRateLimitErrorMessage } from '@/lib/ratelimit';
 
 const prisma = new PrismaClient();
 const ably = new Ably.Rest(process.env.ABLY_API_KEY!);
@@ -19,8 +19,15 @@ export async function GET(req: Request) {
       const rateLimitResult = await checkRateLimit(rateLimits.general, identifier);
 
       if (!rateLimitResult.success) {
+        const errorMessage = createRateLimitErrorMessage(
+          "reminder requests",
+          rateLimitResult.reset,
+          rateLimitResult.limit,
+          "minute"
+        );
+        
         return NextResponse.json(
-          { error: 'Too many requests. Please try again later.' },
+          { error: errorMessage },
           { 
             status: 429,
             headers: createRateLimitHeaders(rateLimitResult)
@@ -89,8 +96,15 @@ export async function POST(req: Request) {
       const rateLimitResult = await checkRateLimit(rateLimits.reminderCrud, identifier);
 
       if (!rateLimitResult.success) {
+        const errorMessage = createRateLimitErrorMessage(
+          "reminder creation requests",
+          rateLimitResult.reset,
+          rateLimitResult.limit,
+          "minute"
+        );
+        
         return NextResponse.json(
-          { error: 'Too many reminder creation requests. Please slow down.' },
+          { error: errorMessage },
           { 
             status: 429,
             headers: createRateLimitHeaders(rateLimitResult)
