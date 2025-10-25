@@ -144,5 +144,5 @@ export function createRateLimitErrorMessage(
     timeUntilReset = `${hours} hour${hours === 1 ? '' : 's'}`;
   }
 
-  return `You've reached the rate limit for ${action}. You can try again in ${timeUntilReset}. (Limit: ${limit} requests per ${window})`;
+  return `You've reached the rate limit for ${action}. Please try again later . (Limit: ${limit} requests per ${window})`;
 }
