@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/auth";
+import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { SURVEY_SCHEMAS, getSurveySchema, processSurveyResponses } from "@/lib/surveySchemas";
 
@@ -12,8 +11,8 @@ function getDateFromTimeframe(timeframe: string): Date {
 
 export async function GET(request: NextRequest) {
   try {
-    // Check authentication and admin status
-    const session = await getServerSession(authOptions);
+    // Check authentication and admin status using auth() method
+    const session = await auth();
     
     if (!session?.user?.email) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

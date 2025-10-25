@@ -20,6 +20,27 @@ export default function SurveyAnalytics() {
   const isAdmin = session?.user?.email && 
     process.env.NEXT_PUBLIC_ADMIN_EMAILS?.split(',').includes(session.user.email);
 
+  // useEffect must be called before any conditional returns
+  useEffect(() => {
+    // Only fetch data if user is authenticated and admin
+    if (status === 'authenticated' && isAdmin) {
+      const fetchData = async () => {
+        setLoading(true);
+        try {
+          const response = await fetch(`/api/analytics/survey-distribution?timeframe=${timeframe}`);
+          const data = await response.json();
+          setDistributions(data);
+        } catch (error) {
+          console.error('Error fetching survey distributions:', error);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchData();
+    }
+  }, [timeframe, status, isAdmin]);
+
   // Show loading while checking auth
   if (status === 'loading') {
     return (
@@ -49,28 +70,11 @@ export default function SurveyAnalytics() {
       <div className="space-y-6 p-6">
         <div className="text-center py-12">
           <h1 className="text-2xl font-bold text-gray-900 mb-4">Admin Access Required</h1>
-          <p className="text-gray-600">You don't have permission to access this page.</p>
+          <p className="text-gray-600">You do not have permission to access this page.</p>
         </div>
       </div>
     );
   }
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch(`/api/analytics/survey-distribution?timeframe=${timeframe}`);
-        const data = await response.json();
-        setDistributions(data);
-      } catch (error) {
-        console.error('Error fetching survey distributions:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [timeframe]);
 
   if (loading) {
     return (
