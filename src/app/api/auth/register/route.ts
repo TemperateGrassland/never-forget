@@ -1,9 +1,25 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { verifyTurnstileToken } from '@/lib/turnstile';
+import { rateLimits, getClientIP, createIdentifier, checkRateLimit, createRateLimitHeaders } from '@/lib/ratelimit';
 
 export async function POST(req: Request) {
   try {
+    // Rate limiting check
+    const clientIP = getClientIP(req);
+    const identifier = createIdentifier("ip", clientIP, "register");
+    const rateLimitResult = await checkRateLimit(rateLimits.userRegistration, identifier);
+
+    if (!rateLimitResult.success) {
+      return NextResponse.json(
+        { error: 'Too many registration attempts. Please try again later.' },
+        { 
+          status: 429,
+          headers: createRateLimitHeaders(rateLimitResult)
+        }
+      );
+    }
+
     const { firstName, lastName, email, phoneNumber, turnstileToken } = await req.json();
 
     // Verify CAPTCHA token
@@ -25,7 +41,13 @@ export async function POST(req: Request) {
       data: { firstName, lastName, email, phoneNumber },
     });
 
-    return NextResponse.json({ message: 'User registered', userId: user.id }, { status: 201 });
+    return NextResponse.json(
+      { message: 'User registered', userId: user.id },
+      { 
+        status: 201,
+        headers: createRateLimitHeaders(rateLimitResult)
+      }
+    );
   } catch (error) {
     console.error('Registration error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

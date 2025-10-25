@@ -1,11 +1,32 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import Ably from "ably";
+import { auth } from "@/auth";
+import { rateLimits, getClientIP, createIdentifier, checkRateLimit, createRateLimitHeaders } from '@/lib/ratelimit';
 
 const prisma = new PrismaClient();
 const ably = new Ably.Rest(process.env.ABLY_API_KEY!);
 
 export async function DELETE(req: NextRequest, params: { params: Promise<{ id: string }> }) {
+  try {
+    const session = await auth();
+    
+    // Rate limiting for reminder deletion
+    if (session?.user?.id) {
+      const identifier = createIdentifier("user", session.user.id, "reminders-delete");
+      const rateLimitResult = await checkRateLimit(rateLimits.reminderCrud, identifier);
+
+      if (!rateLimitResult.success) {
+        return NextResponse.json(
+          { error: 'Too many deletion requests. Please slow down.' },
+          { 
+            status: 429,
+            headers: createRateLimitHeaders(rateLimitResult)
+          }
+        );
+      }
+    }
+
     const id = (await params?.params).id;
     if (!id || typeof id !== "string") {
       return NextResponse.json({ error: "Invalid or missing Reminder ID" }, { status: 400 });
@@ -33,17 +54,40 @@ export async function DELETE(req: NextRequest, params: { params: Promise<{ id: s
     console.error("Error deleting reminder:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
+  } catch (error) {
+    console.error("Error in DELETE handler:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  }
 }
 
 export async function PATCH(req: NextRequest, params: { params: Promise<{ id: string }> }) {
-  const { title, dueDate, frequency, advanceNoticeDays } = await req.json();
-  const id = (await params?.params).id;
+  try {
+    const session = await auth();
+    
+    // Rate limiting for reminder updates
+    if (session?.user?.id) {
+      const identifier = createIdentifier("user", session.user.id, "reminders-update");
+      const rateLimitResult = await checkRateLimit(rateLimits.reminderCrud, identifier);
 
-  console.log(`reminder ${title} - dueDate ${dueDate} - frequency ${frequency} - advanceNoticeDays ${advanceNoticeDays} - id ${id}`)
+      if (!rateLimitResult.success) {
+        return NextResponse.json(
+          { error: 'Too many update requests. Please slow down.' },
+          { 
+            status: 429,
+            headers: createRateLimitHeaders(rateLimitResult)
+          }
+        );
+      }
+    }
 
-  if (!id || typeof id !== "string") {
-    return NextResponse.json({ error: "Invalid or missing Reminder ID" }, { status: 400 });
-  }
+    const { title, dueDate, frequency, advanceNoticeDays } = await req.json();
+    const id = (await params?.params).id;
+
+    console.log(`reminder ${title} - dueDate ${dueDate} - frequency ${frequency} - advanceNoticeDays ${advanceNoticeDays} - id ${id}`)
+
+    if (!id || typeof id !== "string") {
+      return NextResponse.json({ error: "Invalid or missing Reminder ID" }, { status: 400 });
+    }
 
   // Validate and parse the dueDate
   let parsedDueDate: Date | null = null;
@@ -88,6 +132,10 @@ export async function PATCH(req: NextRequest, params: { params: Promise<{ id: st
     return NextResponse.json({ updatedReminder });
   } catch (error) {
     console.error("Error updating reminder:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  }
+  } catch (error) {
+    console.error("Error in PATCH handler:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

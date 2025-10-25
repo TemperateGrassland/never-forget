@@ -2,9 +2,25 @@ import prisma from "@/lib/prisma";
 import bcrypt from "bcrypt";
 import { NextRequest } from "next/server";
 import { verifyTurnstileToken } from '@/lib/turnstile';
+import { rateLimits, getClientIP, createIdentifier, checkRateLimit, createRateLimitHeaders } from '@/lib/ratelimit';
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limiting check
+    const clientIP = getClientIP(request);
+    const identifier = createIdentifier("ip", clientIP, "user-create");
+    const rateLimitResult = await checkRateLimit(rateLimits.userRegistration, identifier);
+
+    if (!rateLimitResult.success) {
+      return new Response(
+        JSON.stringify({ message: "Too many user creation attempts. Please try again later." }),
+        { 
+          status: 429,
+          headers: createRateLimitHeaders(rateLimitResult)
+        }
+      );
+    }
+
     const {
       email,
       firstName,
@@ -67,9 +83,13 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    return new Response(JSON.stringify({ message: "User created successfully - you can now set some reminders", user }), {
-      status: 201,
-    });
+    return new Response(
+      JSON.stringify({ message: "User created successfully - you can now set some reminders", user }),
+      {
+        status: 201,
+        headers: createRateLimitHeaders(rateLimitResult)
+      }
+    );
   } catch (err) {
     console.error("User creation error:", err);
     return new Response(

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import prisma from '@/lib/prisma';
 import { verifyTurnstileToken } from '@/lib/turnstile';
+import { rateLimits, getClientIP, createIdentifier, checkRateLimit, createRateLimitHeaders } from '@/lib/ratelimit';
 
 export async function POST(request: NextRequest) {
   try {
@@ -10,6 +11,23 @@ export async function POST(request: NextRequest) {
     console.log('Prisma feedback model:', prisma?.feedback ? 'available' : 'not available');
     
     const session = await auth();
+    
+    // Rate limiting check - use user ID if authenticated, otherwise IP
+    const clientIP = getClientIP(request);
+    const rateLimitKey = session?.user?.id || clientIP;
+    const identifier = createIdentifier(session?.user?.id ? "user" : "ip", rateLimitKey, "feedback");
+    const rateLimitResult = await checkRateLimit(rateLimits.feedback, identifier);
+
+    if (!rateLimitResult.success) {
+      return NextResponse.json(
+        { error: 'Too many feedback submissions. Please try again later.' },
+        { 
+          status: 429,
+          headers: createRateLimitHeaders(rateLimitResult)
+        }
+      );
+    }
+
     const { type, feedback, turnstileToken } = await request.json();
 
     // Verify CAPTCHA token
@@ -64,7 +82,10 @@ export async function POST(request: NextRequest) {
         message: 'Feedback submitted successfully',
         id: feedbackRecord.id 
       },
-      { status: 200 }
+      { 
+        status: 200,
+        headers: createRateLimitHeaders(rateLimitResult)
+      }
     );
   } catch (error) {
     console.error('Error processing feedback:', error);

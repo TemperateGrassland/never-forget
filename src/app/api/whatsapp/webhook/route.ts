@@ -12,6 +12,7 @@ import {
 } from "@/lib/reminderTools";
 import { checkSubscriptionByPhone } from "@/lib/subscription";
 import { log } from "@/lib/logger";
+import { rateLimits, getClientIP, createIdentifier, checkRateLimit, createRateLimitHeaders } from '@/lib/ratelimit';
 
 
 // Type definitions
@@ -98,6 +99,21 @@ export async function GET(request: NextRequest) {
 // a json payload describing the change: https://developers.facebook.com/docs/graph-api/webhooks/getting-started#create-endpoint
 export async function POST(request: NextRequest) {
   try {
+    // Rate limiting check for WhatsApp webhooks
+    const clientIP = getClientIP(request);
+    const identifier = createIdentifier("ip", clientIP, "whatsapp-webhook");
+    const rateLimitResult = await checkRateLimit(rateLimits.whatsappWebhook, identifier);
+
+    if (!rateLimitResult.success) {
+      return NextResponse.json(
+        { error: 'Too many webhook requests' },
+        { 
+          status: 429,
+          headers: createRateLimitHeaders(rateLimitResult)
+        }
+      );
+    }
+
     const body = await request.json();
     console.log("Received webhook:", JSON.stringify(body, null, 2));
 
@@ -214,9 +230,15 @@ export async function POST(request: NextRequest) {
 
     // If we saw only statuses, acknowledge specifically; otherwise fall back to generic success
     if (!sawSomething) {
-      return NextResponse.json({ status: "no_messages" });
+      return NextResponse.json(
+        { status: "no_messages" },
+        { headers: createRateLimitHeaders(rateLimitResult) }
+      );
     }
-    return NextResponse.json({ status: "success" });
+    return NextResponse.json(
+      { status: "success" },
+      { headers: createRateLimitHeaders(rateLimitResult) }
+    );
   } catch (error) {
     console.error("Webhook error:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
