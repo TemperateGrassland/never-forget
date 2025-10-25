@@ -2,6 +2,7 @@
 
 import { signIn } from 'next-auth/react';
 import { useState } from 'react';
+import TurnstileComponent from '@/components/Turnstile';
 
 export default function CreateUser({ prefillEmail = '' }: { prefillEmail?: string }) {
   const [email, setEmail] = useState(prefillEmail);
@@ -12,6 +13,7 @@ export default function CreateUser({ prefillEmail = '' }: { prefillEmail?: strin
   const [dateOfBirth, setDateOfBirth] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState('');
+  const [turnstileToken, setTurnstileToken] = useState('');
 
   const validate = () => {
     if (!firstName.trim() || !lastName.trim()) {
@@ -54,6 +56,7 @@ export default function CreateUser({ prefillEmail = '' }: { prefillEmail?: strin
         email,
         phoneNumber,
         dateOfBirth,
+        turnstileToken,
       }),
     });
 
@@ -73,6 +76,15 @@ export default function CreateUser({ prefillEmail = '' }: { prefillEmail?: strin
     } else {
       setMessage(`Error: ${data.error || 'Unable to create user.'}`);
     }
+  };
+
+  const handleTurnstileVerify = (token: string) => {
+    setTurnstileToken(token);
+  };
+
+  const handleTurnstileError = () => {
+    setMessage('CAPTCHA verification failed. Please try again.');
+    setTurnstileToken('');
   };
 
   return (
@@ -119,10 +131,21 @@ export default function CreateUser({ prefillEmail = '' }: { prefillEmail?: strin
         required
         className="w-full px-3 py-2 border rounded text-black"
       />
+      
+      <div>
+        <label className="block text-gray-700 font-medium mb-2">
+          Security Verification
+        </label>
+        <TurnstileComponent
+          onVerify={handleTurnstileVerify}
+          onError={handleTurnstileError}
+        />
+      </div>
+
       <div className="text-center">
       <button
         type="submit"
-        disabled={submitting}
+        disabled={submitting || !turnstileToken}
         className="bg-green-600 text-white px-4 py-2 rounded disabled:opacity-50"
       >
         {submitting ? 'Creating...' : 'Create User'}

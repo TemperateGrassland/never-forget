@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import prisma from '@/lib/prisma';
+import { verifyTurnstileToken } from '@/lib/turnstile';
 
 export async function POST(request: NextRequest) {
   try {
@@ -9,7 +10,16 @@ export async function POST(request: NextRequest) {
     console.log('Prisma feedback model:', prisma?.feedback ? 'available' : 'not available');
     
     const session = await auth();
-    const { type, feedback } = await request.json();
+    const { type, feedback, turnstileToken } = await request.json();
+
+    // Verify CAPTCHA token
+    const isValidCaptcha = await verifyTurnstileToken(turnstileToken);
+    if (!isValidCaptcha) {
+      return NextResponse.json(
+        { error: 'CAPTCHA verification failed' },
+        { status: 400 }
+      );
+    }
 
     // Validate input
     if (!type || !feedback) {

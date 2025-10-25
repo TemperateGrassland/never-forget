@@ -1,9 +1,16 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { verifyTurnstileToken } from '@/lib/turnstile';
 
 export async function POST(req: Request) {
   try {
-    const { firstName, lastName, email, phoneNumber } = await req.json();
+    const { firstName, lastName, email, phoneNumber, turnstileToken } = await req.json();
+
+    // Verify CAPTCHA token
+    const isValidCaptcha = await verifyTurnstileToken(turnstileToken);
+    if (!isValidCaptcha) {
+      return NextResponse.json({ error: 'CAPTCHA verification failed' }, { status: 400 });
+    }
 
     if (!firstName || !lastName || !email || !phoneNumber) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });

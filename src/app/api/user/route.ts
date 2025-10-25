@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma";
 import bcrypt from "bcrypt";
 import { NextRequest } from "next/server";
+import { verifyTurnstileToken } from '@/lib/turnstile';
 
 export async function POST(request: NextRequest) {
   try {
@@ -10,7 +11,16 @@ export async function POST(request: NextRequest) {
       lastName,
       phoneNumber,
       dateOfBirth,
+      turnstileToken,
     } = await request.json();
+
+    // Verify CAPTCHA token
+    const isValidCaptcha = await verifyTurnstileToken(turnstileToken);
+    if (!isValidCaptcha) {
+      return new Response(JSON.stringify({ message: "CAPTCHA verification failed." }), {
+        status: 400,
+      });
+    }
 
     // Basic validation
     if (

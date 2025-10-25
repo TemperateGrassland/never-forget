@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import TurnstileComponent from "@/components/Turnstile";
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -10,6 +11,7 @@ export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLTextAreaElement>) => {
     setFormData({
@@ -29,7 +31,10 @@ export default function ContactPage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          turnstileToken
+        }),
       });
 
       if (!response.ok) {
@@ -38,11 +43,21 @@ export default function ContactPage() {
 
       setIsSubmitted(true);
       setFormData({ type: "", feedback: "" });
+      setTurnstileToken("");
     } catch (err) {
       setError('Failed to submit feedback. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleTurnstileVerify = (token: string) => {
+    setTurnstileToken(token);
+  };
+
+  const handleTurnstileError = () => {
+    setError('CAPTCHA verification failed. Please try again.');
+    setTurnstileToken("");
   };
 
   if (isSubmitted) {
@@ -112,9 +127,20 @@ export default function ContactPage() {
           />
         </div>
 
+        <div>
+          <label className="block text-gray-700 font-medium mb-2">
+            Security Verification
+          </label>
+          <TurnstileComponent
+            onVerify={handleTurnstileVerify}
+            onError={handleTurnstileError}
+            className="mb-4"
+          />
+        </div>
+
         <button
           type="submit"
-          disabled={isSubmitting || !formData.type || !formData.feedback}
+          disabled={isSubmitting || !formData.type || !formData.feedback || !turnstileToken}
           className="w-full bg-[#25d366] text-white py-3 px-6 rounded-md font-semibold hover:bg-[#128C7E] disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
         >
           {isSubmitting ? 'Submitting...' : 'Submit Feedback'}

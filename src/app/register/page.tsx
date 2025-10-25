@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import TurnstileComponent from "@/components/Turnstile";
 
 export default function RegisterPage() {
   const router = useRouter();
   const [formData, setFormData] = useState({ firstName: "", lastName: "", email: "", phoneNumber: "" });
   const [error, setError] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -19,7 +21,7 @@ export default function RegisterPage() {
     const res = await fetch("/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
+      body: JSON.stringify({ ...formData, turnstileToken }),
     });
 
     if (res.ok) {
@@ -28,6 +30,15 @@ export default function RegisterPage() {
       const data = await res.json();
       setError(data.error);
     }
+  };
+
+  const handleTurnstileVerify = (token: string) => {
+    setTurnstileToken(token);
+  };
+
+  const handleTurnstileError = () => {
+    setError('CAPTCHA verification failed. Please try again.');
+    setTurnstileToken('');
   };
 
   return (
@@ -83,7 +94,21 @@ export default function RegisterPage() {
           />
         </div>
 
-        <button type="submit" className="w-full bg-[#25d366] text-black p-2 rounded-md hover:bg-[#128C7E]">
+        <div>
+          <label className="block text-gray-700 font-medium mb-2">
+            Security Verification
+          </label>
+          <TurnstileComponent
+            onVerify={handleTurnstileVerify}
+            onError={handleTurnstileError}
+          />
+        </div>
+
+        <button 
+          type="submit" 
+          disabled={!turnstileToken}
+          className="w-full bg-[#25d366] text-black p-2 rounded-md hover:bg-[#128C7E] disabled:bg-gray-400 disabled:cursor-not-allowed"
+        >
           Register
         </button>
       </form>
