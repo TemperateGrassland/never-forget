@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES2017",
+    "target": "ES2018",
     "lib": [
       "dom",
       "dom.iterable",
@@ -29,7 +29,7 @@
     },
     "strict": false,
     "strictNullChecks": true,
-    "types": ["next-auth"]
+    "types": ["next-auth", "jest", "node"]
   },
   "include": [
     "next-env.d.ts",

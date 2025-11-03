@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "next lint",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
-    "test:ci": "jest --runInBand"
+    "test:ci": "jest --runInBand",
+    "test:rls": "node scripts/run-rls-tests.cjs",
+    "test:rls:existing": "node scripts/test-rls-with-existing-db.cjs"
   },
   "dependencies": {
     "@ai-sdk/openai": "^2.0.15",
@@ -59,6 +61,7 @@
     "@testing-library/react": "^16.2.0",
     "@types/jest": "^29.5.14",
     "@types/node": "^22",
+    "@types/pg": "^8.15.6",
     "@types/react": "^19.0.2",
     "@types/react-dom": "^19",
     "babel-jest": "^29.7.0",

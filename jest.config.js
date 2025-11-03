@@ -5,4 +5,5 @@ export default {
   coverageDirectory: "coverage",
   coverageProvider: "v8",
   testEnvironment: "node", // or "jsdom" if you're testing frontend
+  setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
 };
