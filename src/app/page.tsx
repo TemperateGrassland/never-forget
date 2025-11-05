@@ -75,7 +75,7 @@ export default function HomePage() {
             never forget sends you a daily WhatsApp message with the things you want to remember - like birthdays, booking the dentist, or time to stretch after work. Set a reminder today and get a nudge tomorrow morning - and every day after that.
           </p>
           <p>
-            and if things change? Just message back - you can update your reminders all in the same chat.
+            and if things change? You can update your reminders all on the web app.
           </p>
           <p className="space-y-6 text-xl sm:text-2xl font-medium text-gray-900 text-left pt-8">
             the things that matter most in life aren&apos;t always hard to do - they&apos;re just easy to forget.
