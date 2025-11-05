@@ -28,13 +28,13 @@ export default function PricingPage() {
               key={plan.id}
               className={`
                 relative bg-white rounded-2xl shadow-lg border-2 p-8 transition-transform hover:scale-105
-                ${plan.popular ? 'border-blue-500 shadow-blue-100' : 'border-gray-200'}
+                ${plan.popular ? 'border-[#25d366] shadow-green-100' : 'border-gray-200'}
               `}
             >
               {/* Popular Badge */}
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                  <div className="bg-blue-500 text-white px-4 py-2 rounded-full text-sm font-medium flex items-center">
+                  <div className="bg-[#25d366] text-white px-4 py-2 rounded-full text-sm font-medium flex items-center">
                     <Star className="w-4 h-4 mr-1" />
                     Most Popular
                   </div>
@@ -73,7 +73,7 @@ export default function PricingPage() {
                   className={`
                     w-full py-3 px-6 rounded-lg font-medium transition-colors
                     ${plan.popular 
-                      ? 'bg-blue-500 hover:bg-blue-600 text-white' 
+                      ? 'bg-[#25d366] hover:bg-[#1fb854] text-white' 
                       : 'bg-gray-100 hover:bg-gray-200 text-gray-900'
                     }
                   `}
