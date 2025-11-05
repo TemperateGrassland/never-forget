@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import { log } from "@/lib/logger";
+import { enforceDeliveryLimits, checkUserCanSendReminder } from "@/lib/usage-tracking";
 
 // Helper function to calculate next due date based on frequency
 function getNextDueDate(currentDueDate: Date, frequency: string): Date {
@@ -168,9 +169,37 @@ export async function GET() {
     let messagesFailed = 0;
 
     for (const user of usersWithFilteredReminders) {
-      const { firstName, phoneNumber, reminders } = user;
+      const { id: userId, firstName, phoneNumber, reminders } = user;
 
       if (!phoneNumber || reminders.length === 0) continue;
+
+      // Check if user can send reminders based on their plan limits
+      try {
+        const canSend = await enforceDeliveryLimits(userId);
+        if (!canSend) {
+          // User has reached their monthly limit, skip sending
+          const limitCheck = await checkUserCanSendReminder(userId);
+          log.warn('🚫 User reached delivery limit', {
+            jobId,
+            userId,
+            phoneNumber: phoneNumber.slice(-4),
+            plan: limitCheck.plan,
+            currentCount: limitCheck.currentCount,
+            message: limitCheck.message,
+            timestamp: new Date().toISOString()
+          });
+          continue; // Skip to next user
+        }
+      } catch (error) {
+        log.error('❌ Error checking delivery limits', {
+          jobId,
+          userId,
+          phoneNumber: phoneNumber.slice(-4),
+          error: error instanceof Error ? error.message : 'Unknown error',
+          timestamp: new Date().toISOString()
+        });
+        continue; // Skip to next user on error
+      }
 
       // TODO trigger a message to be sent that prompts user to add a reminder
 
@@ -217,6 +246,7 @@ export async function GET() {
         messagesSent++;
         log.info('✅ WhatsApp message sent successfully', {
           jobId,
+          userId,
           phoneNumber: phoneNumber.slice(-4), // Log last 4 digits for privacy
           reminderCount: reminders.length,
           messageId: result.messages?.[0]?.id,
@@ -226,6 +256,7 @@ export async function GET() {
         messagesFailed++;
         log.error('❌ WhatsApp message failed', {
           jobId,
+          userId,
           phoneNumber: phoneNumber.slice(-4),
           error: result.error?.message,
           errorCode: result.error?.code,

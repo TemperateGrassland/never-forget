@@ -7,44 +7,36 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum FriendInviteStatus {
-  PENDING
-  ACCEPTED
-  IGNORED
-}
-
 model User {
-  id            String     @id @default(cuid())
-  email         String     @unique
-  emailVerified DateTime?
-  createdAt     DateTime   @default(now())
-  dateOfBirth   DateTime?
-  firstName     String?
-  isActive      Boolean    @default(true)
-  lastName      String?
-  phoneNumber   String?    @unique
-  updatedAt     DateTime   @updatedAt
-  reminders     Reminder[] // One-to-many relationship
-  hasReceivedWelcomeEmail Boolean  @default(false)
-  accounts      Account[] // One-to-many relationship
-  sessions      Session[] // One-to-many relationship
-  stripeCustomerId  String?  @unique
-  // Subscription tracking fields
-  subscriptionId        String?   @unique // Current Stripe subscription ID
-  subscriptionStatus    String?   // active, canceled, past_due, etc.
-  subscriptionEndsAt    DateTime? // When current period ends
-  subscriptionPlanId    String?   // Stripe price ID of current plan
-  subscriptionStartedAt DateTime? // When subscription began
-  friends    User[] @relation("UserFriends")
-  friendOf   User[] @relation("UserFriends")
-  sentFriendInvites FriendInvite[] @relation("SentFriendInvites")
-  feedback   Feedback[] // One-to-many relationship for feedback
-  flowResponses FlowResponse[] // One-to-many relationship for flow responses
+  id                      String         @id @default(cuid())
+  email                   String         @unique
+  emailVerified           DateTime?
+  createdAt               DateTime       @default(now())
+  dateOfBirth             DateTime?
+  firstName               String?
+  isActive                Boolean        @default(true)
+  lastName                String?
+  phoneNumber             String?        @unique
+  updatedAt               DateTime       @updatedAt
+  hasReceivedWelcomeEmail Boolean        @default(false)
+  stripeCustomerId        String?        @unique
+  subscriptionEndsAt      DateTime?
+  subscriptionId          String?        @unique
+  subscriptionPlanId      String?
+  subscriptionStartedAt   DateTime?
+  subscriptionStatus      String?
+  currentMonthDeliveries  Int       @default(0)
+  lastUsageReset          DateTime?
+  accounts                Account[]
+  feedback                Feedback[]
+  flowResponses           FlowResponse[]
+  reminders               Reminder[]
+  sessions                Session[]
 }
 
 model Account {
   id                String  @id @default(cuid())
-  userId            String // Foreign key referencing User.id
+  userId            String
   provider          String
   providerAccountId String
   type              String
@@ -57,7 +49,7 @@ model Account {
   session_state     String?
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([provider, providerAccountId]) // Ensure unique accounts per provider
+  @@unique([provider, providerAccountId])
 }
 
 model Session {
@@ -65,10 +57,8 @@ model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   phoneNumber  String?
-  // Mark userId as unique to enforce one-to-one relationship
-  // @@unique([userId])
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model VerificationToken {
@@ -76,27 +66,20 @@ model VerificationToken {
   token      String   @unique
   expires    DateTime
 
-  @@unique([identifier, token]) // Ensure token uniqueness
-}
-
-enum ReminderFrequency {
-  NONE // One-time reminder (no repeat)
-  WEEKLY // Once a week
-  MONTHLY // Once a month
-  YEARLY // Once a year
+  @@unique([identifier, token])
 }
 
 model Reminder {
-  id               String   @id @default(uuid())
-  title            String
-  userId           String
-  isComplete       Boolean  @default(false)
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-  User             User     @relation(fields: [userId], references: [id])
-  dueDate          DateTime?
-  frequency        ReminderFrequency @default(NONE)
-  advanceNoticeDays Int      @default(1) // Days before due date to start sending reminders (1-7)
+  id                String            @id @default(uuid())
+  title             String
+  userId            String
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  isComplete        Boolean           @default(false)
+  dueDate           DateTime?
+  frequency         ReminderFrequency @default(NONE)
+  advanceNoticeDays Int               @default(1)
+  User              User              @relation(fields: [userId], references: [id])
 }
 
 model WaitlistEntry {
@@ -105,13 +88,45 @@ model WaitlistEntry {
   createdAt DateTime @default(now())
 }
 
-model FriendInvite {
-  id         String             @id @default(cuid())
-  fromUser   User               @relation("SentFriendInvites", fields: [fromUserId], references: [id])
-  fromUserId String
-  phone      String             // E.164 format WhatsApp number
-  status     FriendInviteStatus @default(PENDING)
-  createdAt  DateTime           @default(now())
+model Feedback {
+  id        String       @id @default(cuid())
+  type      FeedbackType
+  message   String
+  userId    String?
+  createdAt DateTime     @default(now())
+  userAgent String?
+  ipAddress String?
+  user      User?        @relation(fields: [userId], references: [id])
+}
+
+model AnonymousFeedback {
+  id        String   @id @default(cuid())
+  template  String
+  response  String
+  metadata  Json?
+  createdAt DateTime @default(now())
+}
+
+model FlowResponse {
+  id          String   @id @default(cuid())
+  flowToken   String   @unique
+  flowName    String
+  userId      String?
+  phoneNumber String
+  responses   Json
+  metadata    Json?
+  createdAt   DateTime @default(now())
+  user        User?    @relation(fields: [userId], references: [id])
+
+  @@index([flowName, createdAt])
+  @@index([phoneNumber])
+}
+
+enum ReminderFrequency {
+  NONE
+  WEEKLY
+  MONTHLY
+  YEARLY
 }
 
 enum FeedbackType {
@@ -119,39 +134,3 @@ enum FeedbackType {
   CRITICISM
 }
 
-model Feedback {
-  id        String       @id @default(cuid())
-  type      FeedbackType
-  message   String
-  userId    String?      // Optional - can be anonymous
-  user      User?        @relation(fields: [userId], references: [id])
-  createdAt DateTime     @default(now())
-  userAgent String?      // For tracking browser/device info
-  ipAddress String?      // For analytics (anonymized)
-}
-
-model AnonymousFeedback {
-  id        String   @id @default(cuid())
-  template  String   // Which template was used to request feedback
-  response  String   // User's feedback text
-  metadata  Json?    // Additional context (source, cycle number, etc.)
-  createdAt DateTime @default(now())
-  
-  // No userId field - keeps it completely anonymous
-}
-
-model FlowResponse {
-  id          String   @id @default(cuid())
-  flowToken   String   // Flow token from WhatsApp (not unique since WhatsApp reuses "unused")
-  flowName    String   // Name/type of the flow (questionnaire, feedback, etc.)
-  userId      String?  // Optional - can be anonymous
-  user        User?    @relation(fields: [userId], references: [id])
-  phoneNumber String   // WhatsApp phone number
-  responses   Json     // Structured questionnaire responses
-  metadata    Json?    // Additional context (timestamp, flow version, templateName, etc.)
-  createdAt   DateTime @default(now())
-  
-  @@index([flowName, createdAt]) // For analytics queries
-  @@index([phoneNumber]) // For user lookup
-  @@index([flowToken]) // For flow token lookup (non-unique)
-}

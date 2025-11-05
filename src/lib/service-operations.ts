@@ -158,7 +158,6 @@ export async function exportUserData(userId: string) {
       include: {
         reminders: true,
         feedback: true,
-        sentFriendInvites: true,
         flowResponses: true,
         accounts: {
           select: {
@@ -195,7 +194,6 @@ export async function exportUserData(userId: string) {
       },
       reminders: userData.reminders,
       feedback: userData.feedback,
-      friendInvites: userData.sentFriendInvites,
       flowResponses: userData.flowResponses.map(fr => ({
         flowName: fr.flowName,
         responses: fr.responses,
@@ -225,11 +223,6 @@ export async function deleteUserData(userId: string) {
       // Delete feedback
       await tx.feedback.deleteMany({
         where: { userId }
-      });
-
-      // Delete friend invites
-      await tx.friendInvite.deleteMany({
-        where: { fromUserId: userId }
       });
 
       // Delete reminders

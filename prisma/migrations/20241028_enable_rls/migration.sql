@@ -6,7 +6,6 @@ ALTER TABLE "User" ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "Account" ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "Session" ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "Reminder" ENABLE ROW LEVEL SECURITY;
-ALTER TABLE "FriendInvite" ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "Feedback" ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "FlowResponse" ENABLE ROW LEVEL SECURITY;
 
@@ -57,9 +56,6 @@ CREATE POLICY reminder_own_data ON "Reminder"
   FOR ALL
   USING ("userId" = current_app_user_id() OR is_admin_user());
 
-CREATE POLICY friend_invite_own_data ON "FriendInvite"
-  FOR ALL
-  USING ("fromUserId" = current_app_user_id() OR is_admin_user());
 
 CREATE POLICY feedback_own_data ON "Feedback"
   FOR ALL
@@ -77,16 +73,5 @@ CREATE POLICY flow_response_anonymous_admin_only ON "FlowResponse"
   FOR SELECT
   USING ("userId" IS NULL AND is_admin_user());
 
--- Create service role for system operations
-DO $$
-BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'service_role') THEN
-    CREATE ROLE service_role;
-    GRANT CONNECT ON DATABASE postgres TO service_role;
-    GRANT USAGE ON SCHEMA public TO service_role;
-    GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO service_role;
-    GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO service_role;
-    ALTER ROLE service_role SET row_security = off;
-  END IF;
-END
-$$;
+-- Note: Service role creation removed due to permission constraints
+-- If needed, this role should be created manually by a database administrator

@@ -75,7 +75,10 @@ export async function POST(request: NextRequest) {
 
     console.log(`Created checkout session ${checkoutSession.id} for user ${session.user.email}`);
 
-    return NextResponse.json({ sessionId: checkoutSession.id });
+    return NextResponse.json({ 
+      sessionId: checkoutSession.id,
+      url: checkoutSession.url 
+    });
   } catch (error) {
     console.error('Checkout session creation error:', error);
     return NextResponse.json(
