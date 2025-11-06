@@ -28,7 +28,7 @@ export const SUBSCRIPTION_PLANS = {
     price: 0.99,
     currency: 'GBP',
     interval: 'month',
-    priceId: 'price_1RYzNdF5x12WgiZJJjkYBZ8P', // TODO: Update with new 99p price ID
+    priceId: 'price_1SQO9pF5x12WgiZJIwOmSWmX',
     features: [
       'Unlimited birthday reminders',
       'Advanced WhatsApp notifications',
@@ -42,6 +42,29 @@ export const SUBSCRIPTION_PLANS = {
       advancedFeatures: true
     },
     description: 'Full access to Never Forget for just 99p per month',
+    popular: false
+  },
+  proYearly: {
+    id: 'proYearly',
+    name: 'Pro',
+    price: 9.99,
+    currency: 'GBP',
+    interval: 'year',
+    priceId: 'price_1SQOAHF5x12WgiZJ1QokEbnx',
+    features: [
+      'Unlimited birthday reminders',
+      'Advanced WhatsApp notifications',
+      'Full reminder management',
+      'Priority support',
+      'Advanced scheduling',
+      'Save £2.89 per year'
+    ],
+    limits: {
+      monthlyReminderDeliveries: null, // Unlimited
+      totalReminders: null, // Unlimited
+      advancedFeatures: true
+    },
+    description: 'Best value - Full access for the whole year',
     popular: true
   }
 } as const;

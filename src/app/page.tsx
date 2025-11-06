@@ -99,7 +99,7 @@ export default function HomePage() {
         </div>
 
         {/* Pricing Cards */}
-        <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
+        <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
           {plans.map((plan) => (
             <div
               key={plan.id}
@@ -111,7 +111,7 @@ export default function HomePage() {
               {/* Popular Badge */}
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                  <div className="bg-[#25d366] text-white px-4 py-2 rounded-full text-sm font-medium flex items-center">
+                  <div className="bg-[#25d366] text-white px-2 py-2 rounded-full text-sm font-medium flex items-center">
                     <Star className="w-4 h-4 mr-1" />
                     Most Popular
                   </div>

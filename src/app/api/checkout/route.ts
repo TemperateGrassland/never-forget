@@ -5,13 +5,16 @@ import { prisma } from '@/lib/prisma';
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('Checkout API called');
     // Authenticate the user
     const session = await auth();
     if (!session?.user?.email) {
+      console.log('No session or email');
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const { priceId } = await request.json();
+    console.log('Price ID received:', priceId);
 
     if (!priceId) {
       return NextResponse.json({ error: 'Price ID is required' }, { status: 400 });

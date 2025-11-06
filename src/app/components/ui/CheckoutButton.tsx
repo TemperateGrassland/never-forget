@@ -5,7 +5,7 @@ import { useSession, signIn } from "next-auth/react";
 import { SUBSCRIPTION_PLANS } from "@/lib/subscription-plans";
 
 interface CheckoutButtonProps {
-  planId?: 'free' | 'pro';
+  planId?: 'free' | 'pro' | 'proYearly';
   children?: React.ReactNode;
   className?: string;
 }
@@ -61,9 +61,12 @@ export default function CheckoutButton({
   };
 
   const plan = SUBSCRIPTION_PLANS[planId];
-  const defaultContent = planId === 'free' 
-    ? 'Get Started Free' 
-    : `Upgrade to Pro - ${plan.price}p/month`;
+  const getDefaultContent = () => {
+    if (planId === 'free') return 'Get Started Free';
+    if (planId === 'proYearly') return `Upgrade to Pro - £${plan.price}/year`;
+    return `Upgrade to Pro - ${plan.price}p/month`;
+  };
+  const defaultContent = getDefaultContent();
 
   return (
     <button 
