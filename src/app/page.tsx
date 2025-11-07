@@ -14,14 +14,10 @@ export default function HomePage() {
   const plans = Object.values(SUBSCRIPTION_PLANS);
 
   const handleGetStarted = () => {
-    if (status === "loading") return; // Don't do anything while loading
-    
-    if (session) {
-      // User is signed in, take them to daily-reminder page
-      router.push('/daily-reminder');
-    } else {
-      // User is not signed in, take them to sign in
-      signIn();
+    // Scroll to the how it works section
+    const howItWorksSection = document.querySelector('[data-section="how-it-works"]');
+    if (howItWorksSection) {
+      howItWorksSection.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
@@ -52,17 +48,16 @@ export default function HomePage() {
         </p>
         <button 
                     onClick={handleGetStarted}
-                    disabled={status === "loading"}
-                    className="bg-[#25d366] hover:bg-[#20bd5a] text-white font-medium py-3 px-6 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-[#25d366] focus:ring-offset-2 disabled:opacity-50 text-base sm:text-lg"
-                    aria-label={session ? "Go to daily reminders" : "Sign in to your account"}
+                    className="bg-[#25d366] hover:bg-[#20bd5a] text-white font-medium py-3 px-6 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-[#25d366] focus:ring-offset-2 text-base sm:text-lg"
+                    aria-label="Learn how it works"
                     type="button"
                   >
-                    {status === "loading" ? "loading..." : "get started"}
+                    learn how it works
         </button>
       </div>
     </div>
 
-    <div className="bg-white py-16 sm:py-20">
+    <div className="bg-white py-16 sm:py-20" data-section="how-it-works">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
         <div className="mb-6">
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4 text-left">
@@ -75,7 +70,7 @@ export default function HomePage() {
             never forget sends you a daily WhatsApp message with the things you want to remember - like birthdays, booking the dentist, or time to stretch after work. Set a reminder today and get a nudge tomorrow morning - and every day after that.
           </p>
           <p>
-            and if things change? You can update your reminders all on the web app.
+            and if things change? You can update your reminders on the web app.
           </p>
           <p className="space-y-6 text-xl sm:text-2xl font-medium text-gray-900 text-left pt-8">
             the things that matter most in life aren&apos;t always hard to do - they&apos;re just easy to forget.
