@@ -41,7 +41,7 @@ export default function HomePage() {
 
     <div className="relative z-10 flex flex-col items-start justify-center text-left h-full px-4 sm:px-6 md:px-8 lg:px-16 pt-16 sm:pt-20">        
       <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold mb-3 sm:mb-4 text-white leading-tight">
-          never forget a birthday again
+          never forget an important birthday again
         </h1>
         <p className="text-base sm:text-lg md:text-xl text-white mb-6 sm:mb-8 max-w-lg sm:max-w-xl leading-relaxed">
           no apps, no fuss - just a nudge on WhatsApp when someone&apos;s special day is coming up.
