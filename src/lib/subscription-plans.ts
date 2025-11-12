@@ -41,7 +41,7 @@ export const SUBSCRIPTION_PLANS = {
       totalReminders: null, // Unlimited
       advancedFeatures: true
     },
-    description: 'Introductory price - lock in 99p forever!',
+    description: 'Introductory price until March 2025 - lock in 99p forever!',
     popular: true
   },
   proYearly: {
