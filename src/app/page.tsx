@@ -41,10 +41,10 @@ export default function HomePage() {
 
     <div className="relative z-10 flex flex-col items-start justify-center text-left h-full px-4 sm:px-6 md:px-8 lg:px-16 pt-16 sm:pt-20">        
       <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold mb-3 sm:mb-4 text-white leading-tight">
-          daily reminders to your whatsapp
+          never forget a birthday again
         </h1>
         <p className="text-base sm:text-lg md:text-xl text-white mb-6 sm:mb-8 max-w-lg sm:max-w-xl leading-relaxed">
-          no apps, no fuss - just one nudge a day to help you build better habits.
+          no apps, no fuss - just a nudge on WhatsApp when someone&apos;s special day is coming up.
         </p>
         <button 
                     onClick={handleGetStarted}
@@ -67,7 +67,7 @@ export default function HomePage() {
         
         <div className="space-y-6 text-lg sm:text-xl text-gray-700 leading-relaxed">
           <p>
-            never forget sends you a daily WhatsApp message with the things you want to remember - like birthdays, booking the dentist, or time to stretch after work. Set a reminder today and get a nudge tomorrow morning - and every day after that.
+            never forget sends you a WhatsApp message when a birthday you cannot forget is on the horizon. Set your first reminder today and never forget a birthday again.
           </p>
           <p>
             and if things change? You can update your reminders on the web app.

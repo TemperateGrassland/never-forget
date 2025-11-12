@@ -10,6 +10,9 @@ const prisma = new PrismaClient();
   
 export const { auth, handlers, signIn, signOut } = NextAuth({
     adapter: PrismaAdapter(prisma),
+    pages: {
+      signIn: '/signin',
+    },
     providers: [
       Email({
           apiKey: process.env.MAILGUN_API_KEY,
