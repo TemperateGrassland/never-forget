@@ -66,6 +66,16 @@ export default function PricingPage() {
                 </ul>
               </div>
 
+              {/* Introductory Pricing Notice for Pro Plan */}
+              {plan.id === 'pro' && (
+                <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                  <p className="text-sm text-amber-800 text-center">
+                    <span className="font-medium">Limited Time:</span> This introductory price of 99p will increase to £1.99 in March 2025. 
+                    Sign up now to lock in this rate forever!
+                  </p>
+                </div>
+              )}
+
               {/* CTA Button */}
               <div className="mb-4">
                 <CheckoutButton

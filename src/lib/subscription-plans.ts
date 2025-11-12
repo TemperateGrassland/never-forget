@@ -41,8 +41,8 @@ export const SUBSCRIPTION_PLANS = {
       totalReminders: null, // Unlimited
       advancedFeatures: true
     },
-    description: 'Full access to Never Forget for just 99p per month',
-    popular: false
+    description: 'Introductory price - lock in 99p forever!',
+    popular: true
   },
   proYearly: {
     id: 'proYearly',
@@ -65,7 +65,7 @@ export const SUBSCRIPTION_PLANS = {
       advancedFeatures: true
     },
     description: 'Best value - Full access for the whole year',
-    popular: true
+    popular: false
   }
 } as const;
 
